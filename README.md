@@ -13,6 +13,12 @@ docker run --name js8 -h js8 -d -p 2222:22 -v ~/.ssh/$SSHKEYNAME.pub:/root/.ssh/
 ssh root@localhost -p 2222 'apk update;apk add curl'
 ```
 
+### to login into the docker
+
+```
+ssh root@localhost -p 2222
+```
+
 ## see scripts dir
 
 ```
@@ -25,11 +31,14 @@ git clone git@github.com:Jumpscale/builder.git
 
 cd builder/scripts
 
+sh prepare.sh #only need to do this once
 sh js_builder.sh
 
 ```
 
 different scripts
+
+- prepare.sh : execute this to make sure that your local environment is up to date
 - js_builder.sh : build jumpscale 8 on branch 8.2.0 inside the docker with name js
 
 # cleanup
