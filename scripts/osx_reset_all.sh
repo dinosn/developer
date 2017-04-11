@@ -22,18 +22,18 @@ if echo "$answer" | grep -iq "^y" ;then
 fi
 
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
-rm -rf ~/.homebrew
-rm -rf ~/.rvm
-rm -rf /opt
-rm -rf /optvar
-rm -rf ~/data
-rm -rf ~/code
-rm -rf ~/opta
-rm -rf ~/optvar
-rm -rf ~/tmp
-rm -rf ~/.npm
-rm -rf ~/.ipython
-rm -rf ~/.dlv
-rm -rf ~/.cups
-rm -rf /usr/local
+sudo rm -rf ~/.homebrew
+sudo rm -rf ~/.rvm
+sudo rm -rf /opt
+sudo rm -rf /optvar
+sudo rm -rf ~/data
+sudo rm -rf ~/code
+sudo rm -rf ~/opta
+sudo rm -rf ~/optvar
+sudo rm -rf ~/tmp
+sudo rm -rf ~/.npm
+sudo rm -rf ~/.ipython
+sudo rm -rf ~/.dlv
+sudo rm -rf ~/.cups
+sudo rm -rf /usr/local
 
