@@ -3,6 +3,7 @@ set -ex
 if [ -z "$SSHKEYNAME" ]; then
     echo "Need to set SSHKEYNAME (through export SSHKEYNAME='mykey')"
     exit 1
+fi
     
 if grep -q Microsoft /proc/version; then
     # Windows subsystem 4 linux
@@ -15,12 +16,14 @@ else
     export OPTVAR=/optvar
     export OPT=/opt
 fi
+
 mkdir -p ${OPTVAR}/data
 mkdir -p ${OPT}/data
 
 rm -rf ~/.ssh/known_hosts
 
 mkdir -p ${OPT}/code/github/jumpscale
+
 cd ${OPT}/code/github/jumpscale
 git clone git@github.com:Jumpscale/builder.git
 
