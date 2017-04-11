@@ -22,8 +22,8 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval `ssh-agent`  
 fi
 
-if [ -e $HOMEDIR/.ssh/develop.pub ]; then
-    export SSHKEYNAME=$HOMEDIR/.ssh/develop.pub
+if [ -e $HOMEDIR/.ssh/id_rsa.pub ]; then
+    export SSHKEYNAME=$HOMEDIR/.ssh/id_rsa.pub
 fi
 
 if [ -z "$SSHKEYNAME" ]; then
