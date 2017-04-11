@@ -24,7 +24,7 @@ ssh root@localhost -p 2222
 ## recommended tools
 
 - all jumpscale code is checked out under /opt/code
-- use a ide like atom for development on this code
+- use a ide like atom for development on this code, sourcetree is a good tool for git manipulation
 - over ssh you can play with the code in the docker
 - to push changes to a remote host (remote development) use j.tools.develop...
 
@@ -34,7 +34,7 @@ ssh root@localhost -p 2222
 - prepare.sh : execute this to make sure that your local environment is up to date
 - js_builder.sh : build jumpscale 8 on branch 8.2.0 inside the docker with name js
 
-# cleanup
+## cleanup
 ```
 #remove all old dockers
 docker rm $(docker ps -a -q)
