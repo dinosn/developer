@@ -32,10 +32,7 @@ fi
 
 
 
-if [ ! -f "~/env.sh" ]; then
-    echo "env.sh does not exist in home dir, will download"
-    curl https://raw.githubusercontent.com/Jumpscale/developer/master/env.sh?$RANDOM > ~/env.sh
-fi
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/env.sh?$RANDOM > ~/env.sh
 
 source ~/env.sh
 
