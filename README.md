@@ -1,12 +1,8 @@
-# builder
-builder for lots of sandboxes, so it can be used in e.g. g8os
+# development environment for jumpscale 8
 
+- please use this development environment to play & develop with jumpscale 8
+- it uses docker and the goal is to get it to work on ubuntu, windows & osx
 
-### to login into the docker
-
-```
-ssh root@localhost -p 2222
-```
 
 ## install
 
@@ -19,7 +15,21 @@ curl -k https://raw.githubusercontent.com/Jumpscale/developer/master/install.sh?
 bash jsdeveloper.sh
 ```
 
-## see other scriots in /scripts dir
+## to login into the development machine
+
+```
+ssh root@localhost -p 2222
+```
+
+## recommended tools
+
+- all jumpscale code is checked out under /opt/code
+- use a ide like atom for development on this code
+- over ssh you can play with the code in the docker
+- to push changes to a remote host (remote development) use j.tools.develop...
+
+
+## see other scripts in /scripts dir
 
 - prepare.sh : execute this to make sure that your local environment is up to date
 - js_builder.sh : build jumpscale 8 on branch 8.2.0 inside the docker with name js
