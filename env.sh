@@ -23,7 +23,7 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
 fi
 
 if [ -e $HOMEDIR/.ssh/id_rsa.pub ]; then
-    export SSHKEYNAME=$HOMEDIR/.ssh/id_rsa.pub
+    export SSHKEYNAME='id_rsa'
 fi
 
 if [ -z "$SSHKEYNAME" ]; then
