@@ -14,9 +14,8 @@ ssh root@localhost -p 2222
 #MAKE SURE YOU SELECT YOUR KEY NAME
 export SSHKEYNAME='ovh_install'
 
-cd $TMPDIR
-rm -f jsdeveloper.sh
-curl -k https://raw.githubusercontent.com/Jumpscale/developer8/master/install/jsdeveloper.sh?$RANDOM > jsdeveloper.sh
+cd $TMPDIR;rm -f jsdeveloper.sh
+curl -k https://raw.githubusercontent.com/Jumpscale/developer/master/install.sh?$RANDOM > jsdeveloper.sh
 bash jsdeveloper.sh
 ```
 
