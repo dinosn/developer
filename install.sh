@@ -25,9 +25,10 @@ rm -rf ~/.ssh/known_hosts
 mkdir -p ${OPT}/code/github/jumpscale
 
 cd ${OPT}/code/github/jumpscale
-git clone git@github.com:Jumpscale/builder.git
+rm -rf developer
+git clone git@github.com:Jumpscale/developer.git
 
-cd builder/scripts
+cd developer/scripts
 
 sh prepare.sh #only need to do this once
 sh js_builder.sh
