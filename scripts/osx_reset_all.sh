@@ -11,13 +11,13 @@ if [ "$(uname)" == "Darwin" ]; then
 
 echo -n "Do you want to uninstall virtualbox (y/n)? "
 read answer
-if echo "$answer" | grep -iq "^y" ;then
+if echo "$answer" | grep -iq "^y"; then
     curl -s https://gist.githubusercontent.com/lox/52f27919816a7eadb6d3/raw/uninstall_virtualbox.sh | bash
 fi
 
 echo -n "Do you want to uninstall virtualbox (y/n)? "
 read answer
-if echo "$answer" | grep -iq "^y" ;then
+if echo "$answer" | grep -iq "^y"; then
     curl -s https://gist.githubusercontent.com/lox/52f27919816a7eadb6d3/raw/uninstall_virtualbox.sh | bash
 fi
 
@@ -36,4 +36,3 @@ sudo rm -rf ~/.ipython
 sudo rm -rf ~/.dlv
 sudo rm -rf ~/.cups
 sudo rm -rf /usr/local
-
