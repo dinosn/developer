@@ -9,16 +9,13 @@
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > $TMPDIR/jsinstall.sh; sh $TMPDIR/jsinstall.sh
 ```
 
-## install
+## install development env
 
 ```
-#MAKE SURE YOU SELECT YOUR KEY NAME, if not selected will look for
-export SSHKEYNAME='ovh_install'
-
-cd $TMPDIR;rm -f jsdeveloper.sh
-curl -k https://raw.githubusercontent.com/Jumpscale/developer/master/install.sh?$RANDOM > jsdeveloper.sh
-bash jsdeveloper.sh
+jsinstall
 ```
+
+this will configure docker
 
 ## to login into the development machine
 
