@@ -3,11 +3,16 @@
 - please use this development environment to play & develop with jumpscale 8
 - it uses docker and the goal is to get it to work on ubuntu, windows & osx
 
+## init
+
+```
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/init.sh?$RANDOM | sh
+```
 
 ## install
 
 ```
-#MAKE SURE YOU SELECT YOUR KEY NAME
+#MAKE SURE YOU SELECT YOUR KEY NAME, if not selected will look for 
 export SSHKEYNAME='ovh_install'
 
 cd $TMPDIR;rm -f jsdeveloper.sh
