@@ -6,7 +6,7 @@
 ## init
 
 ```
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM | sh
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > $TMPDIR/jsinstall.sh; sh $TMPDIR/jsinstall.sh
 ```
 
 ## install
