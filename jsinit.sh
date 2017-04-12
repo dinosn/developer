@@ -32,9 +32,9 @@ fi
 
 
 
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/env.sh?$RANDOM > ~/env.sh
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/jsenv.sh
 
-source ~/env.sh
+source ~/jsenv.sh
 
 mkdir -p $DATADIR
 mkdir -p $CODEDIR
@@ -57,7 +57,8 @@ else
     git pull
 fi
 
-#cd developer/scripts
-#sh prepare.sh #only need to do this once
-#sh js_builder.sh
-
+#link all our command lines relevant to jumpscale development env
+rm -f /usr/local/bin/js*
+rm -rf /usr/local/bin/cmds
+find  $CODEDIR/github/jumpscale/developer/cmds -exec ln -s {} "/usr/local/bin/" \;
+rm -rf /usr/local/bin/cmds

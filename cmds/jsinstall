@@ -1,0 +1,5 @@
+#/bin/bash
+set -e
+cd $CODEDIR/github/jumpscale/developer
+sh prepare.sh
+sh js_builder.sh

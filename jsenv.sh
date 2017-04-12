@@ -27,7 +27,7 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval `ssh-agent`
 fi
 
-
+echo "KEYNAME:$SSHKEYNAME"
 if [ -z $SSHKEYNAME]; then
     SSHKEYNAME=SOMETHINGWHICHWILLNOTMATCH
 else
@@ -59,10 +59,17 @@ fi
 
 #check profile file exists, if yes modify
 if [ -e ~/.profile ] ; then
-    sed  '/export SSHKEYNAME/d'  ~/.profile > ~/.profile2;mv ~/.profile2 ~/.profile
-    sed  '/source ~\/env.sh/d'  ~/.profile > ~/.profile2;mv ~/.profile2 ~/.profile
+    #make a 1time backup
+    if [ ! -e "$HOMEDIR/.profile.bak" ]; then
+        cp $HOMEDIR/.profile $HOMEDIR/.profile.bak
+    fi
+    set -e
+    sed  '/export SSHKEYNAME/d'  ~/.profile > ~/.profile2
+    mv ~/.profile2 ~/.profile
+    sed  '/jsenv.sh/d'  ~/.profile > ~/.profile2
+    mv ~/.profile2 ~/.profile
     echo export SSHKEYNAME=$SSHKEYNAME >> ~/.profile
-    echo source ~/env.sh >> ~/.profile
+    echo source ~/jsenv.sh >> ~/.profile
 fi
 
 #now add to profile
