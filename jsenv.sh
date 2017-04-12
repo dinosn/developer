@@ -1,6 +1,6 @@
 
 #this is the main env file which needs to be sourced for any action we do on our platform
-set -ex
+set -e
 
 if [ "$(uname)" == "Darwin" ]; then
     export LANG=C; export LC_ALL=C
@@ -58,19 +58,22 @@ fi
 
 
 #check profile file exists, if yes modify
-if [ -e ~/.profile ] ; then
+if [ ! -e $HOMEDIR/.bash_profile ] ; then
+    touch $HOMEDIR/.bash_profile
+else
     #make a 1time backup
-    if [ ! -e "$HOMEDIR/.profile.bak" ]; then
-        cp $HOMEDIR/.profile $HOMEDIR/.profile.bak
+    if [ ! -e "$HOMEDIR/.bash_profile.bak" ]; then
+        cp $HOMEDIR/.bash_profile  $HOMEDIR/.bash_profile.bak
     fi
-    set -e
-    sed  '/export SSHKEYNAME/d'  ~/.profile > ~/.profile2
-    mv ~/.profile2 ~/.profile
-    sed  '/jsenv.sh/d'  ~/.profile > ~/.profile2
-    mv ~/.profile2 ~/.profile
-    echo export SSHKEYNAME=$SSHKEYNAME >> ~/.profile
-    echo source ~/jsenv.sh >> ~/.profile
 fi
+
+set -e
+sed  '/export SSHKEYNAME/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
+mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
+sed  '/jsenv.sh/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
+mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
+echo export SSHKEYNAME=$SSHKEYNAME >> $HOMEDIR/.bash_profile
+echo source ~/jsenv.sh >> $HOMEDIR/.bash_profile
 
 #now add to profile
 
