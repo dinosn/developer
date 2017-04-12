@@ -1,6 +1,6 @@
 
 #this is the main env file which needs to be sourced for any action we do on our platform
-set -ex
+set -e
 
 if [ "$(uname)" == "Darwin" ]; then
     export LANG=C; export LC_ALL=C
@@ -27,8 +27,8 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval `ssh-agent`
 fi
 
-echo "KEYNAME:$SSHKEYNAME"
-if [ -z $SSHKEYNAME]; then
+# echo "KEYNAME:$SSHKEYNAME"
+if [ -z $SSHKEYNAME ]; then
     SSHKEYNAME=SOMETHINGWHICHWILLNOTMATCH
 else
     #trim the sshkeyname
@@ -48,7 +48,7 @@ keyexists=$(ssh-add -l| grep $SSHKEYNAME)
 #check exit code if not 0 then means key did not exist
 if [ $? -eq 0 ]; then
     set -e
-    echo "KEY $SSHKEYNAME was loaded"
+    echo "KEY $SSHKEYNAME is loaded"
 else
     set -e
     echo "will now try to load sshkey: $HOMEDIR/.ssh/$SSHKEYNAME"
@@ -77,3 +77,5 @@ fi
 export DATADIR=$HOMEDIR/data
 export CODEDIR=$HOMEDIR/code
 export CFGDIR=$HOMEDIR/cfg
+
+set +e

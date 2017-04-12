@@ -6,13 +6,13 @@
 ## init
 
 ```
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/init.sh?$RANDOM | sh
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM | sh
 ```
 
 ## install
 
 ```
-#MAKE SURE YOU SELECT YOUR KEY NAME, if not selected will look for 
+#MAKE SURE YOU SELECT YOUR KEY NAME, if not selected will look for
 export SSHKEYNAME='ovh_install'
 
 cd $TMPDIR;rm -f jsdeveloper.sh

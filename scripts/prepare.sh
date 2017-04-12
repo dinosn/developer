@@ -18,29 +18,31 @@ function clean_system {
 }
 
 function osx_install {
-    # set +ex
-    # brew unlink curl
-    # brew unlink python3
-    # brew unlink git
-    # set -ex
-    # brew install python3
-    # brew link --overwrite python3
-    # brew install git
-    # brew link --overwrite git
-    # brew install curl
-    # brew link --overwrite curl
-    # brew install snappy
-    sudo mkdir -p /optvar
-    sudo chown -R $USER /optvar
-    sudo mkdir -p /opt
-    sudo chown -R $USER /opt
+    echo ""
 }
 
+function ubuntu_install {
+    apt-get install git
+    apt-get install mc curl git ssh python3.5 -y
+    apt-get install python3-pip -y
+}
 
+function cygwin_install {
+    export LANG=C; export LC_ALL=C
+    lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg
+    install apt-cyg /bin
+    apt-cyg install curl
+    # apt-cyg install python3-dev
+    # apt-cyg install build-essential
+    # apt-cyg install openssl-devel
+    # apt-cyg install libffi-dev
+    # apt-cyg install python3
+    # apt-cyg install make
+    apt-cyg install unzip
+    apt-cyg install git
+}
 
 if [ "$(uname)" == "Darwin" ]; then
-    # Do something under Mac OS X platform
-    # echo 'install brew'
     export LANG=C; export LC_ALL=C
     osx_install
 
@@ -55,35 +57,20 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     dist=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
     if [ "$dist" == "Ubuntu" ]; then
         echo "found ubuntu"
-        apt-get install git
-        apt-get install mc curl git ssh python3.5 -y
-        apt-get install python3-pip -y
+        ubuntu_install
+    else
+        echo "unrecognized platform"
+        exit 1
     fi
 
 elif [ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]; then
-    # Do something under Windows NT platform
-    export LANG=C; export LC_ALL=C
-    lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg
-    install apt-cyg /bin
-    apt-cyg install curl
-    # apt-cyg install python3-dev
-    # apt-cyg install build-essential
-    # apt-cyg install openssl-devel
-    # apt-cyg install libffi-dev
-    # apt-cyg install python3
-    # apt-cyg install make
-    apt-cyg install unzip
-    apt-cyg install git
-
-    # ln -sf /usr/bin/python3 /usr/bin/python
-
+    cygwin_install
 fi
 
 clean_system
 
 # pip_install
 
-set -ex
-
+set +ex
 
 cd $STARTDIR

@@ -11,7 +11,7 @@ fi
 
 rm -rf /Users/despiegk/.ssh/known_hosts
 
-docker run --name js8 -h js8 -d -p 2222:22 -v ~/.ssh/$SSHKEYNAME.pub:/root/.ssh/authorized_keys -v /opt/code/:/opt/code/ -v ~/data/:/optvar/data macropin/sshd
+docker run --name js8 -h js8 -d -p 2222:22 -v ~/.ssh/$SSHKEYNAME.pub:/root/.ssh/authorized_keys -v $CODEDIR:/opt/code/ -v $DATADIR:/data macropin/sshd
 
 sleep 1
 
