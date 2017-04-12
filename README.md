@@ -44,3 +44,9 @@ ssh root@localhost -p 2222
 #remove all old dockers
 docker rm $(docker ps -a -q)
 ```
+
+### to remove homebrew and /opt on mac osx
+
+```
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/scripts/osx_reset_all.sh?$RANDOM > $TMPDIR/resetall.sh;bash $TMPDIR/resetall.sh
+```
