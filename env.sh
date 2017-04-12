@@ -1,7 +1,11 @@
 
 #this is the main env file which needs to be sourced for any action we do on our platform
 
-if grep -q Microsoft /proc/version; then
+if [ "$(uname)" == "Darwin" ]; then
+    export LANG=C; export LC_ALL=C
+    export HOMEDIR=~
+    export TMPDIR=$TMPDIR
+elif grep -q Microsoft /proc/version; then
     # Windows subsystem 4 linux
     WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
     WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
@@ -19,7 +23,7 @@ fi
 ###############################################################
 
 if [ -z "$SSH_AUTH_SOCK" ] ; then
-  eval `ssh-agent`  
+  eval `ssh-agent`
 fi
 
 if [ -e $HOMEDIR/.ssh/id_rsa.pub ]; then
@@ -36,4 +40,3 @@ ssh-add $HOMEDIR/.ssh/$SSHKEYNAME
 export DATADIR=$HOMEDIR/data
 export CODEDIR=$HOMEDIR/code
 export CFGDIR=$HOMEDIR/cfg
-
