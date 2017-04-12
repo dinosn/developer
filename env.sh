@@ -60,7 +60,7 @@ fi
 #check profile file exists, if yes modify
 if [ -e ~/.profile ] ; then
     sed  '/export SSHKEYNAME/d'  ~/.profile > ~/.profile2;mv ~/.profile2 ~/.profile
-    sed  '/source ~/env.sh'  ~/.profile > ~/.profile2;mv ~/.profile2 ~/.profile
+    sed  '/source ~\/env.sh/d'  ~/.profile > ~/.profile2;mv ~/.profile2 ~/.profile
     echo export SSHKEYNAME=$SSHKEYNAME >> ~/.profile
     echo source ~/env.sh >> ~/.profile
 fi
