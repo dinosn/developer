@@ -11,12 +11,6 @@ if [ "$(uname)" == "Darwin" ]; then
         curl -s https://gist.githubusercontent.com/lox/52f27919816a7eadb6d3/raw/uninstall_virtualbox.sh | bash
     fi
 
-    echo -n "Do you want to uninstall virtualbox (y/n)? "
-    read answer
-    if echo "$answer" | grep -iq "^y"; then
-        curl -s https://gist.githubusercontent.com/lox/52f27919816a7eadb6d3/raw/uninstall_virtualbox.sh | bash
-    fi
-
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
     sudo rm -rf ~/.homebrew
     sudo rm -rf ~/.rvm
