@@ -26,13 +26,14 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval `ssh-agent`
 fi
 
-if [ -e $HOMEDIR/.ssh/id_rsa.pub ]; then
-    export SSHKEYNAME='id_rsa'
-fi
 
 if [ -z "$SSHKEYNAME" ]; then
-    echo "Need to set SSHKEYNAME (through export SSHKEYNAME='mykey')"
-    exit 1
+    if [ -e $HOMEDIR/.ssh/id_rsa.pub ]; then
+        export SSHKEYNAME='id_rsa'
+    else
+        echo "Need to set SSHKEYNAME (through export SSHKEYNAME='mykey')"
+        exit 1
+    fi
 fi
 
 ssh-add $HOMEDIR/.ssh/$SSHKEYNAME
