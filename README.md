@@ -11,6 +11,8 @@ curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RAN
 
 ## install development env
 
+open a new console, this should make sure the env variables are set
+or do: source ~/jsenv.sh ;jsinstall
 ```
 jsinstall
 ```
