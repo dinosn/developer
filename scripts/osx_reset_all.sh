@@ -33,4 +33,4 @@ if [ "$(uname)" == "Darwin" ]; then
     sudo rm -rf ~/.cups
     sudo rm -rf /usr/local
    
- fi
+fi
