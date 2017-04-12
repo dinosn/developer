@@ -1,6 +1,6 @@
 
 #this is the main env file which needs to be sourced for any action we do on our platform
-set -e
+set -ex
 
 if [ "$(uname)" == "Darwin" ]; then
     export LANG=C; export LC_ALL=C
