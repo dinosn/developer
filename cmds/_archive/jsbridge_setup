@@ -1,0 +1,4 @@
+#!/bin/bash
+>sudo chown -R $USER  /private/var/lib/zerotier-one
+docker run --device=/dev/net/tun --net=host --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -d -v /private/var/lib/zerotier-one:/var/lib/zerotier-one --name zerotier-one zerotier/zerotier-containerized
+docker exec zerotier-one /zerotier-cli join 17d709436ca25251

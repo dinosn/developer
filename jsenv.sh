@@ -83,5 +83,4 @@ export CFGDIR=$HOMEDIR/cfg
 
 set +e
 
-export PS1="JS:\h:\w >\[$(tput sgr0)\]"
-
+export PS1="JS:\h:\w$\[$(tput sgr0)\]"

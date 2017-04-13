@@ -19,3 +19,5 @@ ssh root@localhost -p 2222 'apk update;apk add curl;apk add mc'
 
 #important to use local keys
 ssh -A root@localhost -p 2222 'cd $TMPDIR;rm -f install.sh;export JSBRANCH="8.2.0";curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh; bash install.sh'
+
+ssh -A root@localhost -p 2222 'echo "JSDEVELOPER WELCOME" > /etc/motd'
