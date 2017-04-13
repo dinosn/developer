@@ -14,6 +14,7 @@ function osx_install {
     fi
 
     set +ex
+    brew unlink curl
     brew unlink python3
     brew unlink git
     set -ex
@@ -21,7 +22,16 @@ function osx_install {
     brew link --overwrite python3
     brew install git
     brew link --overwrite git
+    brew install curl
+    brew link --overwrite curl
+
+    # brew install snappy
+    # sudo mkdir -p /optvar
+    # sudo chown -R $USER /optvar
+    # sudo mkdir -p /opt
+    # sudo chown -R $USER /opt
 }
+
 
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
