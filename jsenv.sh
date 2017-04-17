@@ -1,6 +1,6 @@
 
 #this is the main env file which needs to be sourced for any action we do on our platform
-set -ex
+set -e
 
 if [ "$(uname)" == "Darwin" ]; then
     export LANG=C; export LC_ALL=C
@@ -73,7 +73,7 @@ mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
 sed  '/jsenv.sh/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
 mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
 echo export SSHKEYNAME=$SSHKEYNAME >> $HOMEDIR/.bash_profile
-echo source ~/jsenv.sh >> $HOMEDIR/.bash_profile
+echo source ~/.jsenv.sh >> $HOMEDIR/.bash_profile
 
 #now add to profile
 

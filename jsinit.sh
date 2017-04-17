@@ -110,9 +110,9 @@ elif [ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]; then
 fi
 
 
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/jsenv.sh
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh
 
-source ~/jsenv.sh
+source  ~/.jsenv.sh
 
 mkdir -p $DATADIR
 mkdir -p $CODEDIR
