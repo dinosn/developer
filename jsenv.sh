@@ -77,9 +77,15 @@ echo source ~/jsenv.sh >> $HOMEDIR/.bash_profile
 
 #now add to profile
 
-export DATADIR=$HOMEDIR/data
-export CODEDIR=$HOMEDIR/code
-export CFGDIR=$HOMEDIR/cfg
+export TMPDIR="/tmp"
+export BASEDIR="$HOMEDIR/js9"
+export VARDIR="$BASEDIR/var"
+export CFGDIR="$VARDIR/cfg"
+export DATADIR="$VARDIR/data"
+export CODEDIR="$HOME/code"
+export BUILDDIR="$VARDIR/build"
+export LIBDIR="$BASEDIR/lib"
+export TEMPLATEDIR="$BASEDIR/templates"
 
 set +e
 
