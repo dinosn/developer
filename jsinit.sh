@@ -33,13 +33,81 @@ function osx_install {
 }
 
 
+function alpine_install {
+    apk add git
+    apk add curl
+    apk add python3
+    apk add tmux
+    # apk add wget
+    # apk add python3-dev
+    # apk add gcc
+    # apk add make
+    # apk add alpine-sdk
+    # apk add snappy-dev
+    # apk add py3-cffi
+    # apk add libffi
+    # apk add libffi-dev
+    # apk add openssl-dev
+    # apk add libexecinfo-dev
+    # apk add linux-headers
+    # apk add redis
+
+}
+
+function ubuntu_unstall {
+    locale-gen en_US.UTF-8
+    export LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    dist=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
+    if [ "$dist" == "Ubuntu" ]; then
+        echo "found ubuntu"
+        apt-get install git
+        apt-get install curl git ssh python3 -y
+        # apt-get install python3-pip -y
+        # apt-get install libssl-dev -y
+        # apt-get install python3-dev -y
+        # apt-get install build-essential -y
+        # apt-get install libffi-dev -y
+        # apt-get install libsnappy-dev libsnappy1v5 -y
+        rm -f /usr/bin/python
+        rm -f /usr/bin/python3
+        ln -s /usr/bin/python3.5 /usr/bin/python
+        ln -s /usr/bin/python3.5 /usr/bin/python3
+    else
+        echo "ONLY ALPINE & UBUNTU LINUX SUPPORTED"
+        exit 1
+    fi
+}
+
+function cygwin_install {
+    # Do something under Windows NT platform
+    export LANG=C; export LC_ALL=C
+    lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg
+    install apt-cyg /bin
+    apt-cyg install curl
+    # apt-cyg install python3-dev
+    # apt-cyg install build-essential
+    # apt-cyg install openssl-devel
+    # apt-cyg install libffi-dev
+    apt-cyg install python3
+    # apt-cyg install make
+    # apt-cyg install unzip
+    apt-cyg install git
+    ln -sf /usr/bin/python3 /usr/bin/python
+}
+
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
-    # echo 'install brew'
     export LANG=C; export LC_ALL=C
     osx_install
+elif [ -e /etc/alpine-release ]; then
+    alpine_install
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    # export LC_ALL='C.UTF-8'
+    ubuntu_unstall
+elif [ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]; then
+    cygwin_install
 fi
-
 
 
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/jsenv.sh
