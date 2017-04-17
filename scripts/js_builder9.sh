@@ -16,8 +16,9 @@ docker run --name js9 -h js9 -d -p 2223:22 -v ~/.ssh/$SSHKEYNAME.pub:/root/.ssh/
 sleep 1
 
 ssh root@localhost -p 2223 'apk update;apk add curl;apk add mc'
+ssh root@localhost -p 2223 'pip3 install -e /opt/code/github/jumpscale/core9'
 
 #important to use local keys
-ssh -A root@localhost -p 2223 'cd $TMPDIR;rm -f install.sh;export JSBRANCH="master";curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core9/$JSBRANCH/install/install.sh?$RANDOM > install.sh; bash install.sh'
+# ssh -A root@localhost -p 2223 'cd $TMPDIR;rm -f install.sh;export JSBRANCH="master";curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core9/$JSBRANCH/install/install.sh?$RANDOM > install.sh; bash install.sh'
 
 ssh -A root@localhost -p 2223 'echo "JS9 DEVELOPER WELCOME\n" > /etc/motd'

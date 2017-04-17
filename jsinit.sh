@@ -52,18 +52,33 @@ mkdir -p $CFGDIR
 
 rm -rf ~/.ssh/known_hosts
 
+mkdir -p $CODEDIR/github/jumpscale
+cd $CODEDIR/github/jumpscale
+
+
 if [ ! -e $CODEDIR/github/jumpscale/developer ]; then
-    mkdir -p $CODEDIR/github/jumpscale
-    cd $CODEDIR/github/jumpscale
     set +e
     git clone git@github.com:Jumpscale/developer.git
     if [ ! $? -eq 0 ]; then
         set -ex
         git clone https://github.com/Jumpscale/developer.git
     fi
-    set -ex
+    set +e
 else
     cd $CODEDIR/github/jumpscale/developer
+    git pull
+fi
+
+if [ ! -e $CODEDIR/github/jumpscale/core9 ]; then
+    set +e
+    git clone git@github.com:Jumpscale/core9.git
+    if [ ! $? -eq 0 ]; then
+        set -ex
+        git clone https://github.com/Jumpscale/core9.git
+    fi
+    set +e
+else
+    cd $CODEDIR/github/jumpscale/core9
     git pull
 fi
 
