@@ -82,6 +82,59 @@ else
     git pull
 fi
 
+if [ ! -e $CODEDIR/github/jumpscale/lib9 ]; then
+    set +e
+    git clone git@github.com:Jumpscale/lib9.git
+    if [ ! $? -eq 0 ]; then
+        set -ex
+        git clone https://github.com/Jumpscale/lib9.git
+    fi
+    set +e
+else
+    cd $CODEDIR/github/jumpscale/lib9
+    git pull
+fi
+
+if [ ! -e $CODEDIR/github/jumpscale/ays9 ]; then
+    set +e
+    git clone git@github.com:Jumpscale/ays9.git
+    if [ ! $? -eq 0 ]; then
+        set -ex
+        git clone https://github.com/Jumpscale/ays9.git
+    fi
+    set +e
+else
+    cd $CODEDIR/github/jumpscale/ays9
+    git pull
+fi
+
+if [ ! -e $CODEDIR/github/jumpscale/rsal9 ]; then
+    set +e
+    git clone git@github.com:Jumpscale/rsal9.git
+    if [ ! $? -eq 0 ]; then
+        set -ex
+        git clone https://github.com/Jumpscale/rsal9.git
+    fi
+    set +e
+else
+    cd $CODEDIR/github/jumpscale/rsal9
+    git pull
+fi
+
+if [ ! -e $CODEDIR/github/jumpscale/portal9 ]; then
+    set +e
+    git clone git@github.com:Jumpscale/portal9.git
+    if [ ! $? -eq 0 ]; then
+        set -ex
+        git clone https://github.com/Jumpscale/portal9.git
+    fi
+    set +e
+else
+    cd $CODEDIR/github/jumpscale/portal9
+    git pull
+fi
+
+
 #link all our command lines relevant to jumpscale development env
 rm -f /usr/local/bin/js*
 rm -rf /usr/local/bin/cmds
