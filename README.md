@@ -17,13 +17,21 @@ or do: source ~/jsenv.sh ;jsinstall
 jsinstall
 ```
 
-this will configure docker
+this will configure docker & install basic of jumpscale9
 
 ## to login into the development machine
 
 ```
 ssh root@localhost -p 2222
 ```
+
+## to start with shellcmds
+
+```bash
+python3 -c 'from JumpScale9 import j;from IPython import embed;embed()'
+```
+
+ - this will change, is just to get started
 
 ## recommended tools
 
