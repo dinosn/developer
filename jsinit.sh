@@ -69,10 +69,10 @@ function ubuntu_unstall {
         # apt-get install build-essential -y
         # apt-get install libffi-dev -y
         # apt-get install libsnappy-dev libsnappy1v5 -y
-        rm -f /usr/bin/python
-        rm -f /usr/bin/python3
-        ln -s /usr/bin/python3.5 /usr/bin/python
-        ln -s /usr/bin/python3.5 /usr/bin/python3
+        # rm -f /usr/bin/python
+        # rm -f /usr/bin/python3
+        # ln -s /usr/bin/python3.5 /usr/bin/python
+        # ln -s /usr/bin/python3.5 /usr/bin/python3
     else
         echo "ONLY ALPINE & UBUNTU LINUX SUPPORTED"
         exit 1

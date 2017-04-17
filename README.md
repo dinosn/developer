@@ -35,7 +35,7 @@ python3 -c 'from JumpScale9 import j;from IPython import embed;embed()'
 
 ## recommended tools
 
-- all jumpscale code is checked out under /opt/code
+- all jumpscale code is checked out under /opt/code in development env or in ~/code/...
 - use a ide like atom for development on this code, sourcetree is a good tool for git manipulation
 - over ssh you can play with the code in the docker
 - to push changes to a remote host (remote development) use j.tools.develop...
