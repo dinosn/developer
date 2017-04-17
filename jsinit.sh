@@ -208,3 +208,5 @@ rm -f /usr/local/bin/js*
 rm -rf /usr/local/bin/cmds
 find  $CODEDIR/github/jumpscale/developer/cmds -exec ln -s {} "/usr/local/bin/" \;
 rm -rf /usr/local/bin/cmds
+find  $CODEDIR/github/jumpscale/core9/cmds -exec ln -s {} "/usr/local/bin/" \;
+rm -rf /usr/local/bin/cmds
