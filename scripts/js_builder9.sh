@@ -20,7 +20,6 @@ ssh root@localhost -p 2223 'cd $TMPDIR;rm -rf get-pip.py;curl -k https://bootstr
 ssh root@localhost -p 2223 'pip3 install --upgrade pip'
 ssh root@localhost -p 2223 'pip3 install -e /opt/code/github/jumpscale/core9 --upgrade'
 
-#important to use local keys
-# ssh -A root@localhost -p 2223 'cd $TMPDIR;rm -f install.sh;export JSBRANCH="master";curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core9/$JSBRANCH/install/install.sh?$RANDOM > install.sh; bash install.sh'
+ssh root@localhost -p 2223 'python3 -c "from JumpScale9 import j"'
 
 ssh -A root@localhost -p 2223 'echo "JS9 DEVELOPER WELCOME." > /etc/motd'
