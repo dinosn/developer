@@ -7,7 +7,7 @@ function valid () {
   fi
 }
 
-if (( `docker ps | grep js8 | wc -l` > 0 )); then
+if (( `docker ps -a | grep js8 | wc -l` > 0 )); then
   echo "Cleaning up existing container instance"
   docker rm --force js8 > /tmp/lastcommandoutput.txt 2>&1
   valid
@@ -40,6 +40,11 @@ if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
   OPTVAR=c:/Users/${WINDOWSUSERNAME}/optvar
   OPT=c:/Users/${WINDOWSUSERNAME}/opt
+fi
+
+if [ -e /var/lib/zerotier-one ]; then
+  mkdir -p /var/lib/zerotier-one  > /tmp/lastcommandoutput.txt 2>&1
+  valid
 fi
 
 echo "Starting docker container"
