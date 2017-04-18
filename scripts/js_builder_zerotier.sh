@@ -32,8 +32,10 @@ else
   OPTVAR=/optvar
   OPT=/opt
 fi
-mkdir -p ${OPTVAR}/data
-mkdir -p ${OPT}/data
+mkdir -p ${OPTVAR}/data > /tmp/lastcommandoutput.txt 2>&1
+valid
+mkdir -p ${OPT}/data > /tmp/lastcommandoutput.txt 2>&1
+valid
 if grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
   OPTVAR=c:/Users/${WINDOWSUSERNAME}/optvar
