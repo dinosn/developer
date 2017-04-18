@@ -7,9 +7,11 @@ function valid () {
   fi
 }
 
-echo "Cleaning up existing container instance"
-docker rm --force js8 > /tmp/lastcommandoutput.txt 2>&1
-valid
+if (( `docker ps | grep js8 | wc -l` > 0 )); then
+  echo "Cleaning up existing container instance"
+  docker rm --force js8 > /tmp/lastcommandoutput.txt 2>&1
+  valid
+fi
 
 if [ "$1" ]; then
   ZEROTIERNWID=$1
