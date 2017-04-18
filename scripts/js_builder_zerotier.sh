@@ -34,7 +34,7 @@ else
 fi
 mkdir -p ${OPTVAR}/data > /tmp/lastcommandoutput.txt 2>&1
 valid
-mkdir -p ${OPT}/data > /tmp/lastcommandoutput.txt 2>&1
+mkdir -p ${OPT}/code > /tmp/lastcommandoutput.txt 2>&1
 valid
 if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
