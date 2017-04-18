@@ -36,20 +36,17 @@ mkdir -p ${OPTVAR}/data > /tmp/lastcommandoutput.txt 2>&1
 valid
 mkdir -p ${OPT}/code > /tmp/lastcommandoutput.txt 2>&1
 valid
+mkdir -p /optvar/zerotier-one  > /tmp/lastcommandoutput.txt 2>&1
+valid
 if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
   OPTVAR=c:/Users/${WINDOWSUSERNAME}/optvar
   OPT=c:/Users/${WINDOWSUSERNAME}/opt
 fi
 
-if [ -e /var/lib/zerotier-one ]; then
-  mkdir -p /var/lib/zerotier-one  > /tmp/lastcommandoutput.txt 2>&1
-  valid
-fi
-
 echo "Starting docker container"
 #docker run --name js8 -d --device=/dev/net/tun --cap-add=NET_ADMIN --net=host --cap-add=SYS_ADMIN -v /var/lib/zerotier-one:/var/lib/zerotier-one -v ${OPT}/code/:/opt/code/ -v ${OPTVAR}/data/:/optvar/data zerotier/zerotier-containerized > /tmp/lastcommandoutput.txt 2>&1
-docker run --name js8 -h js8 -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v /var/lib/zerotier-one:/var/lib/zerotier-one -v ${OPT}/code/:/opt/code/ -v ${OPTVAR}/data/:/optvar/data zerotier/zerotier-containerized > /tmp/lastcommandoutput.txt 2>&1
+docker run --name js8 -h js8 -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v /optvar/zerotier-one/:/var/lib/zerotier-one/ -v ${OPT}/code/:/opt/code/ -v ${OPTVAR}/data/:/optvar/data zerotier/zerotier-containerized > /tmp/lastcommandoutput.txt 2>&1
 valid
 
 echo "Joining zerotier network"
