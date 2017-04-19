@@ -36,7 +36,7 @@ mkdir -p ${OPTVAR}/data > /tmp/lastcommandoutput.txt 2>&1
 valid
 mkdir -p ${OPT}/code > /tmp/lastcommandoutput.txt 2>&1
 valid
-mkdir -p /optvar/zerotier-one  > /tmp/lastcommandoutput.txt 2>&1
+mkdir -p ${OPTVAR}/zerotier-one  > /tmp/lastcommandoutput.txt 2>&1
 valid
 if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
@@ -45,17 +45,17 @@ if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
 fi
 
 echo "Starting docker container"
-#docker run --name js8 -d --device=/dev/net/tun --cap-add=NET_ADMIN --net=host --cap-add=SYS_ADMIN -v /var/lib/zerotier-one:/var/lib/zerotier-one -v ${OPT}/code/:/opt/code/ -v ${OPTVAR}/data/:/optvar/data zerotier/zerotier-containerized > /tmp/lastcommandoutput.txt 2>&1
-docker run --name js8 -h js8 -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v /optvar/zerotier-one/:/var/lib/zerotier-one/ -v ${OPT}/code/:/opt/code/ -v ${OPTVAR}/data/:/optvar/data zerotier/zerotier-containerized > /tmp/lastcommandoutput.txt 2>&1
+docker run --name js8 -h js8 -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${OPTVAR}/zerotier-one/:/var/lib/zerotier-one/ -v ${OPT}/code/:/opt/code/ -v ${OPTVAR}/data/:/optvar/data zerotier/zerotier-containerized > /tmp/lastcommandoutput.txt 2>&1
 valid
 
 echo "Joining zerotier network"
 docker exec -it js8 /bin/sh -c "/zerotier-cli join ${ZEROTIERNWID}" > /tmp/lastcommandoutput.txt 2>&1
 valid
-echo "Waiting for ip in zerotier network (do not forget to allow the container in your network) ..."
+echo "Waiting for ip in zerotier network (do not forget to allow the container in your network, and make sure auto assign ip is enabled) ..."
 while :
 do
-  ZEROTIERIP=`docker exec -it js8 ip -4 addr show zt0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'`
+  sleep 1
+  ZEROTIERIP=`docker exec -it js8 /bin/sh -c "ip -4 addr show zt0 | grep -oE 'inet\s\d+(\.\d+){3}' | sed 's/inet //'"`
   if [ "${ZEROTIERIP}" ]; then
     echo "Container zerotier ip = ${ZEROTIERIP}"
     break
@@ -105,7 +105,6 @@ echo "alias js='docker exec -it js8 js'" >> ~/.bashrc
 echo "alias ays='docker exec -it js8 ays'" >> ~/.bashrc
 echo "alias jsbash='docker exec -it js8 bash'" >> ~/.bashrc
 
-ZEROTIERIP=`docker exec -it js8 ip -4 addr show zt0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'`
 echo
 echo "Congratulations, your docker based jumpscale installation is ready!"
 echo "Sandbox is present in the zerotier network ${ZEROTIERNWID} with ip: ${ZEROTIERIP}"
