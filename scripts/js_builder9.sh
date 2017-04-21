@@ -31,7 +31,7 @@ if [ -z $1 ]; then
     # exit 1
     echo
     echo "WARNING: WILL NOT USE A ZEROTIER CONNECTION !"
-    echo "If you want to use zerotier do: js_builder9.sh <ZEROTIERNWID>"
+    echo "If you want to use zerotier do: jsinstall <ZEROTIERNWID>"
     echo
     ZEROTIERNWID=$1
 else
