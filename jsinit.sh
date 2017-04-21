@@ -205,6 +205,12 @@ function getcode2 {
 
 ########MAIN BLOCK#############
 
+sudo echo "* get mascot"
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > ~/.mascot.txt
+valid
+clear
+cat ~/.mascot.txt
+echo 
 
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
@@ -223,8 +229,11 @@ elif [ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]; then
 fi
 
 sudo echo "* get gig environment script"
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh  > /tmp/lastcommandoutput.txt 2>&1
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh
 valid
+
+
+
 
 echo "* include the gig environment script"
 source  ~/.jsenv.sh
