@@ -146,6 +146,7 @@ docker exec -t js9 /bin/sh -c 'pip3 install -e /opt/code/github/jumpscale/core9 
 valid
 
 echo "* first init of js9"
+docker exec -t js9 /bin/sh -c 'python3 -c "from JumpScale import j"' > /tmp/lastcommandoutput.txt 2>&1 #need to do it twice, ignore error first time
 docker exec -t js9 /bin/sh -c 'python3 -c "from JumpScale import j"' > /tmp/lastcommandoutput.txt 2>&1
 valid
 
