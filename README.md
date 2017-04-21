@@ -6,6 +6,8 @@
 
 to see an install [screencast](http://showterm.io/5a87e36aee35b5b765b20#fast){:target="_blank"}
 
+<a href="http://showterm.io/5a87e36aee35b5b765b20#fast target="_blank">example</a>
+
 ## init
 
 ```
