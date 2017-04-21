@@ -1,10 +1,9 @@
-set -ex
+set -e
 
 if ! type "curl" > /dev/null; then
   echo "curl is not installed, please install"
   exit 1
 fi
-
 
 function osx_install {
 
@@ -96,117 +95,145 @@ function cygwin_install {
     ln -sf /usr/bin/python3 /usr/bin/python
 }
 
+function getcode {
+
+    cd $CODEDIR/github/jumpscale
+
+    if [ ! -e $CODEDIR/github/jumpscale/developer ]; then
+        set +e
+        git clone git@github.com:Jumpscale/developer.git
+        if [ ! $? -eq 0 ]; then
+            set -ex
+            git clone https://github.com/Jumpscale/developer.git
+        fi
+        set +e
+    else
+        cd $CODEDIR/github/jumpscale/developer
+        git pull
+    fi
+
+    if [ ! -e $CODEDIR/github/jumpscale/core9 ]; then
+        set +e
+        git clone git@github.com:Jumpscale/core9.git
+        if [ ! $? -eq 0 ]; then
+            set -ex
+            git clone https://github.com/Jumpscale/core9.git
+        fi
+        set +e
+    else
+        cd $CODEDIR/github/jumpscale/core9
+        git pull
+    fi
+}
+
+function getcode2 {
+    if [ ! -e $CODEDIR/github/jumpscale/lib9 ]; then
+        set +e
+        git clone git@github.com:Jumpscale/lib9.git
+        if [ ! $? -eq 0 ]; then
+            set -ex
+            git clone https://github.com/Jumpscale/lib9.git
+        fi
+        set +e
+    else
+        cd $CODEDIR/github/jumpscale/lib9
+        git pull
+    fi
+
+    if [ ! -e $CODEDIR/github/jumpscale/ays9 ]; then
+        set +e
+        git clone git@github.com:Jumpscale/ays9.git
+        if [ ! $? -eq 0 ]; then
+            set -ex
+            git clone https://github.com/Jumpscale/ays9.git
+        fi
+        set +e
+    else
+        cd $CODEDIR/github/jumpscale/ays9
+        git pull
+    fi
+
+    if [ ! -e $CODEDIR/github/jumpscale/rsal9 ]; then
+        set +e
+        git clone git@github.com:Jumpscale/rsal9.git
+        if [ ! $? -eq 0 ]; then
+            set -ex
+            git clone https://github.com/Jumpscale/rsal9.git
+        fi
+        set +e
+    else
+        cd $CODEDIR/github/jumpscale/rsal9
+        git pull
+    fi
+
+    if [ ! -e $CODEDIR/github/jumpscale/portal9 ]; then
+        set +e
+        git clone git@github.com:Jumpscale/portal9.git
+        if [ ! $? -eq 0 ]; then
+            set -ex
+            git clone https://github.com/Jumpscale/portal9.git
+        fi
+        set +e
+    else
+        cd $CODEDIR/github/jumpscale/portal9
+        git pull
+    fi
+}
+
+########MAIN BLOCK#############
+
+
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
+    echo "* INSTALL homebrew, curl, python, git"
     export LANG=C; export LC_ALL=C
-    osx_install
+    osx_install  > /tmp/lastcommandoutput.txt 2>&1
+    valid
 elif [ -e /etc/alpine-release ]; then
+    echo "* INSTALL curl, python, git"  
     alpine_install
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     # export LC_ALL='C.UTF-8'
-    ubuntu_unstall
+    echo "* INSTALL curl, python, git"
+    ubuntu_unstall  > /tmp/lastcommandoutput.txt 2>&1
+    valid
 elif [ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]; then
-    cygwin_install
+    cygwin_install  > /tmp/lastcommandoutput.txt 2>&1
+    valid
 fi
 
+echo "* done"
 
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh
+echo "* get gig environment script"
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh  > /tmp/lastcommandoutput.txt 2>&1
+valid
 
+echo "* include the gig environment script"
 source  ~/.jsenv.sh
 
-mkdir -p $DATADIR
-mkdir -p $CODEDIR
-mkdir -p $CFGDIR
-
+echo "* create dir's"
+mkdir -p $DATADIR > /tmp/lastcommandoutput.txt 2>&1
+valid
+mkdir -p $CODEDIR/github/jumpscale > /tmp/lastcommandoutput.txt 2>&1
+valid
+mkdir -p $CFGDIR > /tmp/lastcommandoutput.txt 2>&1
+valid
 rm -rf ~/.ssh/known_hosts
 
-mkdir -p $CODEDIR/github/jumpscale
-cd $CODEDIR/github/jumpscale
+echo "* get core code for development scripts & jumpscale core"
+getcode > /tmp/lastcommandoutput.txt 2>&1
+valid
 
+function linkcode {
+    echo "* link commands to local environment"
+    #link all our command lines relevant to jumpscale development env
+    rm -f /usr/local/bin/js*
+    rm -rf /usr/local/bin/cmds
+    find  $CODEDIR/github/jumpscale/developer/cmds -exec ln -s {} "/usr/local/bin/" \;
+    rm -rf /usr/local/bin/cmds
+    find  $CODEDIR/github/jumpscale/core9/cmds -exec ln -s {} "/usr/local/bin/" \;
+    rm -rf /usr/local/bin/cmds
+}
 
-if [ ! -e $CODEDIR/github/jumpscale/developer ]; then
-    set +e
-    git clone git@github.com:Jumpscale/developer.git
-    if [ ! $? -eq 0 ]; then
-        set -ex
-        git clone https://github.com/Jumpscale/developer.git
-    fi
-    set +e
-else
-    cd $CODEDIR/github/jumpscale/developer
-    git pull
-fi
-
-if [ ! -e $CODEDIR/github/jumpscale/core9 ]; then
-    set +e
-    git clone git@github.com:Jumpscale/core9.git
-    if [ ! $? -eq 0 ]; then
-        set -ex
-        git clone https://github.com/Jumpscale/core9.git
-    fi
-    set +e
-else
-    cd $CODEDIR/github/jumpscale/core9
-    git pull
-fi
-
-if [ ! -e $CODEDIR/github/jumpscale/lib9 ]; then
-    set +e
-    git clone git@github.com:Jumpscale/lib9.git
-    if [ ! $? -eq 0 ]; then
-        set -ex
-        git clone https://github.com/Jumpscale/lib9.git
-    fi
-    set +e
-else
-    cd $CODEDIR/github/jumpscale/lib9
-    git pull
-fi
-
-if [ ! -e $CODEDIR/github/jumpscale/ays9 ]; then
-    set +e
-    git clone git@github.com:Jumpscale/ays9.git
-    if [ ! $? -eq 0 ]; then
-        set -ex
-        git clone https://github.com/Jumpscale/ays9.git
-    fi
-    set +e
-else
-    cd $CODEDIR/github/jumpscale/ays9
-    git pull
-fi
-
-if [ ! -e $CODEDIR/github/jumpscale/rsal9 ]; then
-    set +e
-    git clone git@github.com:Jumpscale/rsal9.git
-    if [ ! $? -eq 0 ]; then
-        set -ex
-        git clone https://github.com/Jumpscale/rsal9.git
-    fi
-    set +e
-else
-    cd $CODEDIR/github/jumpscale/rsal9
-    git pull
-fi
-
-if [ ! -e $CODEDIR/github/jumpscale/portal9 ]; then
-    set +e
-    git clone git@github.com:Jumpscale/portal9.git
-    if [ ! $? -eq 0 ]; then
-        set -ex
-        git clone https://github.com/Jumpscale/portal9.git
-    fi
-    set +e
-else
-    cd $CODEDIR/github/jumpscale/portal9
-    git pull
-fi
-
-
-#link all our command lines relevant to jumpscale development env
-rm -f /usr/local/bin/js*
-rm -rf /usr/local/bin/cmds
-find  $CODEDIR/github/jumpscale/developer/cmds -exec ln -s {} "/usr/local/bin/" \;
-rm -rf /usr/local/bin/cmds
-find  $CODEDIR/github/jumpscale/core9/cmds -exec ln -s {} "/usr/local/bin/" \;
-rm -rf /usr/local/bin/cmds
+linkcode > /tmp/lastcommandoutput.txt 2>&1
+valid
