@@ -16,7 +16,7 @@ function osx_install {
     brew unlink curl   > /tmp/lastcommandoutput.txt 2>&1
     brew unlink python3  > /tmp/lastcommandoutput.txt 2>&1
     brew unlink git  > /tmp/lastcommandoutput.txt 2>&1
-    set -ex
+    set -e
     brew install python3  > /tmp/lastcommandoutput.txt 2>&1
     valid    
     brew link --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
