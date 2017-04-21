@@ -73,7 +73,7 @@ keyexists=$(ssh-add -l| grep $SSHKEYNAME)
 #check exit code if not 0 then means key did not exist
 if [ $? -eq 0 ]; then
     set -e
-    echo " sshkey $SSHKEYNAME is loaded."
+    echo "                                                                                       sshkey $SSHKEYNAME loaded."
 else
     set -e
     echo "will now try to load sshkey: $HOMEDIR/.ssh/$SSHKEYNAME"
