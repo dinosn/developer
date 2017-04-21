@@ -6,18 +6,19 @@ if ! type "curl" > /dev/null; then
 fi
 
 function osx_install {
-    sudo echo "* Install Brew"
+    
     if ! type "brew" > /dev/null; then
-      echo "  brew is not installed, will install"
+      sudo echo "* Install Brew"
       yes '' | /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
     set +e
+    sudo echo "* Unlink curl/python/git"
     brew unlink curl   > /tmp/lastcommandoutput.txt 2>&1
     brew unlink python3  > /tmp/lastcommandoutput.txt 2>&1
     brew unlink git  > /tmp/lastcommandoutput.txt 2>&1
     set -e
-    brew install python3  > /tmp/lastcommandoutput.txt 2>&1
+    brew install --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
     valid    
     brew link --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
     valid    
