@@ -2,19 +2,39 @@
 #this is the main env file which needs to be sourced for any action we do on our platform
 set -e
 
+function valid () {
+  if [ $? -ne 0 ]; then
+      cat /tmp/lastcommandoutput.txt
+      if [ -z $1 ]; then
+        echo "Error in last step"
+      else
+        echo $1
+      fi
+      exit $?
+  fi
+}
+
+if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
+  # Windows subsystem 4 linux
+  WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
+  WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
+  GIGHOME=/mnt/c/Users/${WINDOWSUSERNAME}/gig
+else
+  # Native Linux or MacOSX
+  GIGHOME=~/gig
+fi
+
 if [ "$(uname)" == "Darwin" ]; then
     export LANG=C; export LC_ALL=C
     export HOMEDIR=~
-    export TMPDIR=$TMPDIR
 elif grep -q Microsoft /proc/version; then
-    # Windows subsystem 4 linux
-    WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
-    WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
-    export HOMEDIR=/mnt/c/Users/${WINDOWSUSERNAME}
+      # Windows subsystem 4 linux
+      WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
+      WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
+      GIGHOME=/mnt/c/Users/${WINDOWSUSERNAME}/gig
 else
     # Native Linux or MacOSX
-    export HOMEDIR=~
-    export TMPDIR=$TMPDIR
+    export GIGHOME=~/gig
 fi
 
 #can overrule if you want
@@ -37,10 +57,9 @@ fi
 
 while [ ! -e "$HOMEDIR/.ssh/$SSHKEYNAME" ]
 do
-    echo "please give name of ssh key to load, if not generate yet do so."
+    echo "please give name of ssh key to load, if not generate one."
     read -p 'SSHKEYNAME: ' SSHKEYNAME
     echo "check keypath '$HOMEDIR/.ssh/$SSHKEYNAME' exists"
-
 done
 
 set +e
@@ -78,15 +97,15 @@ echo source ~/.jsenv.sh >> $HOMEDIR/.bash_profile
 #now add to profile
 
 export TMPDIR="/tmp"
-export BASEDIR="$HOMEDIR/js9"
-export VARDIR="$BASEDIR/var"
-export CFGDIR="$VARDIR/cfg"
-export DATADIR="$VARDIR/data"
-export CODEDIR="$HOMEDIR/code"
+export BASEDIR="$GIGHOME/js9"
+export VARDIR="$GIGHOME/var"
+export CFGDIR="$GIGHOME/cfg"
+export DATADIR="$GIGHOME/data"
+export CODEDIR="$GIGHOME/code"
 export BUILDDIR="$VARDIR/build"
 export LIBDIR="$BASEDIR/lib"
-export TEMPLATEDIR="$BASEDIR/templates"
+export TEMPLATEDIR="$GIGHOME/templates"
 
 set +e
 
-export PS1="JS:\h:\w$\[$(tput sgr0)\]"
+export PS1="gig:\h:\w$\[$(tput sgr0)\]"
