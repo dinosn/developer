@@ -4,11 +4,15 @@
 - please use this development environment to play & develop with jumpscale 9
 - it uses docker and the goal is to get it to work on ubuntu, windows & osx
 
+to see an install [screencast](http://showterm.io/5a87e36aee35b5b765b20#fast)
+
 ## init
 
 ```
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > $TMPDIR/jsinstall.sh; sh $TMPDIR/jsinstall.sh
 ```
+
+
 
 ## Jumpscale 8.2 development env
 
