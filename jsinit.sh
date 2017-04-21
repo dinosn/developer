@@ -31,14 +31,17 @@ function osx_install {
     brew unlink python3  > /tmp/lastcommandoutput.txt 2>&1
     brew unlink git  > /tmp/lastcommandoutput.txt 2>&1
     set -e
+    sudo echo "* Install Python"
     brew install --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
     valid    
     brew link --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
     valid    
+    sudo echo "* Install Git"    
     brew install git  > /tmp/lastcommandoutput.txt 2>&1
     valid    
     brew link --overwrite git  > /tmp/lastcommandoutput.txt 2>&1
     valid    
+    sudo echo "* Install Curl"        
     brew install curl  > /tmp/lastcommandoutput.txt 2>&1
     valid    
     brew link --overwrite curl  > /tmp/lastcommandoutput.txt 2>&1
@@ -219,9 +222,7 @@ elif [ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]; then
     cygwin_install
 fi
 
-echo "* done"
-
-echo "* get gig environment script"
+sudo echo "* get gig environment script"
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh  > /tmp/lastcommandoutput.txt 2>&1
 valid
 
