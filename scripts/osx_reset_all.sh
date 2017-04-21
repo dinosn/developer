@@ -18,7 +18,7 @@ if [ "$(uname)" == "Darwin" ]; then
     sudo rm -rf /optvar
     sudo rm -rf ~/data
     sudo rm -rf ~/code
-    sudo rm -rf ~/opta
+    sudo rm -rf ~/opt
     sudo rm -rf ~/optvar
     sudo rm -rf ~/tmp
     sudo rm -rf ~/.npm
