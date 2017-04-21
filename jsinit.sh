@@ -1,5 +1,5 @@
 set -e
-
+clear
 if ! type "curl" > /dev/null; then
   echo "curl is not installed, please install"
   exit 1
@@ -8,21 +8,27 @@ fi
 function osx_install {
 
     if ! type "brew" > /dev/null; then
-      echo "brew is not installed, will install"
-      /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      echo "  brew is not installed, will install"
+      yes '' | /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
-    set +ex
-    brew unlink curl
-    brew unlink python3
-    brew unlink git
+    set +e
+    brew unlink curl   > /tmp/lastcommandoutput.txt 2>&1
+    brew unlink python3  > /tmp/lastcommandoutput.txt 2>&1
+    brew unlink git  > /tmp/lastcommandoutput.txt 2>&1
     set -ex
-    brew install python3
-    brew link --overwrite python3
-    brew install git
-    brew link --overwrite git
-    brew install curl
-    brew link --overwrite curl
+    brew install python3  > /tmp/lastcommandoutput.txt 2>&1
+    valid    
+    brew link --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
+    valid    
+    brew install git  > /tmp/lastcommandoutput.txt 2>&1
+    valid    
+    brew link --overwrite git  > /tmp/lastcommandoutput.txt 2>&1
+    valid    
+    brew install curl  > /tmp/lastcommandoutput.txt 2>&1
+    valid    
+    brew link --overwrite curl  > /tmp/lastcommandoutput.txt 2>&1
+    valid    
 
     # brew install snappy
     # sudo mkdir -p /optvar
@@ -33,10 +39,10 @@ function osx_install {
 
 
 function alpine_install {
-    apk add git
-    apk add curl
-    apk add python3
-    apk add tmux
+    apk add git  > /tmp/lastcommandoutput.txt 2>&1
+    apk add curl  > /tmp/lastcommandoutput.txt 2>&1
+    apk add python3  > /tmp/lastcommandoutput.txt 2>&1
+    apk add tmux  > /tmp/lastcommandoutput.txt 2>&1
     # apk add wget
     # apk add python3-dev
     # apk add gcc
@@ -187,19 +193,16 @@ if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
     echo "* INSTALL homebrew, curl, python, git"
     export LANG=C; export LC_ALL=C
-    osx_install  > /tmp/lastcommandoutput.txt 2>&1
-    valid
+    osx_install
 elif [ -e /etc/alpine-release ]; then
     echo "* INSTALL curl, python, git"  
     alpine_install
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     # export LC_ALL='C.UTF-8'
     echo "* INSTALL curl, python, git"
-    ubuntu_unstall  > /tmp/lastcommandoutput.txt 2>&1
-    valid
+    ubuntu_unstall
 elif [ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]; then
-    cygwin_install  > /tmp/lastcommandoutput.txt 2>&1
-    valid
+    cygwin_install
 fi
 
 echo "* done"
