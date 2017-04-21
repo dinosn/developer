@@ -2,15 +2,43 @@
 
 function valid () {
   if [ $? -ne 0 ]; then
-      cat /tmp/lastcommandoutput.txt
       if [ -z $1 ]; then
-        echo "Error in last step"
+        echo
+        echo
+        echo "Error in last step (see * ... above)"
+        echo
       else
+        echo
+        echo
+        echo "Error in last step (see * ... above):"
         echo $1
+        echo
       fi
+      cat /tmp/lastcommandoutput.txt
       exit $?
   fi
 }
+
+clear
+cat ~/.mascot.txt
+
+
+if [ -z $1 ]; then
+    # echo "Usage: js_builder9.sh <ZEROTIERNWID>"
+    # echo
+    # echo "  ZEROTIERNWID: The zerotier network in which the jumpscale should join."
+    # echo
+    # exit 1
+    echo
+    echo "WARNING: WILL NOT USE A ZEROTIER CONNECTION !"
+    echo "If you want to use zerotier do: js_builder9.sh <ZEROTIERNWID>"
+    echo
+    ZEROTIERNWID=$1
+else
+    echo "* Create zerotier-one dir."
+    mkdir -p ${GIGHOME}/zerotier-one > /tmp/lastcommandoutput.txt 2>&1
+    valid
+fi
 
 function cleanup {
     if (( `docker ps -a | grep js9 | wc -l` > 0 )); then
@@ -20,16 +48,6 @@ function cleanup {
     fi
 }
 cleanup
-
-if [ -z $1 ]; then
-  echo "Usage: js_builder9.sh <ZEROTIERNWID>"
-  echo
-  echo "  ZEROTIERNWID: The zerotier network in which the jumpscale should join."
-  echo
-  exit 1
-fi
-ZEROTIERNWID=$1
-
 
 if [ -z "$SSHKEYNAME" ]; then
     echo "Need to set SSHKEYNAME (through export SSHKEYNAME='mykey')"
@@ -50,9 +68,7 @@ fi
 
 rm -rf ~/.ssh/known_hosts
 
-echo "* Create zerotier-one dir."
-mkdir -p ${GIGHOME}/zerotier-one > /tmp/lastcommandoutput.txt 2>&1
-valid
+
 
 echo "* Starting docker container"
 docker run --name js9 -h js9 -d -p 2223:22 --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGHOME}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGHOME}/code/:/opt/code/ -v ${GIGHOME}/data/:/data zerotier/zerotier-containerized > /tmp/lastcommandoutput.txt 2>&1
@@ -63,10 +79,9 @@ docker exec -t js9 /bin/sh -c "echo 'http://dl-cdn.alpinelinux.org/alpine/v3.5/m
 valid
 docker exec -t js9 /bin/sh -c "echo 'http://dl-cdn.alpinelinux.org/alpine/v3.5/community' >> /etc/apk/repositories" > /tmp/lastcommandoutput.txt 2>&1
 valid
-docker exec -t js9 /bin/sh -c "apk update; apk upgrade; apk add python3 curl mc bash openssh-client openssh tmux" > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t js9 /bin/sh -c "apk update; apk upgrade; apk add curl bash openssh-client openssh" > /tmp/lastcommandoutput.txt 2>&1
 valid
 
-set -ex
 echo "* Configuring ssh access"
 docker exec -t js9 /bin/sh -c "/usr/bin/ssh-keygen -A" > /tmp/lastcommandoutput.txt 2>&1
 valid
@@ -88,25 +103,34 @@ else
     valid
 fi
 
-echo "* Joining zerotier network"
-docker exec -t js9 /bin/sh -c "/zerotier-cli join ${ZEROTIERNWID}" > /tmp/lastcommandoutput.txt 2>&1
-valid
-echo "* Waiting for ip in zerotier network (do not forget to allow the container in your network, and make sure auto assign ip is enabled) ..."
-while :
-do
-  sleep 1
-  ZEROTIERIP=`docker exec -t js9 /bin/sh -c "ip -4 addr show zt0 | grep -oE 'inet\s\d+(\.\d+){3}' | sed 's/inet //'"`
-  if [ "${ZEROTIERIP}" ]; then
-    echo "Container zerotier ip = ${ZEROTIERIP}"
-    break
-  else
-    echo "  .. no ip yet: ${ZEROTIERIP}"
-  fi
-done
+if [ ! -z "$ZEROTIERNWID" ]; then
+    echo "* Joining zerotier network"
+    docker exec -t js9 /bin/sh -c "/zerotier-cli join ${ZEROTIERNWID}" > /tmp/lastcommandoutput.txt 2>&1
+    valid
+    echo "* Waiting for ip in zerotier network (do not forget to allow the container in your network, and make sure auto assign ip is enabled) ..."
+    while :
+    do
+      sleep 1
+      ZEROTIERIP=`docker exec -t js9 /bin/sh -c "ip -4 addr show zt0 | grep -oE 'inet\s\d+(\.\d+){3}' | sed 's/inet //'"`
+      if [ "${ZEROTIERIP}" ]; then
+        echo "Container zerotier ip = ${ZEROTIERIP}"
+        break
+      else
+        echo "  .. no ip yet: ${ZEROTIERIP}"
+      fi
+    done
+fi
 
 # ssh-keygen -f ~/.ssh/known_hosts -R ${ZEROTIERIP} > /tmp/lastcommandoutput.txt 2>&1
 # valid
 
+echo "* Installing js dependencies (can take a while)"
+docker exec -t js9 /bin/sh -c "echo 'http://dl-cdn.alpinelinux.org/alpine/v3.5/main' > /etc/apk/repositories" > /tmp/lastcommandoutput.txt 2>&1
+valid
+docker exec -t js9 /bin/sh -c "echo 'http://dl-cdn.alpinelinux.org/alpine/v3.5/community' >> /etc/apk/repositories" > /tmp/lastcommandoutput.txt 2>&1
+valid
+docker exec -t js9 /bin/sh -c "apk update; apk upgrade; apk add python3 mc tmux" > /tmp/lastcommandoutput.txt 2>&1
+valid
 
 echo "* update python pip"
 docker exec -t js9 /bin/sh -c 'cd $TMPDIR;rm -rf get-pip.py;curl -k https://bootstrap.pypa.io/get-pip.py > get-pip.py;python3 get-pip.py' > /tmp/lastcommandoutput.txt 2>&1

@@ -19,6 +19,11 @@ Just execute the following line with your zerotier id:
 curl -L https://tinyurl.com/js82installer | bash -s <Your zerotier network id>
 ```
 
+to see interactive output do the following in separate console
+```
+tail -f /tmp/lastcommandoutput.txt
+```
+
 It will
 - create
   - ~/gig/code
@@ -64,10 +69,17 @@ jsinstall
 
 this will configure docker & install basic of jumpscale9
 
+to see interactive output do the following in separate console
+```
+tail -f /tmp/lastcommandoutput.txt
+```
+
 ## to login into the development machine
 
 ```
 ssh root@localhost -p 2222
+#or
+ssh root@zerotierNetworkId
 ```
 
 ## to start with shellcmds
