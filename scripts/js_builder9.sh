@@ -145,9 +145,9 @@ echo "* install jumpscale 9 from pip"
 docker exec -t js9 /bin/sh -c 'pip3 install -e /opt/code/github/jumpscale/core9 --upgrade' > /tmp/lastcommandoutput.txt 2>&1
 valid
 
-# echo "* first init of js9"
-# docker exec -t js9 /bin/sh -c 'python3 -c "from JumpScale9 import j"' > /tmp/lastcommandoutput.txt 2>&1
-# valid
+echo "* first init of js9"
+docker exec -t js9 /bin/sh -c 'python3 -c "from JumpScale9 import j"' > /tmp/lastcommandoutput.txt 2>&1
+valid
 
 echo "* install done"
 echo
