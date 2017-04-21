@@ -1,6 +1,6 @@
 
 #this is the main env file which needs to be sourced for any action we do on our platform
-set -e
+
 
 function valid () {
   if [ $? -ne 0 ]; then
@@ -13,6 +13,12 @@ function valid () {
       exit $?
   fi
 }
+
+clear
+
+cat ~/.mascot.txt
+
+set -e
 
 if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
