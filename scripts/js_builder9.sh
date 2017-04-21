@@ -33,11 +33,11 @@ if [ -z $1 ]; then
     echo "WARNING: WILL NOT USE A ZEROTIER CONNECTION !"
     echo "If you want to use zerotier do: jsinstall <ZEROTIERNWID>"
     echo
-    ZEROTIERNWID=$1
 else
     echo "* Create zerotier-one dir."
     mkdir -p ${GIGHOME}/zerotier-one > /tmp/lastcommandoutput.txt 2>&1
     valid
+    ZEROTIERNWID=$1
 fi
 
 function cleanup {
@@ -113,7 +113,7 @@ if [ ! -z "$ZEROTIERNWID" ]; then
       sleep 1
       ZEROTIERIP=`docker exec -t js9 /bin/sh -c "ip -4 addr show zt0 | grep -oE 'inet\s\d+(\.\d+){3}' | sed 's/inet //'"`
       if [ "${ZEROTIERIP}" ]; then
-        echo "Container zerotier ip = ${ZEROTIERIP}"
+        echo "* !!! Container zerotier ip = ${ZEROTIERIP} !!!"
         break
       else
         echo "  .. no ip yet: ${ZEROTIERIP}"
