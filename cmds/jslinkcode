@@ -1,0 +1,30 @@
+#/bin/bash
+
+set -e
+clear
+
+function valid () {
+  if [ $? -ne 0 ]; then
+      cat /tmp/lastcommandoutput.txt
+      if [ -z $1 ]; then
+        echo "Error in last step"
+      else
+        echo $1
+      fi
+      exit $?
+  fi
+}
+
+function linkcode {
+    echo "* link commands to local environment"
+    #link all our command lines relevant to jumpscale development env
+    rm -f /usr/local/bin/js*
+    rm -rf /usr/local/bin/cmds
+    find  $CODEDIR/github/jumpscale/developer/cmds -exec ln -s {} "/usr/local/bin/" \;
+    rm -rf /usr/local/bin/cmds
+    find  $CODEDIR/github/jumpscale/core9/cmds -exec ln -s {} "/usr/local/bin/" \;
+    rm -rf /usr/local/bin/cmds
+}
+
+linkcode > /tmp/lastcommandoutput.txt 2>&1
+valid

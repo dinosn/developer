@@ -103,6 +103,7 @@ echo source ~/.jsenv.sh >> $HOMEDIR/.bash_profile
 #now add to profile
 
 export TMPDIR="/tmp"
+export GIGHOME="$GIGHOME"
 export BASEDIR="$GIGHOME/js9"
 export VARDIR="$GIGHOME/var"
 export CFGDIR="$GIGHOME/cfg"
