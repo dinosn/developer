@@ -5,6 +5,19 @@ if ! type "curl" > /dev/null; then
   exit 1
 fi
 
+function valid () {
+  if [ $? -ne 0 ]; then
+      cat /tmp/lastcommandoutput.txt
+      if [ -z $1 ]; then
+        echo "Error in last step"
+      else
+        echo $1
+      fi
+      exit $?
+  fi
+}
+
+
 function osx_install {
     
     if ! type "brew" > /dev/null; then
