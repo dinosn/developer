@@ -113,6 +113,7 @@ if [ ! -z "$ZEROTIERNWID" ]; then
       sleep 1
       ZEROTIERIP=`docker exec -t js9 /bin/sh -c "ip -4 addr show zt0 | grep -oE 'inet\s\d+(\.\d+){3}' | sed 's/inet //'"`
       if [ "${ZEROTIERIP}" ]; then
+        echo "* !!! Zerotier Network ID = $ZEROTIERNWID   !!!"
         echo "* !!! Container zerotier ip = ${ZEROTIERIP} !!!"
         break
       else
