@@ -1,7 +1,8 @@
 #/bin/bash
 
 function valid () {
-  if [ $? -ne 0 ]; then
+  EXITCODE=$?
+  if [ ${EXITCODE} -ne 0 ]; then
       if [ -z $1 ]; then
         echo
         echo
@@ -15,7 +16,7 @@ function valid () {
         echo
       fi
       cat /tmp/lastcommandoutput.txt
-      exit $?
+      exit ${EXITCODE}
   fi
 }
 
