@@ -17,7 +17,7 @@ curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RAN
 ## Jumpscale 8.2 development env
 
 ```bash
-curl -L https://tinyurl.com/js82installer | bash -s <Your zerotier network id>
+curl -sL https://tinyurl.com/js82installer | bash -s <Your zerotier network id>
 ```
 
 to see interactive output do the following in separate console
@@ -26,6 +26,22 @@ tail -f /tmp/lastcommandoutput.txt
 ```
 
 - [more detailed explanation](docs/installjs8_details.md)
+
+### Add a g8os grid to your development env
+
+```bash
+curl -sL http://tinyurl.com/g8osgriddev | bash -s <Branch> <Your zerotier network id> <Zerotier api token>
+Usage: ays_grid_installer82.sh <BRANCH> <ZEROTIERNWID> <ZEROTIERTOKEN>
+
+  BRANCH: Grid development branch.
+  ZEROTIERNWID: Zerotier network id.
+  ZEROTIERTOKEN: Zerotier api token.
+```
+
+to see interactive output do the following in separate console
+```
+tail -f /tmp/lastcommandoutput.txt
+```
 
 ## Jumpscale 9.0 development env
 
