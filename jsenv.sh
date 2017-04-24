@@ -16,7 +16,7 @@ function valid () {
 
 clear
 
-cat ~/.mascot.txt
+# cat ~/gig/.mascot.txt
 
 set -e
 

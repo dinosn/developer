@@ -19,7 +19,7 @@ function valid () {
 
 
 function osx_install {
-    
+
     if ! type "brew" > /dev/null; then
       sudo echo "* Install Brew"
       yes '' | /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -33,19 +33,19 @@ function osx_install {
     set -e
     sudo echo "* Install Python"
     brew install --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
-    valid    
+    valid
     brew link --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
-    valid    
-    sudo echo "* Install Git"    
+    valid
+    sudo echo "* Install Git"
     brew install git  > /tmp/lastcommandoutput.txt 2>&1
-    valid    
+    valid
     brew link --overwrite git  > /tmp/lastcommandoutput.txt 2>&1
-    valid    
-    sudo echo "* Install Curl"        
+    valid
+    sudo echo "* Install Curl"
     brew install curl  > /tmp/lastcommandoutput.txt 2>&1
-    valid    
+    valid
     brew link --overwrite curl  > /tmp/lastcommandoutput.txt 2>&1
-    valid    
+    valid
 
     # brew install snappy
     # sudo mkdir -p /optvar
@@ -206,11 +206,11 @@ function getcode2 {
 ########MAIN BLOCK#############
 
 sudo echo "* get mascot"
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > ~/.mascot.txt
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > $GIGHOME/.mascot.txt
 valid
 clear
 cat ~/.mascot.txt
-echo 
+echo
 
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
@@ -218,7 +218,7 @@ if [ "$(uname)" == "Darwin" ]; then
     export LANG=C; export LC_ALL=C
     osx_install
 elif [ -e /etc/alpine-release ]; then
-    echo "* INSTALL curl, python, git"  
+    echo "* INSTALL curl, python, git"
     alpine_install
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     # export LC_ALL='C.UTF-8'
