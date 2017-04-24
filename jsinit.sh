@@ -6,17 +6,17 @@ if ! type "curl" > /dev/null; then
 fi
 
 function valid () {
-  if [ $? -ne 0 ]; then
+  EXITCODE=$?
+  if [ ${EXITCODE} -ne 0 ]; then
       cat /tmp/lastcommandoutput.txt
       if [ -z $1 ]; then
         echo "Error in last step"
       else
         echo $1
       fi
-      exit $?
+      exit ${EXITCODE}
   fi
 }
-
 
 function osx_install {
 
