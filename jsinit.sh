@@ -5,7 +5,7 @@ if ! type "curl" > /dev/null; then
   exit 1
 fi
 
-function valid () {
+function valid() {
   EXITCODE=$?
   if [ ${EXITCODE} -ne 0 ]; then
       cat /tmp/lastcommandoutput.txt
@@ -209,7 +209,7 @@ sudo echo "* get mascot"
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > $GIGHOME/.mascot.txt
 valid
 clear
-cat ~/.mascot.txt
+cat $GIGHOME/.mascot.txt
 echo
 
 if [ "$(uname)" == "Darwin" ]; then

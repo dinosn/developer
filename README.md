@@ -29,6 +29,8 @@ tail -f /tmp/lastcommandoutput.txt
 
 ### Add a g8os grid to your development env
 
+This script is based on the Jumpscale 8.2 development env above.
+
 ```bash
 curl -sL http://tinyurl.com/g8osgriddev | bash -s <Branch> <Your zerotier network id> <Zerotier api token>
 Usage: ays_grid_installer82.sh <BRANCH> <ZEROTIERNWID> <ZEROTIERTOKEN>
