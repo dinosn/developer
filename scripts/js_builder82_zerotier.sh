@@ -128,7 +128,7 @@ do
 done
 docker exec -t js82 bash -c "chmod 600 /root/.ssh/authorized_keys"> /tmp/lastcommandoutput.txt 2>&1
 valid
-ssh-keygen -f ~/.ssh/known_hosts -R ${ZEROTIERIP} > /tmp/lastcommandoutput.txt 2>&1
+ssh-keygen -R ${ZEROTIERIP} -f ~/.ssh/known_hosts > /tmp/lastcommandoutput.txt 2>&1
 valid
 docker exec -t js82 bash -c 'curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot > /etc/motd' > /tmp/lastcommandoutput.txt 2>&1
 valid
