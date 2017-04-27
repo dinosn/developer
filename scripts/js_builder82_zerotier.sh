@@ -32,10 +32,10 @@ if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
   WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
   WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
-  GIGHOME=/mnt/c/Users/${WINDOWSUSERNAME}/gig
+  GIGHOME=${GIGPATH:-/mnt/c/Users/${WINDOWSUSERNAME}/gig}
 else
   # Native Linux or MacOSX
-  GIGHOME=~/gig
+  GIGHOME=${GIGPATH:-~/gig}
 fi
 mkdir -p ${GIGHOME}/data > /tmp/lastcommandoutput.txt 2>&1
 valid
