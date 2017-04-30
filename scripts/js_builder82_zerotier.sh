@@ -32,35 +32,35 @@ if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
   WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
   WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
-  GIGHOME=/mnt/c/Users/${WINDOWSUSERNAME}/gig
+  GIGDIR=/mnt/c/Users/${WINDOWSUSERNAME}/gig
 else
   # Native Linux or MacOSX
-  GIGHOME=~/gig
+  GIGDIR=~/gig
 fi
-mkdir -p ${GIGHOME}/data > /tmp/lastcommandoutput.txt 2>&1
+mkdir -p ${GIGDIR}/data > /tmp/lastcommandoutput.txt 2>&1
 valid
-mkdir -p ${GIGHOME}/code > /tmp/lastcommandoutput.txt 2>&1
+mkdir -p ${GIGDIR}/code > /tmp/lastcommandoutput.txt 2>&1
 valid
-mkdir -p ${GIGHOME}/zerotier-one > /tmp/lastcommandoutput.txt 2>&1
+mkdir -p ${GIGDIR}/zerotier-one > /tmp/lastcommandoutput.txt 2>&1
 valid
 # Test if current user can write in the mounted directories
-touch ${GIGHOME}/data/.write_test > /tmp/lastcommandoutput.txt 2>&1
+touch ${GIGDIR}/data/.write_test > /tmp/lastcommandoutput.txt 2>&1
 valid "Aborting! Docker needs to have write access in your mounted directories.\n Could not write to ${OPTVAR}/data/.write_test"
-rm ${GIGHOME}/data/.write_test > /tmp/lastcommandoutput.txt 2>&1
-touch ${GIGHOME}/zerotier-one/.write_test > /tmp/lastcommandoutput.txt 2>&1
+rm ${GIGDIR}/data/.write_test > /tmp/lastcommandoutput.txt 2>&1
+touch ${GIGDIR}/zerotier-one/.write_test > /tmp/lastcommandoutput.txt 2>&1
 valid "Aborting! Docker needs to have write access in your mounted directories.\n Could not write to ${OPTVAR}/zerotier-one/.write_test"
-rm ${GIGHOME}/zerotier-one/.write_test > /tmp/lastcommandoutput.txt 2>&1
-touch ${GIGHOME}/code/.write_test > /tmp/lastcommandoutput.txt 2>&1
+rm ${GIGDIR}/zerotier-one/.write_test > /tmp/lastcommandoutput.txt 2>&1
+touch ${GIGDIR}/code/.write_test > /tmp/lastcommandoutput.txt 2>&1
 valid "Aborting! Docker needs to have write access in your mounted directories.\n Could not write to ${OPTVAR}/zerotier-one/.write_test"
-rm ${GIGHOME}/code/.write_test > /tmp/lastcommandoutput.txt 2>&1
+rm ${GIGDIR}/code/.write_test > /tmp/lastcommandoutput.txt 2>&1
 if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
-  GIGHOME=c:/Users/${WINDOWSUSERNAME}/gig
+  GIGDIR=c:/Users/${WINDOWSUSERNAME}/gig
 fi
 
 if ! docker images | grep -q "jumpscale/ubuntu-zerotier"; then
   echo "Starting docker container"
-  docker run --name ubuntu-zerotier -h ubuntu-zerotier -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGHOME}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGHOME}/code/:/opt/code/ -v ${GIGHOME}/data/:/optvar/data ubuntu:16.04 sleep 365d > /tmp/lastcommandoutput.txt 2>&1
+  docker run --name ubuntu-zerotier -h ubuntu-zerotier -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGDIR}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGDIR}/code/:/opt/code/ -v ${GIGDIR}/data/:/optvar/data ubuntu:16.04 sleep 365d > /tmp/lastcommandoutput.txt 2>&1
   valid
 
   echo "Correcting the locales env"
@@ -91,7 +91,7 @@ if ! docker images | grep -q "jumpscale/ubuntu-zerotier"; then
 fi
 
 echo "Spawning js82 docker container"
-docker run --name js82 -h js82 -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGHOME}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGHOME}/code/:/opt/code/ -v ${GIGHOME}/data/:/optvar/data jumpscale/ubuntu-zerotier /root/init.sh ${ZEROTIERNWID} > /tmp/lastcommandoutput.txt 2>&1
+docker run --name js82 -h js82 -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGDIR}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGDIR}/code/:/opt/code/ -v ${GIGDIR}/data/:/optvar/data jumpscale/ubuntu-zerotier /root/init.sh ${ZEROTIERNWID} > /tmp/lastcommandoutput.txt 2>&1
 valid
 
 echo "Waiting for ip in zerotier network (do not forget to allow the container in your network, and make sure auto assign ip is enabled) ..."
@@ -158,4 +158,4 @@ echo "Run js82, ays82, or js82bash in a new shell to work in your sandbox"
 echo "ssh into your sandbox through ssh root@${ZEROTIERIP}"
 echo
 echo "Recreate a new jumscale docker without rebuilding as follows:"
-echo "  docker rm --force js82; docker run --name js82 -h js82 -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGHOME}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGHOME}/code/:/opt/code/ -v ${GIGHOME}/data/:/optvar/data jumpscale/js82 /root/init.sh ${ZEROTIERNWID}"
+echo "  docker rm --force js82; docker run --name js82 -h js82 -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGDIR}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGDIR}/code/:/opt/code/ -v ${GIGDIR}/data/:/optvar/data jumpscale/js82 /root/init.sh ${ZEROTIERNWID}"

@@ -36,7 +36,7 @@ if [ -z $1 ]; then
     echo
 else
     echo "* Create zerotier-one dir."
-    mkdir -p ${GIGHOME}/zerotier-one > /tmp/lastcommandoutput.txt 2>&1
+    mkdir -p ${GIGDIR}/zerotier-one > /tmp/lastcommandoutput.txt 2>&1
     valid
     ZEROTIERNWID=$1
 fi
@@ -55,7 +55,7 @@ if [ -z "$SSHKEYNAME" ]; then
     exit 1
 fi
 
-if [ -z "$GIGHOME" ]; then
+if [ -z "$GIGDIR" ]; then
     echo "Please execute: init instructions in https://github.com/Jumpscale/developer"
     echo "and restart shell."
     exit 1
@@ -72,7 +72,7 @@ rm -rf ~/.ssh/known_hosts
 
 
 echo "* Starting docker container"
-docker run --name js9 -h js9 -d -p 2223:22 --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGHOME}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGHOME}/code/:/opt/code/ -v ${GIGHOME}/data/:/data zerotier/zerotier-containerized > /tmp/lastcommandoutput.txt 2>&1
+docker run --name js9 -h js9 -d -p 2223:22 --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGDIR}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGDIR}/code/:/opt/code/ -v ${GIGDIR}/data/:/data zerotier/zerotier-containerized > /tmp/lastcommandoutput.txt 2>&1
 valid
 
 echo "* Installing base system packages (can take a while)"
@@ -141,6 +141,12 @@ docker exec -t js9 /bin/sh -c 'pip3 install --upgrade pip' > /tmp/lastcommandout
 valid
 
 docker exec -t js9 /bin/sh -c 'echo "JS9 DEVELOPER WELCOME." > /etc/motd' > /tmp/lastcommandoutput.txt 2>&1
+valid
+
+echo "* download mascot"
+docker exec -t js9 /bin/sh -c 'mkdir -p  /root/gig;curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > $GIGDIR/.mascot.txt > /root/gig/.mascot.txt' > /tmp/lastcommandoutput.txt 2>&1
+valid
+docker exec -t js9 /bin/sh -c 'touch /root/.iscontainer'
 valid
 
 echo "* install jumpscale 9 from pip"

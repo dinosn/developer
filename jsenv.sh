@@ -25,10 +25,10 @@ if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
   WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
   WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
-  GIGHOME=/mnt/c/Users/${WINDOWSUSERNAME}/gig
+  GIGDIR=/mnt/c/Users/${WINDOWSUSERNAME}/gig
 else
   # Native Linux or MacOSX
-  GIGHOME=~/gig
+  GIGDIR=~/gig
 fi
 
 if [ "$(uname)" == "Darwin" ]; then
@@ -38,10 +38,10 @@ elif grep -q Microsoft /proc/version; then
       # Windows subsystem 4 linux
       WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
       WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
-      GIGHOME=/mnt/c/Users/${WINDOWSUSERNAME}/gig
+      GIGDIR=/mnt/c/Users/${WINDOWSUSERNAME}/gig
 else
     # Native Linux or MacOSX
-    export GIGHOME=~/gig
+    export GIGDIR=~/gig
 fi
 
 #can overrule if you want
@@ -83,36 +83,17 @@ else
 fi
 
 
-#check profile file exists, if yes modify
-if [ ! -e $HOMEDIR/.bash_profile ] ; then
-    touch $HOMEDIR/.bash_profile
-else
-    #make a 1time backup
-    if [ ! -e "$HOMEDIR/.bash_profile.bak" ]; then
-        cp $HOMEDIR/.bash_profile  $HOMEDIR/.bash_profile.bak
-    fi
-fi
+export GIGDIR="$GIGDIR"
 
-set -e
-sed  '/export SSHKEYNAME/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
-mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
-sed  '/jsenv.sh/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
-mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
-echo export SSHKEYNAME=$SSHKEYNAME >> $HOMEDIR/.bash_profile
-echo source ~/.jsenv.sh >> $HOMEDIR/.bash_profile
-
-#now add to profile
-
-export TMPDIR="/tmp"
-export GIGHOME="$GIGHOME"
-export BASEDIR="$GIGHOME/js9"
-export VARDIR="$GIGHOME/var"
-export CFGDIR="$GIGHOME/cfg"
-export DATADIR="$GIGHOME/data"
-export CODEDIR="$GIGHOME/code"
-export BUILDDIR="$VARDIR/build"
-export LIBDIR="$BASEDIR/lib"
-export TEMPLATEDIR="$GIGHOME/templates"
+# export TMPDIR="/tmp"
+# export BASEDIR="$GIGDIR/gig"
+# export VARDIR="$GIGDIR/var"
+# export CFGDIR="$GIGDIR/cfg"
+# export DATADIR="$GIGDIR/data"
+# export CODEDIR="$GIGDIR/code"
+# export BUILDDIR="$VARDIR/build"
+# export LIBDIR="$BASEDIR/lib"
+# export TEMPLATEDIR="$GIGDIR/templates"
 
 set +e
 

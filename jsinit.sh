@@ -206,10 +206,10 @@ function getcode2 {
 ########MAIN BLOCK#############
 
 sudo echo "* get mascot"
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > $GIGHOME/.mascot.txt
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > $GIGDIR/.mascot.txt
 valid
 clear
-cat $GIGHOME/.mascot.txt
+cat $GIGDIR/.mascot.txt
 echo
 
 if [ "$(uname)" == "Darwin" ]; then
@@ -233,18 +233,33 @@ curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RAND
 valid
 
 
-
-
 echo "* include the gig environment script"
 source  ~/.jsenv.sh
 
+#check profile file exists, if yes modify
+if [ ! -e $HOMEDIR/.bash_profile ] ; then
+    touch $HOMEDIR/.bash_profile
+else
+    #make a 1time backup
+    if [ ! -e "$HOMEDIR/.bash_profile.bak" ]; then
+        cp $HOMEDIR/.bash_profile  $HOMEDIR/.bash_profile.bak
+    fi
+fi
+
+set -e
+sed  '/export SSHKEYNAME/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
+mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
+sed  '/jsenv.sh/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
+mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
+echo export SSHKEYNAME=$SSHKEYNAME >> $HOMEDIR/.bash_profile
+echo source ~/.jsenv.sh >> $HOMEDIR/.bash_profile
+
+
 echo "* create dir's"
-mkdir -p $DATADIR > /tmp/lastcommandoutput.txt 2>&1
-valid
+export CODEDIR="$GIGDIR/code"
 mkdir -p $CODEDIR/github/jumpscale > /tmp/lastcommandoutput.txt 2>&1
 valid
-mkdir -p $CFGDIR > /tmp/lastcommandoutput.txt 2>&1
-valid
+
 rm -rf ~/.ssh/known_hosts
 
 echo "* get core code for development scripts & jumpscale core"
