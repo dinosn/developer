@@ -84,13 +84,13 @@ fi
 
 
 export GIGDIR="$GIGDIR"
+export CODEDIR="$GIGDIR/code"
 
 # export TMPDIR="/tmp"
 # export BASEDIR="$GIGDIR/gig"
 # export VARDIR="$GIGDIR/var"
 # export CFGDIR="$GIGDIR/cfg"
 # export DATADIR="$GIGDIR/data"
-# export CODEDIR="$GIGDIR/code"
 # export BUILDDIR="$VARDIR/build"
 # export LIBDIR="$BASEDIR/lib"
 # export TEMPLATEDIR="$GIGDIR/templates"

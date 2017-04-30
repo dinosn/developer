@@ -1,5 +1,6 @@
 #/bin/bash
 set -ex
+source ~/.jsenv.sh
 cd $CODEDIR/github/jumpscale/developer/scripts
 #sh prepare.sh
 sh js_builder9.sh $1

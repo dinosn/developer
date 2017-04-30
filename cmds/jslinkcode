@@ -1,4 +1,5 @@
 #/bin/bash
+source ~/.jsenv.sh
 
 set -e
 clear
