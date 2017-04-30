@@ -34,10 +34,10 @@ if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
   # Windows subsystem 4 linux
   WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
   WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
-  GIGDIR=/mnt/c/Users/${WINDOWSUSERNAME}/gig
+  GIGHOME=${GIGPATH:-/mnt/c/Users/${WINDOWSUSERNAME}/gig}
 else
   # Native Linux or MacOSX
-  GIGDIR=~/gig
+  GIGHOME=${GIGPATH:-~/gig}
 fi
 
 echo "Installing grid dependencies"
@@ -51,7 +51,7 @@ docker exec -t js82 mkdir -p /usr/local/go > /tmp/lastcommandoutput.txt 2>&1
 valid
 
 echo "Updating AYS grid server"
-pushd ${GIGDIR}/code/github/ > /tmp/lastcommandoutput.txt 2>&1
+pushd ${GIGHOME}/code/github/ > /tmp/lastcommandoutput.txt 2>&1
 valid
 mkdir -p g8os > /tmp/lastcommandoutput.txt 2>&1
 valid
