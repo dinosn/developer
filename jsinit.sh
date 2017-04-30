@@ -206,10 +206,10 @@ function getcode2 {
 ########MAIN BLOCK#############
 
 sudo echo "* get mascot"
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > $GIGDIR/.mascot.txt
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > ~/.mascot.txt
 valid
 clear
-cat $GIGDIR/.mascot.txt
+cat ~/.mascot.txt
 echo
 
 if [ "$(uname)" == "Darwin" ]; then
