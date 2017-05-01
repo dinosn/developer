@@ -1,0 +1,24 @@
+#EXAMPLES SEE:http://tmuxp.git-pull.com/en/latest/examples.html
+session_name: Blank pane test
+windows:
+  - window_name: zerotier
+    panes:
+    - shell_command:
+        - source /root/.jsenv.sh
+        - 'killall -s SIGKILL -v -r .*zerotier.*'
+        - 'zerotier-one'
+  - window_name: zerotier_client
+    panes:
+    - shell_command:
+      - sleep 3;echo "will now try to start zerotier netw"
+      - zerotier-cli join a09acf0233f636e4
+      - source /root/.jsenv.sh
+      - source ~/.zerotierconfig;echo ${ZEROTIERNWID};zerotier-cli join ${ZEROTIERNWID}
+
+  # - window_name: test
+  #   panes:
+  #   - shell_command:
+  #     - 'ls'
+  #     - 'ls /'
+  #     focus: true
+  #     start_directory: /root

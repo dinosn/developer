@@ -1,0 +1,10 @@
+#!/bin/bash
+
+SSHKEY=$(cat -)
+
+set +ex
+
+echo "* add sshkey to authorized keys"
+echo $SSHKEY
+
+grep -q '$SSHKEY' ~/.ssh/authorized_keys || echo 'NOT FOUND KEY'

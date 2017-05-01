@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source /root/.jsenv.sh
+
+killall -s SIGKILL -v -r .*tmux.*
+tmuxp load /root/.init.yaml -d
