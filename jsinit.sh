@@ -149,59 +149,6 @@ function getcode {
     fi
 }
 
-function getcode2 {
-    if [ ! -e $CODEDIR/github/jumpscale/lib9 ]; then
-        set +e
-        git clone git@github.com:Jumpscale/lib9.git
-        if [ ! $? -eq 0 ]; then
-            set -ex
-            git clone https://github.com/Jumpscale/lib9.git
-        fi
-        set +e
-    else
-        cd $CODEDIR/github/jumpscale/lib9
-        git pull
-    fi
-
-    if [ ! -e $CODEDIR/github/jumpscale/ays9 ]; then
-        set +e
-        git clone git@github.com:Jumpscale/ays9.git
-        if [ ! $? -eq 0 ]; then
-            set -ex
-            git clone https://github.com/Jumpscale/ays9.git
-        fi
-        set +e
-    else
-        cd $CODEDIR/github/jumpscale/ays9
-        git pull
-    fi
-
-    if [ ! -e $CODEDIR/github/jumpscale/rsal9 ]; then
-        set +e
-        git clone git@github.com:Jumpscale/rsal9.git
-        if [ ! $? -eq 0 ]; then
-            set -ex
-            git clone https://github.com/Jumpscale/rsal9.git
-        fi
-        set +e
-    else
-        cd $CODEDIR/github/jumpscale/rsal9
-        git pull
-    fi
-
-    if [ ! -e $CODEDIR/github/jumpscale/portal9 ]; then
-        set +e
-        git clone git@github.com:Jumpscale/portal9.git
-        if [ ! $? -eq 0 ]; then
-            set -ex
-            git clone https://github.com/Jumpscale/portal9.git
-        fi
-        set +e
-    else
-        cd $CODEDIR/github/jumpscale/portal9
-        git pull
-    fi
-}
 
 ########MAIN BLOCK#############
 
@@ -235,6 +182,7 @@ valid
 
 echo "* include the gig environment script"
 source  ~/.jsenv.sh
+#THIS GIVES GIG & CODEDIR
 
 #check profile file exists, if yes modify
 if [ ! -e $HOMEDIR/.bash_profile ] ; then
@@ -251,16 +199,14 @@ sed  '/export SSHKEYNAME/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
 mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
 sed  '/jsenv.sh/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
 mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
-echo export SSHKEYNAME=$SSHKEYNAME >> $HOMEDIR/.bash_profile
-echo source ~/.jsenv.sh >> $HOMEDIR/.bash_profile
+echo 'export SSHKEYNAME=$SSHKEYNAME' >> $HOMEDIR/.bash_profile
+echo 'source ~/.jsenv.sh' >> $HOMEDIR/.bash_profile
 
 
 echo "* create dir's"
 export CODEDIR="$GIGDIR/code"
 mkdir -p $CODEDIR/github/jumpscale > /tmp/lastcommandoutput.txt 2>&1
 valid
-
-rm -rf ~/.ssh/known_hosts
 
 echo "* get core code for development scripts & jumpscale core"
 getcode > /tmp/lastcommandoutput.txt 2>&1
@@ -269,13 +215,27 @@ valid
 function linkcode {
     echo "* link commands to local environment"
     #link all our command lines relevant to jumpscale development env
-    rm -f /usr/local/bin/js*
-    rm -rf /usr/local/bin/cmds
-    find  $CODEDIR/github/jumpscale/developer/cmds -exec ln -s {} "/usr/local/bin/" \;
-    rm -rf /usr/local/bin/cmds
-    find  $CODEDIR/github/jumpscale/core9/cmds -exec ln -s {} "/usr/local/bin/" \;
-    rm -rf /usr/local/bin/cmds
+    rm -f /usr/local/bin/js9*
+    rm -rf /usr/local/bin/cmds*
+    find  $CODEDIR/github/jumpscale/developer/cmds_host -exec ln -s {} "/usr/local/bin/" \;
+    rm -rf /usr/local/bin/cmds_host
 }
 
 linkcode > /tmp/lastcommandoutput.txt 2>&1
 valid
+
+#create private dir
+mkdir -p $GIGDIR/private
+if [ ! -e "$GIGDIR/private/me.toml" ]; then
+    echo "* copy templates private files."
+    cp $CODEDIR/github/jumpscale/developer/templates/private/me.toml $GIGDIR/private/ > /tmp/lastcommandoutput.txt 2>&1
+    valid
+fi
+echo "* copy chosen sshpub key"
+mkdir -p $GIGDIR/private/pubsshkeys
+cp ~/.ssh/$SSHKEYNAME.pub $GIGDIR/private/pubsshkeys/ > /tmp/lastcommandoutput.txt 2>&1
+valid
+
+
+echo "* please edit templates in $GIGDIR/private/, if you don't then installer will ask for it."
+echo "* to get started with jumpscale do 'js9_start', docker needs to be installed locally."

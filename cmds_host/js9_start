@@ -1,6 +1,4 @@
-#/bin/bash
-set -ex
+#!/bin/bash
 source ~/.jsenv.sh
 cd $CODEDIR/github/jumpscale/developer/scripts
-#sh prepare.sh
-sh js_builder9.sh $1
+sh js_start_js9.sh

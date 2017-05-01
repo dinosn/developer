@@ -1,7 +1,10 @@
 #!/bin/bash
+source ~/.jsenv.sh
+source $CODEDIR/github/jumpscale/core9/cmds/js9_base
 
 
-export iname=ub1704-zt
+
+export iname=js9_base
 
 docker rm --force $iname >/dev/null 2>&1
 docker rm --force js9devel >/dev/null 2>&1
@@ -42,9 +45,14 @@ docker exec -t $iname /bin/sh -c 'cd $TMPDIR;rm -rf get-pip.py;curl -k https://b
 docker exec -t $iname /bin/sh -c 'pip3 install --upgrade pip' > /tmp/lastcommandoutput.txt 2>&1
 docker exec -t $iname /bin/sh -c 'pip3 install tmuxp' > /tmp/lastcommandoutput.txt 2>&1
 
+echo "* install jumpscale 9 from pip"
+docker exec -t $iname /bin/sh -c 'pip3 install -e /opt/code/github/jumpscale/core9 --upgrade' > /tmp/lastcommandoutput.txt 2>&1
+
+initjs
 
 cleanup
 
 commitdocker
+
 
 echo "* BUILD SUCCESSFUL"

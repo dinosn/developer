@@ -1,0 +1,23 @@
+[email]
+from = "info@incubaid.com"
+smtp_port = 443
+smtp_server = ""
+
+# [git.ays]
+# branch = "master"
+# url = "https://github.com/Jumpscale/ays9.git"
+#
+# [git.js]
+# branch = "master"
+# url = "https://github.com/Jumpscale/core9.git"
+
+# [system]
+# debug = true
+# autopip = false
+
+[me]
+fullname = "Kristof De Spiegeleer"
+loginname = "despiegk"
+
+[ssh]
+SSHKEYNAME = "id_rsa"

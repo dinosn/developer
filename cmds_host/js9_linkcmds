@@ -1,0 +1,5 @@
+#!/bin/bash
+source ~/.jsenv.sh
+source $CODEDIR/github/jumpscale/core9/cmds/js9_base
+
+linkcmds > /tmp/lastcommandoutput.txt 2>&1
