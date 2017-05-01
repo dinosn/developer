@@ -199,8 +199,8 @@ sed  '/export SSHKEYNAME/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
 mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
 sed  '/jsenv.sh/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
 mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
-echo 'export SSHKEYNAME=$SSHKEYNAME' >> $HOMEDIR/.bash_profile
-echo 'source ~/.jsenv.sh' >> $HOMEDIR/.bash_profile
+echo export SSHKEYNAME=$SSHKEYNAME >> $HOMEDIR/.bash_profile
+echo source ~/.jsenv.sh >> $HOMEDIR/.bash_profile
 
 
 echo "* create dir's"
@@ -217,6 +217,7 @@ function linkcode {
     #link all our command lines relevant to jumpscale development env
     rm -f /usr/local/bin/js9*
     rm -rf /usr/local/bin/cmds*
+    find  $CODEDIR/github/jumpscale/developer/cmds_host -exec chmod 770 {} \;
     find  $CODEDIR/github/jumpscale/developer/cmds_host -exec ln -s {} "/usr/local/bin/" \;
     rm -rf /usr/local/bin/cmds_host
 }
@@ -236,6 +237,18 @@ mkdir -p $GIGDIR/private/pubsshkeys
 cp ~/.ssh/$SSHKEYNAME.pub $GIGDIR/private/pubsshkeys/ > /tmp/lastcommandoutput.txt 2>&1
 valid
 
+function jumpscaleinstall {
+    echo "* install jumpscale 9"
+    cd $CODEDIR/github/jumpscale/core9 > /tmp/lastcommandoutput.txt 2>&1
+    pip3 install -e . > /tmp/lastcommandoutput.txt 2>&1
+    # python3
+
+}
+
+trap valid ERR
+
+jumpscaleinstall
+valid
 
 echo "* please edit templates in $GIGDIR/private/, if you don't then installer will ask for it."
 echo "* to get started with jumpscale do 'js9_start', docker needs to be installed locally."

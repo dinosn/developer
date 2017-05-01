@@ -2,15 +2,15 @@
 source ~/.jsenv.sh
 source $CODEDIR/github/jumpscale/core9/cmds/js9_base
 
-
-
 export iname=js9_base
+
+trap nothing ERR
 
 docker rm --force $iname >/dev/null 2>&1
 docker rm --force js9devel >/dev/null 2>&1
 docker rm --force js9 >/dev/null 2>&1
 
-source .js_scripts_base.sh
+trap valid ERR
 
 echo "* BUILDING UBUNTU ZEROTIER (to see output do 'tail -f /tmp/lastcommandoutput.txt' in other console)"
 echo "* Starting docker container for ubuntu 1704"
@@ -38,15 +38,28 @@ echo "* mark its a container"
 docker exec -t $iname /bin/sh -c "touch /root/.iscontainer"
 
 echo "* make compile zerotier (3-5 min)"
-docker exec -t $iname /bin/sh -c "git clone https://github.com/zerotier/ZeroTierOne.git && cd ZeroTierOne/ && make && make install" > /tmp/lastcommandoutput.txt 2>&1
+trap nothing ERR
+docker exec -t $iname /bin/sh -c "cd /tmp && git clone https://github.com/zerotier/ZeroTierOne.git && cd ZeroTierOne/ && make" > /tmp/lastcommandoutput.txt 2>&1
+trap valid ERR
+docker exec -t $iname /bin/sh -c "cd /tmp/ZeroTierOne/ && make install" > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t $iname /bin/sh -c "rm -rf /tmp/ZeroTierOne"
+
 
 echo "* update/install python pip"
-docker exec -t $iname /bin/sh -c 'cd $TMPDIR;rm -rf get-pip.py;curl -k https://bootstrap.pypa.io/get-pip.py > get-pip.py;python3 get-pip.py' > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t $iname /bin/sh -c 'cd /tmp && rm -rf get-pip.py && curl -k https://bootstrap.pypa.io/get-pip.py > get-pip.py && python3 get-pip.py' > /tmp/lastcommandoutput.txt 2>&1
 docker exec -t $iname /bin/sh -c 'pip3 install --upgrade pip' > /tmp/lastcommandoutput.txt 2>&1
 docker exec -t $iname /bin/sh -c 'pip3 install tmuxp' > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t $iname /bin/sh -c 'rm -f /tmp/get-pip.py' > /tmp/lastcommandoutput.txt 2>&1
+
+
+copyfiles
+linkcmds
+
 
 echo "* install jumpscale 9 from pip"
+trap nothing ERR
 docker exec -t $iname /bin/sh -c 'pip3 install -e /opt/code/github/jumpscale/core9 --upgrade' > /tmp/lastcommandoutput.txt 2>&1
+trap valid ERR
 
 initjs
 

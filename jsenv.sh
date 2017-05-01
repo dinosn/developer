@@ -86,15 +86,4 @@ fi
 export GIGDIR="$GIGDIR"
 export CODEDIR="$GIGDIR/code"
 
-# export TMPDIR="/tmp"
-# export BASEDIR="$GIGDIR/gig"
-# export VARDIR="$GIGDIR/var"
-# export CFGDIR="$GIGDIR/cfg"
-# export DATADIR="$GIGDIR/data"
-# export BUILDDIR="$VARDIR/build"
-# export LIBDIR="$BASEDIR/lib"
-# export TEMPLATEDIR="$GIGDIR/templates"
-
-set +e
-
 export PS1="gig:\h:\w$\[$(tput sgr0)\]"
