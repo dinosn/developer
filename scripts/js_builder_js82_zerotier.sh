@@ -134,6 +134,8 @@ docker exec -t js82 bash -c 'curl https://raw.githubusercontent.com/Jumpscale/de
 valid
 
 echo "Downloading and building jumpscale 8.2"
+docker exec -t js82 bash -c 'apt-get update'  > /tmp/lastcommandoutput.txt 2>&1
+valid
 docker exec -t js82 bash -c 'cd $TMPDIR && rm -f install.sh && export JSBRANCH="8.2.0" && curl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh && bash install.sh' > /tmp/lastcommandoutput.txt 2>&1
 valid
 
