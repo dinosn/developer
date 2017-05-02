@@ -5,9 +5,9 @@ path = "/opt/code/github/jumpscale"
 for item in j.sal.fs.listFilesInDir(path, True):
     if "cuisine" in item.lower():
         newname = item.replace("cuisine", "prefab")
-        newname = item.replace("Cuisine", "Prefab")
-        # j.sal.fs.renameFile(item,newname)
-        print("rename %s %s" % (item, newname))
+        newname = item.replace("Prefab", "Prefab")
+        j.sal.fs.renameFile(item, newname)
+        # print("rename %s %s" % (item, newname))
 
 from IPython import embed
 print("DEBUG NOW jjj")
