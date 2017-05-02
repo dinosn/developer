@@ -42,6 +42,7 @@ elif grep -q Microsoft /proc/version; then
 else
     # Native Linux or MacOSX
     export GIGDIR=~/gig
+    HOMEDIR=~
 fi
 
 #can overrule if you want

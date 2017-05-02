@@ -54,7 +54,6 @@ function osx_install {
     # sudo chown -R $USER /opt
 }
 
-
 function alpine_install {
     apk add git  > /tmp/lastcommandoutput.txt 2>&1
     apk add curl  > /tmp/lastcommandoutput.txt 2>&1
@@ -76,29 +75,27 @@ function alpine_install {
 
 }
 
-function ubuntu_unstall {
+function ubuntu_install {
     locale-gen en_US.UTF-8
     export LANG=en_US.UTF-8
     export LC_ALL=en_US.UTF-8
-    dist=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
-    if [ "$dist" == "Ubuntu" ]; then
-        echo "found ubuntu"
-        apt-get install git
-        apt-get install curl git ssh python3 -y
-        # apt-get install python3-pip -y
-        # apt-get install libssl-dev -y
-        # apt-get install python3-dev -y
-        # apt-get install build-essential -y
-        # apt-get install libffi-dev -y
-        # apt-get install libsnappy-dev libsnappy1v5 -y
-        # rm -f /usr/bin/python
-        # rm -f /usr/bin/python3
-        # ln -s /usr/bin/python3.5 /usr/bin/python
-        # ln -s /usr/bin/python3.5 /usr/bin/python3
-    else
-        echo "ONLY ALPINE & UBUNTU LINUX SUPPORTED"
-        exit 1
-    fi
+
+    apt-get install git
+    apt-get install curl git ssh python3 -y
+    # apt-get install python3-pip -y
+    # apt-get install libssl-dev -y
+    # apt-get install python3-dev -y
+    # apt-get install build-essential -y
+    # apt-get install libffi-dev -y
+    # apt-get install libsnappy-dev libsnappy1v5 -y
+    # rm -f /usr/bin/python
+    # rm -f /usr/bin/python3
+    # ln -s /usr/bin/python3.5 /usr/bin/python
+    # ln -s /usr/bin/python3.5 /usr/bin/python3
+}
+
+function archlinux_install {
+    sudo pacman -S --needed git curl openssh python3 --noconfirm
 }
 
 function cygwin_install {
@@ -120,6 +117,7 @@ function cygwin_install {
 
 function getcode {
 
+    echo "get code"
     cd $CODEDIR/github/jumpscale
 
     if [ ! -e $CODEDIR/github/jumpscale/developer ]; then
@@ -135,6 +133,7 @@ function getcode {
         git pull
     fi
 
+    cd $CODEDIR/github/jumpscale
     if [ ! -e $CODEDIR/github/jumpscale/core9 ]; then
         set +e
         git clone git@github.com:Jumpscale/core9.git
@@ -152,7 +151,7 @@ function getcode {
 
 ########MAIN BLOCK#############
 
-sudo echo "* get mascot"
+echo "* get mascot"
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > ~/.mascot.txt
 valid
 clear
@@ -168,14 +167,22 @@ elif [ -e /etc/alpine-release ]; then
     echo "* INSTALL curl, python, git"
     alpine_install
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    # export LC_ALL='C.UTF-8'
     echo "* INSTALL curl, python, git"
-    ubuntu_unstall
+
+    dist=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
+    if [ "$dist" == "Ubuntu" ]; then
+        ubuntu_install
+    elif type "pacman" > /dev/null; then
+        archlinux_install
+    else
+        echo "ONLY ARCHLINUX & UBUNTU LINUX SUPPORTED"
+        exit 1
+    fi
 elif [ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]; then
     cygwin_install
 fi
 
-sudo echo "* get gig environment script"
+echo "* get gig environment script"
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh
 valid
 
@@ -218,7 +225,7 @@ function linkcode {
     rm -f /usr/local/bin/js9*
     rm -rf /usr/local/bin/cmds*
     find  $CODEDIR/github/jumpscale/developer/cmds_host -exec chmod 770 {} \;
-    find  $CODEDIR/github/jumpscale/developer/cmds_host -exec ln -s {} "/usr/local/bin/" \;
+    sudo find  $CODEDIR/github/jumpscale/developer/cmds_host -exec ln -s {} "/usr/local/bin/" \;
     rm -rf /usr/local/bin/cmds_host
 }
 
@@ -237,13 +244,6 @@ mkdir -p $GIGDIR/private/pubsshkeys
 cp ~/.ssh/$SSHKEYNAME.pub $GIGDIR/private/pubsshkeys/ > /tmp/lastcommandoutput.txt 2>&1
 valid
 
-function jumpscaleinstall {
-    echo "* install jumpscale 9"
-    cd $CODEDIR/github/jumpscale/core9 > /tmp/lastcommandoutput.txt 2>&1
-    pip3 install -e . > /tmp/lastcommandoutput.txt 2>&1
-    # python3
-
-}
 
 trap valid ERR
 
