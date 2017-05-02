@@ -11,7 +11,7 @@
     - zerotier networks allow you to work together independant where you are (behind nat, ...)
 - ssh enabled
     - the development machine always runs on 2222 and there is only 1
-    - we use ssh this allows us to use our cuisine tools in jumpscale & work together with others
+    - we use ssh this allows us to use our prefab tools in jumpscale & work together with others
     - this also allows git to be seamless used (login ssh -A ..., this allows keys to be reused) in the docker
 - if there is a need to use more than 1 machine or develop against other (p)machines
     - DO NOT USE MULTIPLE DOCKERS AT SAME TIME on your development machine
