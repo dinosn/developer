@@ -1,8 +1,7 @@
+# Development environment for JumpScale 9
 
-# development environment for jumpscale 9
-
-- please use this development environment to play & develop with jumpscale 9
-- it uses docker and the goal is to get it to work on ubuntu, windows & osx
+- please use this development environment to play & develop with JumpScale 9
+- it uses Docker and the goal is to get it to work on Ubuntu, Windows & Mac OS X
 
 to see an install [screencast](http://showterm.io/5a87e36aee35b5b765b20#fast)
 
@@ -13,14 +12,14 @@ curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RAN
 ```
 
 
-
-## Jumpscale 8.2 development env
+## JumpScale 8.2 development environment
 
 ```bash
-curl -sL https://tinyurl.com/js82installer | bash -s <Your zerotier network id>
+curl -sL https://raw.githubusercontent.com/Jumpscale/developer/master/scripts/js_builder_js82_zerotier.sh | bash -s <your-ZeroTier-network-ID>
 ```
 
-to see interactive output do the following in separate console
+To see interactive output do the following in separate console:
+
 ```
 tail -f /tmp/lastcommandoutput.txt
 ```
@@ -29,7 +28,7 @@ tail -f /tmp/lastcommandoutput.txt
 
 ### Add a g8os grid to your development env
 
-This script is based on the Jumpscale 8.2 development env above.
+This script is based on the JumpScale 8.2 development env above.
 
 ```bash
 curl -sL http://tinyurl.com/g8osgriddev | bash -s <Branch> <Your zerotier network id> <Zerotier api token>
