@@ -1,4 +1,4 @@
 #!/bin/bash
 source ~/.jsenv.sh
 cd $CODEDIR/github/jumpscale/developer/scripts9
-sh js_start_js9.sh $@
+bash js_start_js9.sh $@

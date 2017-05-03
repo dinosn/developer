@@ -6,7 +6,6 @@
 source ~/.jsenv.sh
 source $CODEDIR/github/jumpscale/core9/cmds/js9_base
 
-
 function usage () {
    cat <<EOF
 Usage: js9_build [-l] [-p] [-h]
@@ -41,10 +40,9 @@ if ! docker images | grep -q "jumpscale/$bname"; then
 fi
 
 trap nothing ERR
-
-docker rm --force $iname >/dev/null 2>&1
-docker rm --force js9devel >/dev/null 2>&1
-docker rm --force js9 >/dev/null 2>&1
+`docker ps --format "{{.Names}}" | grep -q "$iname"` &&  docker rm  -f $iname > /dev/null 2>&1
+`docker ps --format "{{.Names}}" | grep -q "js9devel"` &&  docker rm  -f js9deve > /dev/null 2>&1
+`docker ps --format "{{.Names}}" | grep -q "js9"` &&  docker rm  -f js9 > /dev/null 2>&1
 
 trap valid ERR
 

@@ -2,6 +2,7 @@
 source ~/.jsenv.sh
 source $CODEDIR/github/jumpscale/core9/cmds/js9_base
 
+
 export bname=js9_base
 export iname=js9
 
@@ -34,12 +35,15 @@ shift $(($OPTIND - 1))
 
 
 trap nothing ERR
-docker rm --force $iname >/dev/null 2>&1
-docker rm --force $bname >/dev/null 2>&1
+
+`docker ps --format "{{.Names}}" | grep -q "$bname"` &&  docker rm  -f $bname > /dev/null 2>&1
+
+`docker ps --format "{{.Names}}" | grep -q "$iname"` &&  docker rm  -f "$iname" > /dev/null 2>&1
+
 trap valid ERR
 
 if ! docker images | grep -q "jumpscale/$bname"; then
-    sh js_builder_base9.sh -lp
+    bash js_builder_base9.sh -lp
 fi
 
 echo "* start jumpscale 9 development env based on ub 1704 (to see output do 'tail -f /tmp/lastcommandoutput.txt' in other console)"
