@@ -1,8 +1,44 @@
 #!/bin/bash
+
+# progname=$0
+#see http://floppsie.comp.glam.ac.uk/Glamorgan/gaius/scripting/4.html
+
 source ~/.jsenv.sh
 source $CODEDIR/github/jumpscale/core9/cmds/js9_base
 
+
+function usage () {
+   cat <<EOF
+Usage: js9_build [-l] [-p] [-h]
+   -l: means install the jumpscale libs, ays & prefab
+   -p: means install the jumpscale portal
+   -h: help
+
+   example to do all: 'js9_build -lp' which will install jumpscale & libs & pip deps
+
+EOF
+   exit 0
+}
+
+while getopts ":lph" opt; do
+   case $opt in
+   l )  echo "* Will install js9 libs." ; install_libs=1 ;;
+   p )  echo "* Will install js9 portal." ; install_portal=1 ;;
+   h )  usage ; exit 0 ;;
+   \?)  usage exit0 ;;
+   esac
+done
+
+shift $(($OPTIND - 1))
+
+# echo "the remaining arguments are: $1 $2 $3"
+
+export bname=js9_base0
 export iname=js9_base
+
+if ! docker images | grep -q "jumpscale/$bname"; then
+    sh js_builder_base9_step1.sh
+fi
 
 trap nothing ERR
 
@@ -12,56 +48,35 @@ docker rm --force js9 >/dev/null 2>&1
 
 trap valid ERR
 
-echo "* BUILDING UBUNTU ZEROTIER (to see output do 'tail -f /tmp/lastcommandoutput.txt' in other console)"
-echo "* Starting docker container for ubuntu 1704"
-#${GIGDIR}/zerotier-one/:/var/lib/zerotier-one/
-docker run --name $iname -h $iname -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN  -v ${GIGDIR}/code/:/opt/code/ ubuntu:17.04 sleep 365d > /tmp/lastcommandoutput.txt 2>&1
+#make sure we always install jumpscale if any of the libs are asked for
+if [ -n "$install_libs" ]; then
+    install_js=1
+    initenv=1
+fi
+if [ -n "$install_portal" ]; then
+    install_js=1
+    install_libs=1
+fi
 
-echo "* Correcting the locales env"
-# docker exec -t $iname bash -c 'echo -e "export LC_ALL=C.UTF-8\nexport LANG=C.UTF-8" >> /root/.bashrc' > /tmp/lastcommandoutput.txt 2>&1
-# docker exec -t $iname bash -c 'echo -e "export LC_ALL=C.UTF-8\nexport LANG=C.UTF-8" >> /root/.bash_profile' > /tmp/lastcommandoutput.txt 2>&1
-docker exec -t $iname bash -c 'echo -e "export LC_ALL=C.UTF-8\nexport LANG=C.UTF-8" >> /root/.profile' > /tmp/lastcommandoutput.txt 2>&1
+docker run --name $iname -h $iname -d -p 2222:22 --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGDIR}/:/root/gig/ -v ${GIGDIR}/code/:/opt/code/ jumpscale/$bname sleep 365d  > /tmp/lastcommandoutput.txt 2>&1
 
-echo "* Update/Upgrade ubuntu (apt)"
-docker exec -t $iname bash -c "cd && apt-get update && apt-get upgrade -y " > /tmp/lastcommandoutput.txt 2>&1
+initssh
 
-echo "* Install base ubuntu development tools (python3, ...)"
-docker exec -t $iname bash -c "cd && apt-get install -y python3" > /tmp/lastcommandoutput.txt 2>&1
+if [ -n "$install_libs" ]; then
+    echo "* install jumpscale 9 lib"
+    ssh -A root@localhost -p 2222 'js9_getcode_libs_prefab_ays noinit'
 
-echo "* Install base ubuntu requirements tools (mc, make, git, ...)"
-docker exec -t $iname bash -c "cd && apt-get install -y curl mc openssh-server git make iproute2 g++ vim tmux localehelper psmisc pkg-config && mkdir /var/run/sshd" > /tmp/lastcommandoutput.txt 2>&1
+fi
 
-# docker exec -t $iname/bin/sh -c 'cat /root/.mascot.txt > /etc/motd' > /tmp/lastcommandoutput.txt 2>&1
-docker exec -t $iname /bin/sh -c 'echo "" > /etc/motd' > /tmp/lastcommandoutput.txt 2>&1
+if [ -n "$install_portal" ]; then
+    echo "* install jumpscale 9 portal"
+    ssh -A root@localhost -p 2222 'js9_getcode_portal noinit'
+fi
 
-echo "* mark its a container"
-docker exec -t $iname /bin/sh -c "touch /root/.iscontainer"
-
-echo "* make compile zerotier (3-5 min)"
-trap nothing ERR
-docker exec -t $iname /bin/sh -c "cd /tmp && git clone https://github.com/zerotier/ZeroTierOne.git && cd ZeroTierOne/ && make" > /tmp/lastcommandoutput.txt 2>&1
-trap valid ERR
-docker exec -t $iname /bin/sh -c "cd /tmp/ZeroTierOne/ && make install" > /tmp/lastcommandoutput.txt 2>&1
-docker exec -t $iname /bin/sh -c "rm -rf /tmp/ZeroTierOne"
-
-
-echo "* update/install python pip"
-docker exec -t $iname /bin/sh -c 'cd /tmp && rm -rf get-pip.py && curl -k https://bootstrap.pypa.io/get-pip.py > get-pip.py && python3 get-pip.py' > /tmp/lastcommandoutput.txt 2>&1
-docker exec -t $iname /bin/sh -c 'pip3 install --upgrade pip' > /tmp/lastcommandoutput.txt 2>&1
-docker exec -t $iname /bin/sh -c 'pip3 install tmuxp' > /tmp/lastcommandoutput.txt 2>&1
-docker exec -t $iname /bin/sh -c 'rm -f /tmp/get-pip.py' > /tmp/lastcommandoutput.txt 2>&1
-
-
-copyfiles
-linkcmds
-
-
-echo "* install jumpscale 9 from pip"
-trap nothing ERR
-docker exec -t $iname /bin/sh -c 'pip3 install -e /opt/code/github/jumpscale/core9 --upgrade' > /tmp/lastcommandoutput.txt 2>&1
-trap valid ERR
-
-initjs
+if [ -n "$initenv" ]; then
+    echo "* init environment"
+    ssh -A root@localhost -p 2222 'js9_init'
+fi
 
 cleanup
 
