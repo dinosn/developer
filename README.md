@@ -5,7 +5,7 @@ It uses Docker and the goal is to get it to work on Ubuntu, Windows & Mac OS X.
 
 ## JumpScale 9
 
-First execute `jsinit.sh` in order to prepare the environment:
+First execute `jsinit.sh` in order to prepare the installation:
 
 ```bash
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > $TMPDIR/jsinit.sh; sh $TMPDIR/jsinit.sh
