@@ -112,7 +112,7 @@ python3 -c "from JumpScale9 import j;j.tools.jsloader.generate()"
 python3 -c "from JumpScale.init import j;from IPython import embed;embed()"
 ```
 
-### Removing Homebrew and /opt on Mac OS X
+## Removing Homebrew and /opt on Mac OS X
 
 ```
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/scripts/osx_reset_all.sh?$RANDOM > $TMPDIR/resetall.sh;bash $TMPDIR/resetall.sh
