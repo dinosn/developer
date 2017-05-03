@@ -19,6 +19,8 @@ EOF
    exit 0
 }
 
+PORT=2222
+
 while getopts ":nph" opt; do
    case $opt in
    n )  iname=$OPTARG ;;
@@ -30,9 +32,6 @@ done
 
 shift $(($OPTIND - 1))
 
-if [ -n "$port" ]; then
-    PORT=2222
-fi
 
 trap nothing ERR
 docker rm --force $iname >/dev/null 2>&1
@@ -60,4 +59,4 @@ initjs
 # autostart
 
 
-echo "* SUCCESSFUL, please access over ssh (ssh -tA root@localhost -p 2222) or using js or jshell"
+echo "* SUCCESSFUL, please access over ssh (ssh -tA root@localhost -p $PORT) or using js or jshell"
