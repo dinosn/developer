@@ -62,20 +62,26 @@ docker run --name $iname -h $iname -d -p 2222:22 --device=/dev/net/tun --cap-add
 
 initssh
 
-if [ -n "$install_libs" ]; then
-    echo "* install jumpscale 9 lib"
-    ssh -A root@localhost -p 2222 'js9_getcode_libs_prefab_ays noinit'
+trap nothing ERR
+echo "* autoaccept github key"
+ssh -A root@localhost -p 2222 'ssh  -oStrictHostKeyChecking=no -T git@github.com -y'  > /tmp/lastcommandoutput.txt 2>&1
+trap valid ERR
 
+if [ -n "$install_libs" ]; then
+    echo "* install python dev environment (needed for certain python packages to install)"
+    ssh -A root@localhost -p 2222 'apt-get install build-essential libssl-dev libffi-dev python3-dev -y' > /tmp/lastcommandoutput.txt 2>&1
+    echo "* install jumpscale 9 lib"
+    ssh -A root@localhost -p 2222 'js9_getcode_libs_prefab_ays noinit' > /tmp/lastcommandoutput.txt 2>&1
 fi
 
 if [ -n "$install_portal" ]; then
     echo "* install jumpscale 9 portal"
-    ssh -A root@localhost -p 2222 'js9_getcode_portal noinit'
+    ssh -A root@localhost -p 2222 'js9_getcode_portal noinit' > /tmp/lastcommandoutput.txt 2>&1
 fi
 
 if [ -n "$initenv" ]; then
     echo "* init environment"
-    ssh -A root@localhost -p 2222 'js9_init'
+    ssh -A root@localhost -p 2222 'js9_init' > /tmp/lastcommandoutput.txt 2>&1
 fi
 
 cleanup
