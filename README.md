@@ -54,10 +54,9 @@ JumpScale 9:
 ssh root@localhost -p 2222
 ```
 
-
 JumpScale 8.2:
 ```
-ssh root@zerotierNetworkId
+ssh root@zerotier-IP-address
 #or
 docker exec -it js82 bash
 ```
@@ -72,7 +71,7 @@ js
 
 ## Recommended tools
 
-- All JumpScale code is checked out under `/opt/code` in development env or in `~/code/...`
+- All JumpScale code is checked out under `/opt/code` in the development environment or in `~/code/...`
 - Use an IDE like Atom for development, SourceTree is a good tool for Git manipulation
 - Over SSH you can play with the code in the Docker container
 - To push changes to a remote host (remote development) use `j.tools.develop...`
