@@ -98,6 +98,11 @@ function archlinux_install {
     sudo pacman -S --needed git curl openssh python3 --noconfirm
 }
 
+function fedora_install {
+   dnf install -y git curl openssh python3
+   export PATH=$PATH:/usr/local/bin
+}
+
 function cygwin_install {
     # Do something under Windows NT platform
     export LANG=C; export LC_ALL=C
@@ -172,8 +177,12 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     dist=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
     if [ "$dist" == "Ubuntu" ]; then
         ubuntu_install
-    elif type "pacman" > /dev/null; then
+
+    elif type "pacman" > /dev/null 2>&1; then
         archlinux_install
+    elif type "dnf" > /dev/null 2>&1; then
+        fedora_install
+
     else
         echo "ONLY ARCHLINUX & UBUNTU LINUX SUPPORTED"
         exit 1
@@ -247,7 +256,6 @@ valid
 
 trap valid ERR
 
-jumpscaleinstall
 valid
 
 echo "* please edit templates in $GIGDIR/private/, if you don't then installer will ask for it."

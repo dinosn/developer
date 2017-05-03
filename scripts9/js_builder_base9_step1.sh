@@ -5,15 +5,13 @@ source $CODEDIR/github/jumpscale/core9/cmds/js9_base
 
 
 export iname=js9_base0
-
 trap nothing ERR
 
-docker rm --force $iname >/dev/null 2>&1
-docker rm --force js9devel >/dev/null 2>&1
-docker rm --force js9 >/dev/null 2>&1
+docker inspect $iname > /dev/null 2>&1 &&  docker rm  -f $iname > /dev/null 2>&1
+docker inspect js9devel >  /dev/null 2>&1 &&  docker rm  -f js9devel > /dev/null 2>&1
+docker inspect js9  >  /dev/null 2>&1&&  docker rm  -f js9 > /dev/null 2>&1
 
 trap valid ERR
-
 echo "* BUILDING UBUNTU ZEROTIER (to see output do 'tail -f /tmp/lastcommandoutput.txt' in other console)"
 echo "* Starting docker container for ubuntu 1704"
 #${GIGDIR}/zerotier-one/:/var/lib/zerotier-one/

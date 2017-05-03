@@ -40,9 +40,9 @@ if ! docker images | grep -q "jumpscale/$bname"; then
 fi
 
 trap nothing ERR
-`docker ps --format "{{.Names}}" | grep -q "$iname"` &&  docker rm  -f $iname > /dev/null 2>&1
-`docker ps --format "{{.Names}}" | grep -q "js9devel"` &&  docker rm  -f js9deve > /dev/null 2>&1
-`docker ps --format "{{.Names}}" | grep -q "js9"` &&  docker rm  -f js9 > /dev/null 2>&1
+docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f $iname > /dev/null 2>&1
+docker  inspect js9devel >  /dev/null 2>&1  &&  docker rm  -f js9deve > /dev/null 2>&1
+docker inspect js9 > /dev/null 2>&1 &&  docker rm  -f js9 > /dev/null 2>&1
 
 trap valid ERR
 
