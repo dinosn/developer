@@ -45,7 +45,7 @@ docker exec -t js82 bash -c "pip3 install git+https://github.com/g8os/core0.git@
 valid
 docker exec -t js82 bash -c "pip3 install zerotier" > /tmp/lastcommandoutput.txt 2>&1
 valid
-docker exec -t js82 jspython -c "from js9 import j; j.tools.prefab.local.development.golang.install()" > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t js82 jspython -c "from JumpScale import j; j.tools.cuisine.local.development.golang.install()" > /tmp/lastcommandoutput.txt 2>&1
 valid
 docker exec -t js82 mkdir -p /usr/local/go > /tmp/lastcommandoutput.txt 2>&1
 valid
