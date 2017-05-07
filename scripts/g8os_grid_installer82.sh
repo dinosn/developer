@@ -77,13 +77,13 @@ docker exec -t js82 bash -c "mkdir -p /opt/go/proj/src/github.com" > /tmp/lastco
 valid
 docker exec -t js82 bash -c "if [ ! -d /opt/go/proj/src/github.com/g8os ]; then ln -sf /opt/code/github/g8os /opt/go/proj/src/github.com/g8os; fi" > /tmp/lastcommandoutput.txt 2>&1
 valid
-docker exec -t js82 bash -c "cd /opt/go/proj/src/github.com/g8os/grid/api; GOPATH=/opt/go/proj GOROOT=/opt/go/root/ /opt/go/root/bin/go get -d ./...; GOPATH=/opt/go/proj GOROOT=/opt/go/root/ /opt/go/root/bin/go build -o /root/gridapiserver" > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t js82 bash -c "cd /opt/go/proj/src/github.com/g8os/resourcepool/api; GOPATH=/opt/go/proj GOROOT=/opt/go/root/ /opt/go/root/bin/go get -d ./...; GOPATH=/opt/go/proj GOROOT=/opt/go/root/ /opt/go/root/bin/go build -o /root/resourcepoolapiserver" > /tmp/lastcommandoutput.txt 2>&1
 valid
 
 echo "Starting grid api server"
 ZEROTIERIP=`docker exec -t js82 bash -c "ip -4 addr show zt0 | grep -oP 'inet\s\d+(\.\d+){3}' | sed 's/inet //' | tr -d '\n\r'"`
-if ! docker exec -t js82 cat /root/init-include.sh | grep -q "/root/gridapiserver"; then
-  docker exec -t js82 bash -c 'echo "nohup /root/gridapiserver --bind '"${ZEROTIERIP}"':8080 --ays-url http://127.0.0.1:5000 --ays-repo my-little-grid-server > /var/log/gridapiserver.log 2>&1 &"  >> /root/init-include.sh' > /tmp/lastcommandoutput.txt 2>&1
+if ! docker exec -t js82 cat /root/init-include.sh | grep -q "/root/resourcepoolapiserver"; then
+  docker exec -t js82 bash -c 'echo "nohup /root/resourcepoolapiserver --bind '"${ZEROTIERIP}"':8080 --ays-url http://127.0.0.1:5000 --ays-repo my-little-grid-server > /var/log/resourcepoolapiserver.log 2>&1 &"  >> /root/init-include.sh' > /tmp/lastcommandoutput.txt 2>&1
   valid
 fi
 docker stop js82 > /tmp/lastcommandoutput.txt 2>&1
