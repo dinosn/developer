@@ -26,7 +26,7 @@ echo "* Update/Upgrade ubuntu (apt)"
 docker exec -t $iname bash -c "cd && apt-get update && apt-get upgrade -y " > /tmp/lastcommandoutput.txt 2>&1
 
 echo "* Install base ubuntu development tools (python3, ...)"
-docker exec -t $iname bash -c "cd && apt-get install -y python3" > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t $iname bash -c "cd && apt-get install -y python3 python3-dev" > /tmp/lastcommandoutput.txt 2>&1
 
 echo "* Install base ubuntu requirements tools (mc, make, git, ...)"
 docker exec -t $iname bash -c "cd && apt-get install -y curl mc openssh-server git make iproute2 g++ vim tmux localehelper psmisc pkg-config && mkdir /var/run/sshd" > /tmp/lastcommandoutput.txt 2>&1
