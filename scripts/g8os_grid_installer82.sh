@@ -50,18 +50,18 @@ valid
 docker exec -t js82 mkdir -p /usr/local/go > /tmp/lastcommandoutput.txt 2>&1
 valid
 
-echo "Updating AYS grid server"
+echo "Updating AYS resourcepool server"
 pushd ${GIGHOME}/code/github/ > /tmp/lastcommandoutput.txt 2>&1
 valid
 mkdir -p g8os > /tmp/lastcommandoutput.txt 2>&1
 valid
 pushd g8os > /tmp/lastcommandoutput.txt 2>&1
 valid
-if [ ! -d "grid" ]; then
-  git clone git@github.com:g8os/grid.git > /tmp/lastcommandoutput.txt 2>&1
+if [ ! -d "resourcepool" ]; then
+  git clone git@github.com:g8os/resourcepool.git > /tmp/lastcommandoutput.txt 2>&1
   valid
 fi
-pushd grid > /tmp/lastcommandoutput.txt 2>&1
+pushd resourcepool > /tmp/lastcommandoutput.txt 2>&1
 valid
 git pull
 valid
@@ -72,7 +72,7 @@ if ! docker exec -t js82 cat /root/init-include.sh | grep -q "ays start"; then
   valid
 fi
 
-echo "Building grid api server"
+echo "Building resourcepool api server"
 docker exec -t js82 bash -c "mkdir -p /opt/go/proj/src/github.com" > /tmp/lastcommandoutput.txt 2>&1
 valid
 docker exec -t js82 bash -c "if [ ! -d /opt/go/proj/src/github.com/g8os ]; then ln -sf /opt/code/github/g8os /opt/go/proj/src/github.com/g8os; fi" > /tmp/lastcommandoutput.txt 2>&1
@@ -80,7 +80,7 @@ valid
 docker exec -t js82 bash -c "cd /opt/go/proj/src/github.com/g8os/resourcepool/api; GOPATH=/opt/go/proj GOROOT=/opt/go/root/ /opt/go/root/bin/go get -d ./...; GOPATH=/opt/go/proj GOROOT=/opt/go/root/ /opt/go/root/bin/go build -o /root/resourcepoolapiserver" > /tmp/lastcommandoutput.txt 2>&1
 valid
 
-echo "Starting grid api server"
+echo "Starting resourcepool api server"
 ZEROTIERIP=`docker exec -t js82 bash -c "ip -4 addr show zt0 | grep -oP 'inet\s\d+(\.\d+){3}' | sed 's/inet //' | tr -d '\n\r'"`
 if ! docker exec -t js82 cat /root/init-include.sh | grep -q "/root/resourcepoolapiserver"; then
   docker exec -t js82 bash -c 'echo "nohup /root/resourcepoolapiserver --bind '"${ZEROTIERIP}"':8080 --ays-url http://127.0.0.1:5000 --ays-repo my-little-grid-server > /var/log/resourcepoolapiserver.log 2>&1 &"  >> /root/init-include.sh' > /tmp/lastcommandoutput.txt 2>&1
