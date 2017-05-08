@@ -47,7 +47,7 @@ For more details about using `js_builder_js82_zerotier.sh` see [here](docs/insta
 This script is based on the JumpScale 8.2 development environment above:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/Jumpscale/developer/master/scripts/g8os_grid_installer82.sh | bash -s <Branch> <your-ZeroTier-network-ID> <your-ZeroTier-network-ID>
+curl -sL https://raw.githubusercontent.com/Jumpscale/developer/master/scripts/g8os_grid_installer82.sh | bash -s <Branch> <your-ZeroTier-network-ID> <your-ZeroTier-Token>
 ```
 
 Again, to see interactive output do the following in separate console:
