@@ -43,6 +43,8 @@ fi
 echo "Installing grid dependencies"
 docker exec -t js82 bash -c "pip3 install git+https://github.com/g8os/core0.git@${BRANCH}#subdirectory=pyclient" > /tmp/lastcommandoutput.txt 2>&1
 valid
+docker exec -t js82 bash -c "pip3 install git+https://github.com/g8os/resourcepool.git@${BRANCH}#subdirectory=pyclient" > /tmp/lastcommandoutput.txt 2>&1
+valid
 docker exec -t js82 bash -c "pip3 install zerotier" > /tmp/lastcommandoutput.txt 2>&1
 valid
 docker exec -t js82 jspython -c "from JumpScale import j; j.tools.cuisine.local.development.golang.install()" > /tmp/lastcommandoutput.txt 2>&1
@@ -83,7 +85,7 @@ valid
 echo "Starting resourcepool api server"
 ZEROTIERIP=`docker exec -t js82 bash -c "ip -4 addr show zt0 | grep -oP 'inet\s\d+(\.\d+){3}' | sed 's/inet //' | tr -d '\n\r'"`
 if ! docker exec -t js82 cat /root/init-include.sh | grep -q "/root/resourcepoolapiserver"; then
-  docker exec -t js82 bash -c 'echo "nohup /root/resourcepoolapiserver --bind '"${ZEROTIERIP}"':8080 --ays-url http://127.0.0.1:5000 --ays-repo my-little-grid-server > /var/log/resourcepoolapiserver.log 2>&1 &"  >> /root/init-include.sh' > /tmp/lastcommandoutput.txt 2>&1
+  docker exec -t js82 bash -c 'echo "nohup /root/resourcepoolapiserver --bind '"${ZEROTIERIP}"':8080 --ays-url http://127.0.0.1:5000 --ays-repo resourcepool-server > /var/log/resourcepoolapiserver.log 2>&1 &"  >> /root/init-include.sh' > /tmp/lastcommandoutput.txt 2>&1
   valid
 fi
 docker stop js82 > /tmp/lastcommandoutput.txt 2>&1
@@ -92,12 +94,12 @@ docker start js82  > /tmp/lastcommandoutput.txt 2>&1
 valid
 
 echo "Waiting for api server to be ready"
-docker exec -t js82 bash -c "while true; do if [ -d /optvar/cockpit_repos/my-little-grid-server ]; then break; fi; sleep 1; done"
+docker exec -t js82 bash -c "while true; do if [ -d /optvar/cockpit_repos/resourcepool-server ]; then break; fi; sleep 1; done"
 echo "Deploying bootstrap service"
-docker exec -t js82 bash -c 'echo -e "bootstrap.g8os__grid1:\n  zerotierNetID: '"${ZEROTIERNWID}"'\n  zerotierToken: '"${ZEROTIERTOKEN}"'\n\nactions:\n  - action: install\n" > /optvar/cockpit_repos/my-little-grid-server/blueprints/bootstrap.bp'
-docker exec -t js82 bash -c 'cd /optvar/cockpit_repos/my-little-grid-server; ays blueprint' > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t js82 bash -c 'echo -e "bootstrap.g8os__grid1:\n  zerotierNetID: '"${ZEROTIERNWID}"'\n  zerotierToken: '"${ZEROTIERTOKEN}"'\n\nactions:\n  - action: install\n" > /optvar/cockpit_repos/resourcepool-server/blueprints/bootstrap.bp'
+docker exec -t js82 bash -c 'cd /optvar/cockpit_repos/resourcepool-server; ays blueprint' > /tmp/lastcommandoutput.txt 2>&1
 valid
-docker exec -t js82 bash -c 'cd /optvar/cockpit_repos/my-little-grid-server; ays run create --follow -y' > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t js82 bash -c 'cd /optvar/cockpit_repos/resourcepool-server; ays run create --follow -y' > /tmp/lastcommandoutput.txt 2>&1
 valid
 
 echo
