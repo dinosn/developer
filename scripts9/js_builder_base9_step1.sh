@@ -49,6 +49,7 @@ echo "* update/install python pip"
 docker exec -t $iname /bin/sh -c 'cd /tmp && rm -rf get-pip.py && curl -k https://bootstrap.pypa.io/get-pip.py > get-pip.py && python3 get-pip.py' > /tmp/lastcommandoutput.txt 2>&1
 docker exec -t $iname /bin/sh -c 'pip3 install --upgrade pip' > /tmp/lastcommandoutput.txt 2>&1
 docker exec -t $iname /bin/sh -c 'pip3 install tmuxp' > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t $iname /bin/sh -c 'pip3 install gitpython' > /tmp/lastcommandoutput.txt 2>&1
 docker exec -t $iname /bin/sh -c 'rm -f /tmp/get-pip.py' > /tmp/lastcommandoutput.txt 2>&1
 
 
