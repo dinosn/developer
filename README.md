@@ -11,10 +11,12 @@ First execute `jsinit.sh` in order to prepare the installation:
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > $TMPDIR/jsinit.sh; sh $TMPDIR/jsinit.sh
 ```
 
-Then in order to actually install you need to execute `js9_build `:
+Then in order to actually install you need to execute `js9_build`:
 
 ```bash
-js9_build -lp
+#-l installs extra libs
+#-p installs portal
+js9_build -l
 ```
 
 To see all options do ```js9_build -h```

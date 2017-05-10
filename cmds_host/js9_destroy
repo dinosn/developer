@@ -1,0 +1,8 @@
+#!/bin/bash
+source ~/.jsenv.sh
+cd $CODEDIR/github/jumpscale/developer/scripts9
+
+echo '* remove dockers'
+docker rm -f -v $(sudo docker ps -a -q)
+echo '* remove docker images'
+docker rmi -f -v $(docker images -q)

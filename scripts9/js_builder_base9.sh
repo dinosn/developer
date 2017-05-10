@@ -39,11 +39,11 @@ if ! docker images | grep -q "jumpscale/$bname"; then
     sh js_builder_base9_step1.sh
 fi
 
-trap nothing ERR
+trap - ERR
+set +e
 docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f $iname > /dev/null 2>&1
 docker  inspect js9devel >  /dev/null 2>&1  &&  docker rm  -f js9deve > /dev/null 2>&1
 docker inspect js9 > /dev/null 2>&1 &&  docker rm  -f js9 > /dev/null 2>&1
-
 trap valid ERR
 
 #make sure we always install jumpscale if any of the libs are asked for
@@ -60,14 +60,18 @@ docker run --name $iname -h $iname -d -p 2222:22 --device=/dev/net/tun --cap-add
 
 initssh
 
-trap nothing ERR
+
+set -x
+trap - ERR
+set +e
 echo "* autoaccept github key"
 ssh -A root@localhost -p 2222 'ssh  -oStrictHostKeyChecking=no -T git@github.com -y'  > /tmp/lastcommandoutput.txt 2>&1
 trap valid ERR
 
+
 if [ -n "$install_libs" ]; then
     echo "* install python dev environment (needed for certain python packages to install)"
-    ssh -A root@localhost -p 2222 'apt-get install build-essential libssl-dev libffi-dev python3-dev -y' > /tmp/lastcommandoutput.txt 2>&1
+    ssh -A root@localhost -p 2222 'apt-get update -y;apt-get upgrade -y;apt-get install build-essential libssl-dev libffi-dev python3-dev -y' > /tmp/lastcommandoutput.txt 2>&1
     echo "* install jumpscale 9 lib"
     ssh -A root@localhost -p 2222 'js9_getcode_libs_prefab_ays noinit' > /tmp/lastcommandoutput.txt 2>&1
 fi
