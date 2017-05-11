@@ -5,13 +5,14 @@ source $CODEDIR/github/jumpscale/core9/cmds/js9_base
 
 
 export iname=js9_base0
-trap nothing ERR
-
+trap - ERR
+set +e
 docker inspect $iname > /dev/null 2>&1 &&  docker rm  -f $iname > /dev/null 2>&1
 docker inspect js9devel >  /dev/null 2>&1 &&  docker rm  -f js9devel > /dev/null 2>&1
 docker inspect js9  >  /dev/null 2>&1&&  docker rm  -f js9 > /dev/null 2>&1
-
+set -e
 trap valid ERR
+
 echo "* BUILDING UBUNTU ZEROTIER (to see output do 'tail -f /tmp/lastcommandoutput.txt' in other console)"
 echo "* Starting docker container for ubuntu 1704"
 #${GIGDIR}/zerotier-one/:/var/lib/zerotier-one/
@@ -29,7 +30,7 @@ echo "* Install base ubuntu development tools (python3, ...)"
 docker exec -t $iname bash -c "cd && apt-get install -y python3 python3-dev" > /tmp/lastcommandoutput.txt 2>&1
 
 echo "* Install base ubuntu requirements tools (mc, make, git, ...)"
-docker exec -t $iname bash -c "cd && apt-get install -y curl mc openssh-server git make iproute2 g++ vim tmux localehelper psmisc pkg-config && mkdir /var/run/sshd" > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t $iname bash -c "cd && apt-get install -y curl mc openssh-server git make net-tools iproute2 g++ vim tmux localehelper psmisc pkg-config && mkdir /var/run/sshd" > /tmp/lastcommandoutput.txt 2>&1
 
 # docker exec -t $iname/bin/sh -c 'cat /root/.mascot.txt > /etc/motd' > /tmp/lastcommandoutput.txt 2>&1
 docker exec -t $iname /bin/sh -c 'echo "" > /etc/motd' > /tmp/lastcommandoutput.txt 2>&1
@@ -37,10 +38,16 @@ docker exec -t $iname /bin/sh -c 'echo "" > /etc/motd' > /tmp/lastcommandoutput.
 echo "* mark its a container"
 docker exec -t $iname /bin/sh -c "touch /root/.iscontainer"
 
+echo "* get/update jumpscale code"
+getcode core9 > /tmp/lastcommandoutput.txt 2>&1
+getcode developer > /tmp/lastcommandoutput.txt 2>&1
+
 echo "* make compile zerotier (3-5 min)"
-trap nothing ERR
+trap - ERR
+set +e
 docker exec -t $iname /bin/sh -c "cd /tmp && git clone https://github.com/zerotier/ZeroTierOne.git && cd ZeroTierOne/ && make" > /tmp/lastcommandoutput.txt 2>&1
 trap valid ERR
+set -e
 docker exec -t $iname /bin/sh -c "cd /tmp/ZeroTierOne/ && make install" > /tmp/lastcommandoutput.txt 2>&1
 docker exec -t $iname /bin/sh -c "rm -rf /tmp/ZeroTierOne"
 
@@ -58,9 +65,11 @@ linkcmds
 
 
 echo "* install jumpscale 9 from pip"
-trap nothing ERR
+# trap - ERR
+# set +e
 docker exec -t $iname /bin/sh -c 'pip3 install -e /opt/code/github/jumpscale/core9 --upgrade' > /tmp/lastcommandoutput.txt 2>&1
 trap valid ERR
+set -e
 initjs
 
 cleanup

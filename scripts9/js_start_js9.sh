@@ -31,12 +31,14 @@ done
 shift $(($OPTIND - 1))
 
 
-trap nothing ERR
+trap - ERR
+set +e
 docker inspect $bname >  /dev/null 2>&1 &&  docker rm  -f $bname > /dev/null 2>&1
 docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f "$iname" > /dev/null 2>&1
 trap valid ERR
+set -e
 if ! docker images | grep -q "jumpscale/$bname"; then
-    bash js_builder_base9.sh -lp
+    bash js_builder_base9.sh -l
 fi
 echo "* start jumpscale 9 development env based on ub 1704 (to see output do 'tail -f /tmp/lastcommandoutput.txt' in other console)"
 
@@ -48,7 +50,9 @@ initssh
 copyfiles
 linkcmds
 
-initjs
+echo "* init js9 environment"
+ssh -A root@localhost -p 2222 'js9_init' > /tmp/lastcommandoutput.txt 2>&1
+
 
 # configzerotiernetwork
 #

@@ -45,6 +45,7 @@ docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f $iname > /dev/null 2>&
 docker  inspect js9devel >  /dev/null 2>&1  &&  docker rm  -f js9deve > /dev/null 2>&1
 docker inspect js9 > /dev/null 2>&1 &&  docker rm  -f js9 > /dev/null 2>&1
 trap valid ERR
+set -e
 
 #make sure we always install jumpscale if any of the libs are asked for
 if [ -n "$install_libs" ]; then
@@ -54,6 +55,7 @@ fi
 if [ -n "$install_portal" ]; then
     install_js=1
     install_libs=1
+    initenv=1
 fi
 
 docker run --name $iname -h $iname -d -p 2222:22 --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGDIR}/:/root/gig/ -v ${GIGDIR}/code/:/opt/code/ jumpscale/$bname sleep 365d  > /tmp/lastcommandoutput.txt 2>&1
@@ -61,12 +63,16 @@ docker run --name $iname -h $iname -d -p 2222:22 --device=/dev/net/tun --cap-add
 initssh
 
 
-set -x
 trap - ERR
 set +e
 echo "* autoaccept github key"
 ssh -A root@localhost -p 2222 'ssh  -oStrictHostKeyChecking=no -T git@github.com -y'  > /tmp/lastcommandoutput.txt 2>&1
+set -e
 trap valid ERR
+
+echo "* get/update jumpscale code"
+getcode core9 > /tmp/lastcommandoutput.txt 2>&1
+getcode developer > /tmp/lastcommandoutput.txt 2>&1
 
 
 if [ -n "$install_libs" ]; then
@@ -82,7 +88,7 @@ if [ -n "$install_portal" ]; then
 fi
 
 if [ -n "$initenv" ]; then
-    echo "* init environment"
+    echo "* init js9 environment"
     ssh -A root@localhost -p 2222 'js9_init' > /tmp/lastcommandoutput.txt 2>&1
 fi
 
