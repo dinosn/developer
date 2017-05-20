@@ -6,15 +6,32 @@ if ! type "curl" > /dev/null; then
 fi
 
 function valid() {
-  echo 3
-  EXITCODE=$?
-  if [ ${EXITCODE} -ne 0 ]; then
-      cat /tmp/lastcommandoutput.txt
-      echo "Error in last step"
-      echo $1
-      exit ${EXITCODE}
-  fi
+  # EXITCODE=$?
+  # if [ ${EXITCODE} -ne 0 ]; then
+  echo "Error in line: $1"
+  cat /tmp/lastcommandoutput.txt
+  # echo $1
+  exit ${EXITCODE}
+  # fi
 }
+
+function errortrapon() {
+    #make sure previous error is empty
+    echo > /tmp/lastcommandoutput.txt
+    trap 'valid $LINENO' ERR
+    set -e
+}
+
+function errortrapoff() {
+    #make sure previous error is empty
+    echo > /tmp/lastcommandoutput.txt
+    trap - ERR
+    set +e
+}
+
+
+
+errortrapon
 
 function osx_install {
 
@@ -23,27 +40,21 @@ function osx_install {
       yes '' | /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
 
-    set +e
     sudo echo "* Unlink curl/python/git"
+    errortrapoff
     brew unlink curl   > /tmp/lastcommandoutput.txt 2>&1
     brew unlink python3  > /tmp/lastcommandoutput.txt 2>&1
     brew unlink git  > /tmp/lastcommandoutput.txt 2>&1
-    set -e
+    initerrortrap
     sudo echo "* Install Python"
     brew install --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
-    valid
     brew link --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
-    valid
     sudo echo "* Install Git"
     brew install git  > /tmp/lastcommandoutput.txt 2>&1
-    valid
     brew link --overwrite git  > /tmp/lastcommandoutput.txt 2>&1
-    valid
     sudo echo "* Install Curl"
     brew install curl  > /tmp/lastcommandoutput.txt 2>&1
-    valid
     brew link --overwrite curl  > /tmp/lastcommandoutput.txt 2>&1
-    valid
 
     # brew install snappy
     # sudo mkdir -p /optvar
@@ -119,48 +130,47 @@ function cygwin_install {
 }
 
 function getcode {
-    echo "get code"
+    errortrapon
+    echo "* get code"
     cd $CODEDIR/github/jumpscale
 
     if [ ! -e $CODEDIR/github/jumpscale/developer ]; then
-        set +e
-        git clone git@github.com:Jumpscale/developer.git
+        errortrapoff
+        git clone git@github.com:Jumpscale/developer.git > /tmp/lastcommandoutput.txt 2>&1
         if [ ! $? -eq 0 ]; then
-            set -e
-            git clone https://github.com/Jumpscale/developer.git
+            errortrapon
+            git clone https://github.com/Jumpscale/developer.git > /tmp/lastcommandoutput.txt 2>&1
         fi
-        set -e
+        errortrapon
     else
         cd $CODEDIR/github/jumpscale/developer
-        git pull
+        git pull > /tmp/lastcommandoutput.txt 2>&1
     fi
 
     cd $CODEDIR/github/jumpscale
     if [ ! -e $CODEDIR/github/jumpscale/core9 ]; then
-        set +e
-        git clone git@github.com:Jumpscale/core9.git
+        errortrapoff
+        git clone git@github.com:Jumpscale/core9.git > /tmp/lastcommandoutput.txt 2>&1
         if [ ! $? -eq 0 ]; then
-            set -e
-            git clone https://github.com/Jumpscale/core9.git
+            errortrapon
+            git clone https://github.com/Jumpscale/core9.git > /tmp/lastcommandoutput.txt 2>&1
         fi
-        set -e
+        errortrapon
     else
         cd $CODEDIR/github/jumpscale/core9
-        git pull
+        git pull > /tmp/lastcommandoutput.txt 2>&1
     fi
 }
 
 
 ########MAIN BLOCK#############
-trap valid ERR
+errortrapon
 
 echo "* get mascot"
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > ~/.mascot.txt
-valid
 clear
 cat ~/.mascot.txt
 echo
-set -x
 
 if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
@@ -192,14 +202,12 @@ fi
 
 echo "* get gig environment script"
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh
-valid
 
 
 echo "* include the gig environment script"
 source  ~/.jsenv.sh
 #THIS GIVES GIG & CODEDIR
-
-trap valid ERR
+errortrapon
 
 #check profile file exists, if yes modify
 if [ ! -e $HOMEDIR/.bash_profile ] ; then
@@ -211,7 +219,6 @@ else
     fi
 fi
 
-set -e
 sed  '/export SSHKEYNAME/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
 mv $HOMEDIR/.bash_profile2 $HOMEDIR/.bash_profile
 sed  '/jsenv.sh/d'  $HOMEDIR/.bash_profile > $HOMEDIR/.bash_profile2
@@ -223,12 +230,9 @@ echo source ~/.jsenv.sh >> $HOMEDIR/.bash_profile
 echo "* create dir's"
 export CODEDIR="$GIGDIR/code"
 mkdir -p $CODEDIR/github/jumpscale > /tmp/lastcommandoutput.txt 2>&1
-valid
 
 echo "* get core code for development scripts & jumpscale core"
-getcode > /tmp/lastcommandoutput.txt 2>&1
-echo 111
-valid
+getcode
 
 function linkcode {
     echo "* link commands to local environment"
@@ -241,7 +245,6 @@ function linkcode {
 }
 
 linkcode > /tmp/lastcommandoutput.txt 2>&1
-valid
 
 #create private dir
 mkdir -p $GIGDIR/private
@@ -253,7 +256,6 @@ fi
 echo "* copy chosen sshpub key"
 mkdir -p $GIGDIR/private/pubsshkeys
 cp ~/.ssh/$SSHKEYNAME.pub $GIGDIR/private/pubsshkeys/ > /tmp/lastcommandoutput.txt 2>&1
-valid
 
 echo "* please edit templates in $GIGDIR/private/, if you don't then installer will ask for it."
 echo "* to get started with jumpscale do 'js9_start', docker needs to be installed locally."
