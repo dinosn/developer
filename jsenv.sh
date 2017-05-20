@@ -2,19 +2,6 @@
 #this is the main env file which needs to be sourced for any action we do on our platform
 
 
-function valid () {
-  EXITCODE=$?
-  if [ ${EXITCODE} -ne 0 ]; then
-      cat /tmp/lastcommandoutput.txt
-      if [ -z $1 ]; then
-        echo "Error in last step"
-      else
-        echo $1
-      fi
-      exit ${EXITCODE}
-  fi
-}
-
 clear
 
 # cat ~/gig/.mascot.txt
@@ -88,3 +75,5 @@ export GIGDIR="$GIGDIR"
 export CODEDIR="$GIGDIR/code"
 
 export PS1="gig:\h:\w$\[$(tput sgr0)\]"
+
+set +ex 
