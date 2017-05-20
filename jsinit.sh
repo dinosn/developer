@@ -152,6 +152,7 @@ function getcode {
 
 
 ########MAIN BLOCK#############
+trap valid ERR
 
 echo "* get mascot"
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/mascot?$RANDOM > ~/.mascot.txt
@@ -249,11 +250,6 @@ fi
 echo "* copy chosen sshpub key"
 mkdir -p $GIGDIR/private/pubsshkeys
 cp ~/.ssh/$SSHKEYNAME.pub $GIGDIR/private/pubsshkeys/ > /tmp/lastcommandoutput.txt 2>&1
-valid
-
-
-trap valid ERR
-
 valid
 
 echo "* please edit templates in $GIGDIR/private/, if you don't then installer will ask for it."
