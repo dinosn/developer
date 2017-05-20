@@ -118,7 +118,6 @@ function cygwin_install {
 }
 
 function getcode {
-
     echo "get code"
     cd $CODEDIR/github/jumpscale
 
@@ -126,10 +125,10 @@ function getcode {
         set +e
         git clone git@github.com:Jumpscale/developer.git
         if [ ! $? -eq 0 ]; then
-            set -ex
+            set -e
             git clone https://github.com/Jumpscale/developer.git
         fi
-        set +e
+        set -e
     else
         cd $CODEDIR/github/jumpscale/developer
         git pull
@@ -140,10 +139,10 @@ function getcode {
         set +e
         git clone git@github.com:Jumpscale/core9.git
         if [ ! $? -eq 0 ]; then
-            set -ex
+            set -e
             git clone https://github.com/Jumpscale/core9.git
         fi
-        set +e
+        set -e
     else
         cd $CODEDIR/github/jumpscale/core9
         git pull
@@ -198,6 +197,8 @@ valid
 echo "* include the gig environment script"
 source  ~/.jsenv.sh
 #THIS GIVES GIG & CODEDIR
+
+trap valid ERR
 
 #check profile file exists, if yes modify
 if [ ! -e $HOMEDIR/.bash_profile ] ; then
