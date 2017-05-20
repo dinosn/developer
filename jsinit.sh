@@ -176,7 +176,7 @@ if [ "$(uname)" == "Darwin" ]; then
     # Do something under Mac OS X platform
     echo "* INSTALL homebrew, curl, python, git"
     export LANG=C; export LC_ALL=C
-    #osx_install
+    osx_install
 elif [ -e /etc/alpine-release ]; then
     echo "* INSTALL curl, python, git"
     alpine_install
