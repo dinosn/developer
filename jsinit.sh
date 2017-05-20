@@ -144,7 +144,7 @@ function getcode {
         fi
         set -e
     else
-        set -e
+        set +e
         cd $CODEDIR/github/jumpscale/core9
         git pull
     fi
