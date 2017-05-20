@@ -6,6 +6,7 @@ if ! type "curl" > /dev/null; then
 fi
 
 function valid() {
+  echo 3
   EXITCODE=$?
   if [ ${EXITCODE} -ne 0 ]; then
       cat /tmp/lastcommandoutput.txt
@@ -144,7 +145,6 @@ function getcode {
         fi
         set -e
     else
-        set +e
         cd $CODEDIR/github/jumpscale/core9
         git pull
     fi
@@ -227,6 +227,7 @@ valid
 
 echo "* get core code for development scripts & jumpscale core"
 getcode > /tmp/lastcommandoutput.txt 2>&1
+echo 111
 valid
 
 function linkcode {
