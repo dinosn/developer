@@ -10,9 +10,10 @@ function usage () {
 Usage: js9_start [-n $name] [-p $port]
    -n $name: name of container
    -p $port: port on which to install
+   -b: build the docker, don't download from docker
    -h: help
 
-   example to do all: 'js9_start -n mymachine -p 2223' which will start a container with name myachine on port 2223
+   example to do all: 'js9_start -n mymachine -p 2223' which will start a container with name myachine on port 2223 and download
    also works with specifying nothing
 
 EOF
@@ -24,6 +25,7 @@ while getopts ":nph" opt; do
    case $opt in
    n )  iname=$OPTARG ;;
    p )  PORT=$OPTARG ;;
+   b )  BUILD=1 ;;
    h )  usage ; exit 0 ;;
    \?)  usage exit0 ;;
    esac
@@ -38,7 +40,9 @@ docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f "$iname" > /dev/null 2
 trap valid ERR
 set -e
 if ! docker images | grep -q "jumpscale/$bname"; then
-    bash js_builder_base9.sh -l
+    if [ -n "$BUILD" ]; then
+        bash js_builder_base9.sh -l
+    fi
 fi
 echo "* start jumpscale 9 development env based on ub 1704 (to see output do 'tail -f /tmp/lastcommandoutput.txt' in other console)"
 
