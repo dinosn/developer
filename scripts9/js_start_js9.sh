@@ -21,7 +21,7 @@ EOF
 }
 
 PORT=2222
-while getopts ":nph" opt; do
+while getopts ":npbh" opt; do
    case $opt in
    n )  iname=$OPTARG ;;
    p )  PORT=$OPTARG ;;
@@ -54,7 +54,9 @@ initssh
 copyfiles
 linkcmds
 
-echo "* init js9 environment"
+echo "* update jumpscale code (js9_code update -a jumpscale -f)"
+ssh -A root@localhost -p 2222 'js9_code update -a jumpscale -f' > /tmp/lastcommandoutput.txt 2>&1
+echo "* init js9 environment (js9_init)"
 ssh -A root@localhost -p 2222 'js9_init' > /tmp/lastcommandoutput.txt 2>&1
 
 
