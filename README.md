@@ -83,12 +83,12 @@ js
 
 ## Recommended tools
 
-- All JumpScale code is checked out under `/opt/code` in the development environment or in `~/code/...`
+- All JumpScale code is checked out under `/opt/code` in the development environment or in `~/gig/code/...`
 - Use an IDE like Atom for development, SourceTree is a good tool for Git manipulation
 - Over SSH you can play with the code in the Docker container
 - To push changes to a remote host (remote development) use `j.tools.develop...`
 
-## Other scripts
+## Other scripts (js8)
 
 In `/scripts`:
 
@@ -103,7 +103,7 @@ In `/scripts`:
 docker rm $(docker ps -a -q)
 ```
 
-## Init tools
+## Init tools (js8)
 
 ```
 #sets the initial config
