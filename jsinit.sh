@@ -45,7 +45,7 @@ function osx_install {
     brew unlink curl   > /tmp/lastcommandoutput.txt 2>&1
     brew unlink python3  > /tmp/lastcommandoutput.txt 2>&1
     brew unlink git  > /tmp/lastcommandoutput.txt 2>&1
-    initerrortrap
+    errortrapon
     sudo echo "* Install Python"
     brew install --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
     brew link --overwrite python3  > /tmp/lastcommandoutput.txt 2>&1
