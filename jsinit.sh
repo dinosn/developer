@@ -129,13 +129,41 @@ cygwin_install() {
     ln -sf /usr/bin/python3 /usr/bin/python
 }
 
+branchExists() {
+    repository="$1"
+    branch="$2"
+
+    echo "* Checking if ${repository}/${branch} exists"
+    httpcode=$(curl -o /dev/null -I -s --write-out '%{http_code}\n' https://github.com/${repository}/tree/${branch})
+
+    if [ "$httpcode" = "200" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 getcode() {
     errortrapon
     echo "* get code"
     cd $CODEDIR/github/jumpscale
 
+    if ! grep -q ^github.com ~/.ssh/known_hosts 2> /dev/null; then
+        ssh-keyscan github.com >> ~/.ssh/known_hosts 2>&1
+    fi
+
+    export GIGBRANCH=${GIGBRANCH:-"master"}
+
     if [ ! -e $CODEDIR/github/jumpscale/developer ]; then
         repository="Jumpscale/developer"
+        branch=$GIGBRANCH
+
+        # fallback to master if branch doesn't exists
+        if ! branchExists ${repository} ${branch}; then
+            branch="master"
+        fi
+
+        echo "* Cloning github.com/${repository} [${branch}]"
         git clone git@github.com:${repository} || git clone https://github.com/${repository}
 
     else
@@ -146,7 +174,15 @@ getcode() {
     cd $CODEDIR/github/jumpscale
     if [ ! -e $CODEDIR/github/jumpscale/core9 ]; then
         repository="Jumpscale/core9"
-        git clone git@github.com:${repository} || git clone https://github.com/${repository}
+        branch=$GIGBRANCH
+
+        # fallback to master if branch doesn't exists
+        if ! branchExists ${repository} ${branch}; then
+            branch="master"
+        fi
+
+        echo "* Cloning github.com/${repository} [${branch}]"
+        git clone -b "${branch}" git@github.com:${repository} || git clone -b "${branch}" https://github.com/${repository}
 
     else
         cd $CODEDIR/github/jumpscale/core9
@@ -247,7 +283,6 @@ mkdir -p $GIGDIR/private
 if [ ! -e "$GIGDIR/private/me.toml" ]; then
     echo "* copy templates private files."
     cp $CODEDIR/github/jumpscale/developer/templates/private/me.toml $GIGDIR/private/ > /tmp/lastcommandoutput.txt 2>&1
-    valid
 fi
 
 echo "* copy chosen sshpub key"
