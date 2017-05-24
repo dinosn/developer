@@ -52,7 +52,7 @@ show_usage() {
 }
 
 info() {
-    echo -e "[+] \033[34;1m${1}: \033[36;1m${2}\033[0m"
+    printf "[+] \033[34;1m${1}: \033[36;1m${2}\033[0m\n"
 }
 
 load_settings() {
@@ -139,9 +139,9 @@ docker_create_js() {
 
     ztaddr=$(docker exec -t js82 zerotier-cli listnetworks | grep ${ztnetwork} | awk '{ print $NF }')
     ztip=$(echo ${ztaddr} | cut -d'/' -f1)
-    echo -e "[+] container zerotier ip: \033[32;1m${ztaddr}\033[0m"
+    printf "[+] container zerotier ip: \033[32;1m${ztaddr}\033[0m\n"
 
-    if [ $advanced == 0 ]; then
+    if [ $advanced -eq 0 ]; then
         echo "[+] cleaning host known_hosts for this target"
         ssh-keygen -f ~/.ssh/known_hosts -R ${ztip} 2> ${logfile}
     fi
@@ -151,7 +151,7 @@ docker_create_js() {
     docker exec -t js82 bash -c "curl -sk https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > /tmp/install.sh"
     docker exec -t js82 bash -c "export JSBRANCH="${JSBRANCH}" && cd /tmp && bash install.sh" > ${logfile} 2>&1
 
-    if [ $advanced == 0 ]; then
+    if [ $advanced -eq 0 ]; then
         echo "[+] installing aliases"
 
         if ! grep -q "alias js82='docker exec -it js82 js'" ~/.bashrc; then
@@ -170,15 +170,15 @@ docker_create_js() {
 }
 
 success_message() {
-    echo "[+] ================================"
-    echo -e "[+] \033[32mCongratulations\033[0m, your docker based jumpscale installation is ready !"
-    echo "[+] Sandbox is present in the zerotier network ${ztnetwork} with ip: ${ztip}"
-    echo "[+] Run js82, ays82, or js82bash in a new shell to work in your sandbox"
-    echo "[+] ssh into your sandbox via: ssh root@${ztip}"
-    # echo "[+] Recreate a new jumscale docker without rebuilding as follows:"
-    # echo "[+]  docker rm --force js82"
-    # echo "[+]  docker run --name js82 -h js82 -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGPATH}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGPATH}/code/:/opt/code/ -v ${GIGPATH}/data/:/optvar/data jumpscale/js82"
-    echo "[+] ================================"
+    printf "[+] ================================\n"
+    printf "[+] \033[32mCongratulations\033[0m, your docker based jumpscale installation is ready !\n"
+    printf "[+] Sandbox is present in the zerotier network ${ztnetwork} with ip: ${ztip}\n"
+    printf "[+] Run js82, ays82, or js82bash in a new shell to work in your sandbox\n"
+    printf "[+] ssh into your sandbox via: ssh root@${ztip}\n"
+    # print "[+] Recreate a new jumscale docker without rebuilding as follows:"
+    # print "[+]  docker rm --force js82"
+    # print "[+]  docker run --name js82 -h js82 -d --device=/dev/net/tun --cap-add=NET_ADMIN --cap-add=SYS_ADMIN -v ${GIGPATH}/zerotier-one/:/var/lib/zerotier-one/ -v ${GIGPATH}/code/:/opt/code/ -v ${GIGPATH}/data/:/optvar/data jumpscale/js82"
+    printf "[+] ================================\n"
 }
 
 main() {
@@ -200,7 +200,7 @@ main() {
         esac
     done
 
-    if [ "$ztnetwork" == "" ]; then
+    if [ "$ztnetwork" = "" ]; then
         echo "[-] Zerotier Network is required (-z option)"
         exit 1
     fi
@@ -213,16 +213,16 @@ main() {
     info "GIG Home Path" $GIGPATH
     info "ZeroTier Network" $ztnetwork
 
-    if [ $verbose == 1 ]; then
+    if [ $verbose -eq 1 ]; then
         info "Verbose mode" "enabled"
     fi
 
-    if [ $verbose == 1 ]; then
+    if [ $verbose -eq 1 ]; then
         info "Advanced mode" "enabled"
     fi
 
     echo ""
-    if [ $ask == 1 ]; then
+    if [ $ask -eq 1 ]; then
         echo "Press ENTER to continue, hit CTRL+C to cancel"
         read
     fi

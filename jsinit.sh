@@ -197,8 +197,7 @@ elif [ "$(expr substr $(uname -s) 1 9)" = "CYGWIN_NT" ]; then
 fi
 
 echo "* get gig environment script"
-# curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh
-curl https://gist.githubusercontent.com/maxux/c3ba5119665ce6f70510e8e0287d46d0/raw/3a59cc079b076ae7e9d2ea9bfdc4914ac773a165/jsenv.sh > ~/.jsenv.sh
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh
 
 
 echo "* include the gig environment script"
