@@ -8,29 +8,22 @@ clear
 
 set -e
 
-if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
-  # Windows subsystem 4 linux
-  WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
-  WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
-  GIGDIR=/mnt/c/Users/${WINDOWSUSERNAME}/gig
-else
-  # Native Linux or MacOSX
-  GIGDIR=~/gig
-fi
-
-if [ "$(uname)" == "Darwin" ]; then
+if [ "$(uname)" = "Darwin" ]; then
     export LANG=C; export LC_ALL=C
     export HOMEDIR=~
+
 elif grep -q Microsoft /proc/version; then
-      # Windows subsystem 4 linux
-      WINDOWSUSERNAME=`ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.'`
-      WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
-      GIGDIR=/mnt/c/Users/${WINDOWSUSERNAME}/gig
+    # Windows subsystem 4 linux
+    WINDOWSUSERNAME=$(ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.')
+    WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
+    GIGDIR=/mnt/c/Users/${WINDOWSUSERNAME}/gig
+
 else
     # Native Linux or MacOSX
-    export GIGDIR=~/gig
+    export GIGDIR=${GIGDIR:-~/gig}
     HOMEDIR=~
 fi
+
 
 #can overrule if you want
 #export TMPDIR=/tmp
