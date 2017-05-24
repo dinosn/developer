@@ -50,21 +50,14 @@ else
     export SSHKEYNAME=`echo $SSHKEYNAME | xargs`
 fi
 
-while [ ! -e "$HOMEDIR/.ssh/$SSHKEYNAME" ]
+while [ ! -e "$HOMEDIR/.ssh/$SSHKEYNAME" ] || [ "$SSHKEYNAME" = "" ]
 do
     echo "please give name of ssh key to load, if not generate one."
     read -p 'SSHKEYNAME: ' SSHKEYNAME
     echo "check keypath '$HOMEDIR/.ssh/$SSHKEYNAME' exists"
 done
 
-set +e
-keyexists=$(ssh-add -l| grep $SSHKEYNAME)
-#check exit code if not 0 then means key did not exist
-if [ $? -eq 0 ]; then
-    set -e
-    # echo "                                                                                       sshkey $SSHKEYNAME loaded."
-else
-    set -e
+if ! ssh-add -l | grep -q $SSHKEYNAME; then
     echo "will now try to load sshkey: $HOMEDIR/.ssh/$SSHKEYNAME"
     ssh-add $HOMEDIR/.ssh/$SSHKEYNAME
     echo "ssh key $SSHKEYNAME loaded"
@@ -76,4 +69,4 @@ export CODEDIR="$GIGDIR/code"
 
 export PS1="gig:\h:\w$\[$(tput sgr0)\]"
 
-set +ex 
+set +ex
