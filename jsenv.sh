@@ -1,6 +1,6 @@
+#!/bin/bash
 
 #this is the main env file which needs to be sourced for any action we do on our platform
-
 
 clear
 
