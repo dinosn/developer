@@ -8,7 +8,7 @@ It uses Docker and the goal is to get it to work on Ubuntu, Windows & Mac OS X.
 First execute `jsinit.sh` in order to prepare the installation:
 
 ```bash
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > $TMPDIR/jsinit.sh; sh $TMPDIR/jsinit.sh
+curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > $TMPDIR/jsinit.sh; bash $TMPDIR/jsinit.sh
 ```
 
 Then in order to actually install you need to execute `js9_build`:
