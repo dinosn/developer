@@ -1,11 +1,13 @@
+#!/bin/sh
 set -e
+
 clear
-if ! type "curl" > /dev/null; then
+if ! which curl > /dev/null; then
   echo "curl is not installed, please install"
   exit 1
 fi
 
-function valid() {
+valid() {
   # EXITCODE=$?
   # if [ ${EXITCODE} -ne 0 ]; then
   echo "Error in line: $1"
@@ -15,14 +17,14 @@ function valid() {
   # fi
 }
 
-function errortrapon() {
+errortrapon() {
     #make sure previous error is empty
     echo > /tmp/lastcommandoutput.txt
     trap 'valid $LINENO' ERR
     set -e
 }
 
-function errortrapoff() {
+errortrapoff() {
     #make sure previous error is empty
     echo > /tmp/lastcommandoutput.txt
     trap - ERR
@@ -33,9 +35,8 @@ function errortrapoff() {
 
 errortrapon
 
-function osx_install {
-
-    if ! type "brew" > /dev/null; then
+osx_install() {
+    if ! which brew > /dev/null; then
       sudo echo "* Install Brew"
       yes '' | /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
@@ -63,7 +64,7 @@ function osx_install {
     # sudo chown -R $USER /opt
 }
 
-function alpine_install {
+alpine_install() {
     apk add git  > /tmp/lastcommandoutput.txt 2>&1
     apk add curl  > /tmp/lastcommandoutput.txt 2>&1
     apk add python3  > /tmp/lastcommandoutput.txt 2>&1
@@ -84,12 +85,11 @@ function alpine_install {
 
 }
 
-function ubuntu_install {
+ubuntu_install() {
     locale-gen en_US.UTF-8
     export LANG=en_US.UTF-8
     export LC_ALL=en_US.UTF-8
 
-    apt-get install git
     apt-get install curl git ssh python3 -y
     # apt-get install python3-pip -y
     # apt-get install libssl-dev -y
@@ -103,16 +103,16 @@ function ubuntu_install {
     # ln -s /usr/bin/python3.5 /usr/bin/python3
 }
 
-function archlinux_install {
+archlinux_install() {
     sudo pacman -S --needed git curl openssh python3 --noconfirm
 }
 
-function fedora_install {
+fedora_install() {
    dnf install -y git curl openssh python3
    export PATH=$PATH:/usr/local/bin
 }
 
-function cygwin_install {
+cygwin_install() {
     # Do something under Windows NT platform
     export LANG=C; export LC_ALL=C
     lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg
@@ -129,19 +129,15 @@ function cygwin_install {
     ln -sf /usr/bin/python3 /usr/bin/python
 }
 
-function getcode {
+getcode() {
     errortrapon
     echo "* get code"
     cd $CODEDIR/github/jumpscale
 
     if [ ! -e $CODEDIR/github/jumpscale/developer ]; then
-        errortrapoff
-        git clone git@github.com:Jumpscale/developer.git > /tmp/lastcommandoutput.txt 2>&1
-        if [ ! $? -eq 0 ]; then
-            errortrapon
-            git clone https://github.com/Jumpscale/developer.git > /tmp/lastcommandoutput.txt 2>&1
-        fi
-        errortrapon
+        repository="Jumpscale/developer"
+        git clone git@github.com:${repository} || git clone https://github.com/${repository}
+
     else
         cd $CODEDIR/github/jumpscale/developer
         git pull > /tmp/lastcommandoutput.txt 2>&1
@@ -149,13 +145,9 @@ function getcode {
 
     cd $CODEDIR/github/jumpscale
     if [ ! -e $CODEDIR/github/jumpscale/core9 ]; then
-        errortrapoff
-        git clone git@github.com:Jumpscale/core9.git > /tmp/lastcommandoutput.txt 2>&1
-        if [ ! $? -eq 0 ]; then
-            errortrapon
-            git clone https://github.com/Jumpscale/core9.git > /tmp/lastcommandoutput.txt 2>&1
-        fi
-        errortrapon
+        repository="Jumpscale/core9"
+        git clone git@github.com:${repository} || git clone https://github.com/${repository}
+
     else
         cd $CODEDIR/github/jumpscale/core9
         git pull > /tmp/lastcommandoutput.txt 2>&1
@@ -172,40 +164,45 @@ clear
 cat ~/.mascot.txt
 echo
 
-if [ "$(uname)" == "Darwin" ]; then
+if [ "$(uname)" = "Darwin" ]; then
     # Do something under Mac OS X platform
     echo "* INSTALL homebrew, curl, python, git"
     export LANG=C; export LC_ALL=C
     osx_install
+
 elif [ -e /etc/alpine-release ]; then
     echo "* INSTALL curl, python, git"
     alpine_install
-elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+
+elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
     echo "* INSTALL curl, python, git"
 
     dist=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
-    if [ "$dist" == "Ubuntu" ]; then
+    if [ "$dist" = "Ubuntu" ]; then
         ubuntu_install
 
-    elif type "pacman" > /dev/null 2>&1; then
+    elif which pacman > /dev/null 2>&1; then
         archlinux_install
-    elif type "dnf" > /dev/null 2>&1; then
+
+    elif which dnf > /dev/null 2>&1; then
         fedora_install
 
     else
         echo "ONLY ARCHLINUX & UBUNTU LINUX SUPPORTED"
         exit 1
     fi
-elif [ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]; then
+
+elif [ "$(expr substr $(uname -s) 1 9)" = "CYGWIN_NT" ]; then
     cygwin_install
 fi
 
 echo "* get gig environment script"
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh
+# curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsenv.sh?$RANDOM > ~/.jsenv.sh
+curl https://gist.githubusercontent.com/maxux/c3ba5119665ce6f70510e8e0287d46d0/raw/3a59cc079b076ae7e9d2ea9bfdc4914ac773a165/jsenv.sh > ~/.jsenv.sh
 
 
 echo "* include the gig environment script"
-source  ~/.jsenv.sh
+. ~/.jsenv.sh
 #THIS GIVES GIG & CODEDIR
 errortrapon
 
@@ -234,7 +231,7 @@ mkdir -p $CODEDIR/github/jumpscale > /tmp/lastcommandoutput.txt 2>&1
 echo "* get core code for development scripts & jumpscale core"
 getcode
 
-function linkcode {
+linkcode() {
     echo "* link commands to local environment"
     #link all our command lines relevant to jumpscale development env
     rm -f /usr/local/bin/js9*
@@ -253,6 +250,7 @@ if [ ! -e "$GIGDIR/private/me.toml" ]; then
     cp $CODEDIR/github/jumpscale/developer/templates/private/me.toml $GIGDIR/private/ > /tmp/lastcommandoutput.txt 2>&1
     valid
 fi
+
 echo "* copy chosen sshpub key"
 mkdir -p $GIGDIR/private/pubsshkeys
 cp ~/.ssh/$SSHKEYNAME.pub $GIGDIR/private/pubsshkeys/ > /tmp/lastcommandoutput.txt 2>&1
