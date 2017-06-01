@@ -1,6 +1,6 @@
+#!/bin/bash
 
 #this is the main env file which needs to be sourced for any action we do on our platform
-
 
 clear
 
@@ -60,6 +60,6 @@ fi
 export GIGDIR="$GIGDIR"
 export CODEDIR="$GIGDIR/code"
 
-export PS1="gig:\h:\w$\[$(tput sgr0)\]"
+export PS1="gig:\h:\w$\[$(tput sgr0)\] "
 
 set +ex
