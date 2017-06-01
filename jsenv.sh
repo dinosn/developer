@@ -60,6 +60,6 @@ fi
 export GIGDIR="$GIGDIR"
 export CODEDIR="$GIGDIR/code"
 
-export PS1="gig:\h:\w$\[$(tput sgr0)\]"
+export PS1="gig:\h:\w$\[$(tput sgr0)\] "
 
 set +ex
