@@ -15,6 +15,8 @@ if you don't want the jumpscale install script to mess with your `bash_profile`,
 
 `export GIGSAFE=1`
 
+To use any js9_* command please use `source ~/.jsenv` first.
+
 ### Choose your jumpscale base directory
 
 By default all the code will be installed in `~/gig`, if you want to use another location, export the `GIGDIR` environment variable.
