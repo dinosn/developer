@@ -30,7 +30,7 @@ EOF
 port=2222
 pulled=0
 
-while getopts ":npbh" opt; do
+while getopts "n:p:bh" opt; do
    case $opt in
    n )  iname=$OPTARG ;;
    p )  port=$OPTARG ;;
@@ -41,8 +41,6 @@ while getopts ":npbh" opt; do
 done
 shift $(($OPTIND - 1))
 
-docker inspect $bname >  /dev/null 2>&1 &&  docker rm  -f $bname > /dev/null 2>&1
-docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f "$iname" > /dev/null 2>&1
 
 if ! docker images | grep -q "jumpscale/$bname"; then
     if [ -n "${build}" ]; then
@@ -51,6 +49,10 @@ if ! docker images | grep -q "jumpscale/$bname"; then
         pulled=1
     fi
 fi
+
+docker inspect $bname >  /dev/null 2>&1 &&  docker rm  -f $bname > /dev/null 2>&1
+docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f "$iname" > /dev/null 2>&1
+
 echo "[+] starting jumpscale9 development environment"
 
 # -v ${GIGDIR}/data/:/optvar/data
