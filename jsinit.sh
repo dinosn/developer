@@ -205,7 +205,7 @@ main() {
 
     # You can avoid .bash_profile smashing by setting
     # GIGSAFE environment variable
-    if [ ! -z ${GIGSAFE+x} ]; then
+    if [ -z ${GIGSAFE+x} ]; then
         # check profile file exists, if yes modify
         if [ ! -e $HOMEDIR/.bash_profile ] ; then
             touch $HOMEDIR/.bash_profile
