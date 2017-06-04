@@ -55,10 +55,10 @@ alpine_install() {
 }
 
 ubuntu_install() {
+    sudo apt-get install curl git ssh python3 locales -y
     sudo locale-gen en_US.UTF-8
     export LANG=en_US.UTF-8
     export LC_ALL=en_US.UTF-8
-    sudo apt-get install curl git ssh python3 -y
 }
 
 archlinux_install() {
