@@ -29,6 +29,9 @@ docker run \
     -v ${GIGDIR}/code/:/opt/code/ \
     phusion/baseimage > ${logfile}
 
+# this to make sure docker is fully booted before executing in it
+sleep 2
+
 docker exec -t $iname bash /opt/code/github/jumpscale/developer/scripts9/js_builder_base9_step1-docker.sh
 
 echo "[+] commiting changes"

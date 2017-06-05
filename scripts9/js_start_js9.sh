@@ -67,6 +67,9 @@ docker run --name $iname \
     -v ${GIGDIR}/code/:/opt/code/ \
     jumpscale/$bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
 
+# this to make sure docker is fully booted before executing in it
+sleep 2
+
 if [ $pulled -eq 1 ]; then
     # if we are here, this mean that:
     # - base image was not found on local system

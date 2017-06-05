@@ -76,6 +76,9 @@ docker run \
     -v ${GIGDIR}/code/:/opt/code/ \
     jumpscale/$bname > ${logfile} 2>&1
 
+# this to make sure docker is fully booted before executing in it
+sleep 2
+
 ssh_authorize $iname
 
 # Removing previous known_hosts for this target
