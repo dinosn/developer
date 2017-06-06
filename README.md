@@ -26,8 +26,8 @@ By default all the code will be installed in `~/gig`, if you want to use another
 First execute `jsinit.sh` in order to prepare the installation:
 
 ```bash
-export GIGBRANCH=master
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > /tmp/jsinit.sh; bash /tmp/jsinit.sh
+export GIGBRANCH=9.0.0
+curl https://raw.githubusercontent.com/Jumpscale/developer/9.0.0/jsinit.sh?$RANDOM > /tmp/jsinit.sh; bash /tmp/jsinit.sh
 ```
 
 ### Build the Docker image
