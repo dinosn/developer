@@ -32,5 +32,5 @@ ssh_authorize() {
 
     echo "[+] authorizing local ssh keys on docker: $1"
     SSHKEYS=$(ssh-add -L)
-    docker exec -t "$1" /bin/sh -c "echo \"${SSHKEYS}\" > /root/.ssh/authorized_keys"
+    docker exec -t "$1" /bin/sh -c "echo \"${SSHKEYS}\" >> /root/.ssh/authorized_keys"
 }
