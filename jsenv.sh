@@ -35,6 +35,7 @@ if [ "$(uname)" = "Darwin" ]; then
     export LANG=C
     export LC_ALL=C
     export HOMEDIR=~
+    export GIGDIR=${GIGDIR:-~/gig}
 
 elif grep -q Microsoft /proc/version; then
     # Windows subsystem 4 linux
