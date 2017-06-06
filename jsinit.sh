@@ -13,7 +13,6 @@ osx_install() {
     fi
 
     sudo echo "* Unlink curl/python/git"
-    errortrapoff
     brew unlink curl   > /tmp/lastcommandoutput.txt 2>&1
     brew unlink python3  > /tmp/lastcommandoutput.txt 2>&1
     brew unlink git  > /tmp/lastcommandoutput.txt 2>&1
