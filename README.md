@@ -30,8 +30,8 @@ export GIGDIR=/home/user/development/otherdir/gig
 First execute `jsinit.sh` in order to prepare the installation:
 
 ```bash
-export GIGBRANCH="9.0.0"
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > /tmp/jsinit.sh; bash /tmp/jsinit.sh
+export GIGBRANCH="master"
+curl https://raw.githubusercontent.com/Jumpscale/developer/${GIGBRANCH}/jsinit.sh?$RANDOM > /tmp/jsinit.sh; bash /tmp/jsinit.sh
 ```
 
 ### Build the Docker image
