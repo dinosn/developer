@@ -6,32 +6,39 @@ It uses Docker and the goal is to get it to work on Ubuntu, Windows & Mac OS X.
 ## JumpScale 9
 
 ### Install a specific branch
-By default, master branch is installed, if you want to install from a specific branch, set the `GIGBRANCH` environment variable before executing the following scripts:
+By default, master branch is installed, if you want to install from a specific branch, first set the `GIGBRANCH` environment variable:
 
-`export GIGBRANCH=anotherbranch`
+```bash
+export GIGBRANCH=anotherbranch
+```
 
 ### Protect host bash_profile
 If you don't want the JumpScale install script to mess with your `bash_profile`, set the `GIGSAFE` environment variable:
 
-`export GIGSAFE=1`
-
-To use any js9_* command please use `source ~/.jsenv` first.
+```bash
+export GIGSAFE=1
+```
 
 ### Choose your JumpScale base directory
 By default all the code will be installed in `~/gig`, if you want to use another location, export the `GIGDIR` environment variable:
 
-`export GIGDIR=/home/user/development/otherdir/gig`
+```bash
+export GIGDIR=/home/user/development/otherdir/gig
+```
 
 ### Initialize the host
 First execute `jsinit.sh` in order to prepare the installation:
 
 ```bash
-export GIGBRANCH=master
+export GIGBRANCH="9.0.0"
 curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > /tmp/jsinit.sh; bash /tmp/jsinit.sh
 ```
 
 ### Build the Docker image
-Then in order to actually install you need to execute `js9_build`:
+
+Before executing any `js9_*` command please use `source ~/.jsenv.sh` first.
+
+Then in order to build the Docker image execute `js9_build`:
 
 ```bash
 #-l installs extra libs
@@ -39,7 +46,7 @@ Then in order to actually install you need to execute `js9_build`:
 js9_build -l
 ```
 
-To see all options do ```js9_build -h```
+To see all options do ```js9_build -h```.
 
 To see interactive output do the following in a separate console:
 
@@ -54,7 +61,7 @@ js9_start
 ```
 
 Then SSH into it:
-```sell
+```shell
 ssh root@localhost -p 2222
 ```
 
@@ -115,7 +122,7 @@ js
 In `/scripts`:
 
 - `prepare.sh`: execute this to make sure that your local environment is up to date
-- `js_builder.sh`: build JumpScale 8 on branch 8.2.0 inside the docker with name js
+- `js_builder.sh`: build JumpScale 8 on branch 8.2.0 inside the Docker container with name js
 
 
 ## Cleanup
