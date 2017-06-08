@@ -4,19 +4,30 @@
 # Functions definitions: here are useful functions we use
 # ------
 getcode() {
-    echo "[+] downloading code: ${CODEDIR}/github/jumpscale/$1"
+    source=$(pwd)
 
-    if [ -e "${CODEDIR}/github/jumpscale/$1" ]; then
-        cd "${CODEDIR}/github/jumpscale/$1"
-        git pull
-        cd -
+    mkdir -p "${CODEDIR}/github/jumpscale"
+    cd "${CODEDIR}/github/jumpscale"
+
+    if [ ! -e $CODEDIR/github/jumpscale/core9 ]; then
+        repository="Jumpscale/$1"
+        branch=$GIGBRANCH
+
+        # fallback to master if branch doesn't exists
+        if ! branchExists ${repository} ${branch}; then
+            branch="master"
+        fi
+
+        echo "* Cloning github.com/${repository} [${branch}]"
+        git clone -b "${branch}" git@github.com:${repository} || git clone -b "${branch}" https://github.com/${repository}
 
     else
-        mkdir -p "${CODEDIR}/github/jumpscale"
-        cd "${CODEDIR}/github/jumpscale"
-
-        git clone git@github.com:Jumpscale/$1.git || git clone https://github.com/Jumpscale/$1.git
+        echo "* Pulling github.com/${repository} [${branch}]"
+        cd $CODEDIR/github/jumpscale/core9
+        git pull > /tmp/lastcommandoutput.txt 2>&1
     fi
+
+    cd "${source}"
 }
 
 die() {
