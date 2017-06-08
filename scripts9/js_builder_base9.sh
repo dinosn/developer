@@ -9,7 +9,7 @@ source $CODEDIR/github/jumpscale/core9/cmds/js9_base
 function usage () {
    cat <<EOF
 Usage: js9_build [-l] [-p] [-h]
-   -l: means install the jumpscale libs, ays & prefab
+   -l: means install the jumpscale libs, ays, docgenerator & prefab
    -p: means install the jumpscale portal
    -h: help
 
@@ -80,6 +80,8 @@ if [ -n "$install_libs" ]; then
     ssh -A root@localhost -p 2222 'apt-get update -y;apt-get upgrade -y;apt-get install build-essential libssl-dev libffi-dev python3-dev -y' > /tmp/lastcommandoutput.txt 2>&1
     echo "* install jumpscale 9 lib"
     ssh -A root@localhost -p 2222 'js9_getcode_libs_prefab_ays noinit' > /tmp/lastcommandoutput.txt 2>&1
+    echo "* install caddy & docgenerator (will take a while)"
+    ssh -A root@localhost -p 2222 'js9 "j.tools.docgenerator.installDeps()"' > /tmp/lastcommandoutput.txt 2>&1
 fi
 
 if [ -n "$install_portal" ]; then
