@@ -5,12 +5,32 @@ It uses Docker and the goal is to get it to work on Ubuntu, Windows & Mac OS X.
 
 ## JumpScale 9
 
+### Install a specific branch
+By default, master branch is installed, if you want to install from a specific branch, set the `GIGBRANCH` environment variable before executing the following scripts:
+
+`export GIGBRANCH=anotherbranch`
+
+### Protect host bash_profile
+If you don't want the JumpScale install script to mess with your `bash_profile`, set the `GIGSAFE` environment variable:
+
+`export GIGSAFE=1`
+
+To use any js9_* command please use `source ~/.jsenv` first.
+
+### Choose your JumpScale base directory
+By default all the code will be installed in `~/gig`, if you want to use another location, export the `GIGDIR` environment variable:
+
+`export GIGDIR=/home/user/development/otherdir/gig`
+
+### Initialize the host
 First execute `jsinit.sh` in order to prepare the installation:
 
 ```bash
-curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RANDOM > $TMPDIR/jsinit.sh; bash $TMPDIR/jsinit.sh
+export GIGBRANCH=master
+curl https://raw.githubusercontent.com/Jumpscale/developer/${GIGBRANCH}/jsinit.sh?$RANDOM > /tmp/jsinit.sh; bash /tmp/jsinit.sh
 ```
 
+### Build the Docker image
 Then in order to actually install you need to execute `js9_build`:
 
 ```bash
@@ -24,10 +44,19 @@ To see all options do ```js9_build -h```
 To see interactive output do the following in a separate console:
 
 ```bash
-tail -f /tmp/lastcommandoutput.txt
+tail -f /tmp/install.log
 ```
 
-To see an install watch [this screencast](http://showterm.io/5a87e36aee35b5b765b20#fast).
+### Start the Docker container
+Start the development environment build in the Docker container:
+```shell
+js9_start
+```
+
+Then SSH into it:
+```sell
+ssh root@localhost -p 2222
+```
 
 ## JumpScale 8.2
 
@@ -36,7 +65,6 @@ curl -sL https://raw.githubusercontent.com/Jumpscale/developer/master/scripts/js
 ```
 
 To see interactive output do the following in a separate console:
-
 ```bash
 tail -f /tmp/lastcommandoutput.txt
 ```
@@ -44,7 +72,7 @@ tail -f /tmp/lastcommandoutput.txt
 For more details about using `js_builder_js82_zerotier.sh` see [here](docs/installjs8_details.md).
 
 
-### Add a G8OS grid to your JumpScale 8.2 development environment
+### Add a Zero-OS Orchestrator to your JumpScale 8.2 development environment
 
 This script is based on the JumpScale 8.2 development environment above:
 
@@ -59,14 +87,8 @@ tail -f /tmp/lastcommandoutput.txt
 ```
 
 
-## Login into the development machine
+Login into the development machine
 
-JumpScale 9:
-```
-ssh root@localhost -p 2222
-```
-
-JumpScale 8.2:
 ```
 ssh root@zerotier-IP-address
 #or

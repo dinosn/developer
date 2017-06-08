@@ -41,9 +41,9 @@ else
 fi
 
 echo "Installing grid dependencies"
-docker exec -t js82 bash -c "pip3 install git+https://github.com/g8os/core0.git@${BRANCH}#subdirectory=pyclient" > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t js82 bash -c "pip3 install git+https://github.com/zero-os/0-core.git@${BRANCH}#subdirectory=client/py-client" > /tmp/lastcommandoutput.txt 2>&1
 valid
-docker exec -t js82 bash -c "pip3 install git+https://github.com/g8os/resourcepool.git@${BRANCH}#subdirectory=pyclient" > /tmp/lastcommandoutput.txt 2>&1
+docker exec -t js82 bash -c "pip3 install git+https://github.com/zero-os/0-orchestrator.git@${BRANCH}#subdirectory=pyclient" > /tmp/lastcommandoutput.txt 2>&1
 valid
 docker exec -t js82 bash -c "pip3 install zerotier" > /tmp/lastcommandoutput.txt 2>&1
 valid
