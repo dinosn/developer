@@ -52,6 +52,7 @@ fi
 # ------
 # Here you can override some explicit variables used
 # ------
+export GIGBRANCH=${GIGBRANCH:-master}
 # export TMPDIR=/tmp
 # export HOMEDIR=~
 
