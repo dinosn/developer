@@ -18,7 +18,8 @@ docker inspect $iname   > /dev/null 2>&1 && docker rm -f $iname > /dev/null
 docker inspect js9devel > /dev/null 2>&1 && docker rm -f js9deve > /dev/null
 docker inspect js9      > /dev/null 2>&1 && docker rm -f js9 > /dev/null
 
-echo "[+] building ubuntu docker base image"
+echo "[+] building docker base image"
+echo "[+] follow progression: docker exec -t $iname tail -f /tmp/install.log"
 
 docker run \
     --name "${iname}" \
