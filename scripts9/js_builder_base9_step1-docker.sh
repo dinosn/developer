@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 logfile="/tmp/install.log"
 # logfile="/dev/stdout"
