@@ -82,10 +82,10 @@ fi
 # copyfiles
 # linkcmds
 
-# echo "* update jumpscale code (js9_code update -a jumpscale -f )"
-# ssh -A root@localhost -p 2222 'export LC_ALL=C.UTF-8;export LANG=C.UTF-8;js9_code update -a jumpscale -f'
-# echo "* init js9 environment (js9_init)"
-# ssh -A root@localhost -p 2222 'js9_init' > /tmp/lastcommandoutput.txt 2>&1
+echo "* update jumpscale code (js9_code update -a jumpscale -f )"
+ssh -A root@localhost -p ${port} 'export LC_ALL=C.UTF-8;export LANG=C.UTF-8;js9_code update -a jumpscale -f'
+echo "* init js9 environment (js9_init)"
+ssh -A root@localhost -p ${port} 'js9_init' > /tmp/lastcommandoutput.txt 2>&1
 
 
 # configzerotiernetwork
