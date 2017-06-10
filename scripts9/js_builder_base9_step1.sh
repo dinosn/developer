@@ -34,7 +34,8 @@ docker run \
 # this to make sure docker is fully booted before executing in it
 sleep 2
 
-dockerscript="${CODEDIR}/github/jumpscale/developer/scripts9/js_builder_base9_step1-docker.sh"
+# /opt/code is hardcoded, it runs inside the docker
+dockerscript="/opt/code/github/jumpscale/developer/scripts9/js_builder_base9_step1-docker.sh"
 docker exec -t $iname bash ${dockerscript} || dockerdie ${iname} ${logfile}
 
 echo "[+] commiting changes"
