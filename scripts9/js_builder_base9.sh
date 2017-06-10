@@ -99,8 +99,8 @@ ssh-keyscan -p 2222 localhost 2>&1 | grep -v '^#' >> ~/.ssh/known_hosts
 container "ssh-keyscan github.com >> ~/.ssh/known_hosts"
 
 echo "[+] loading or updating jumpscale source code"
-getcode core9 > ${logfile} 2>&1
-getcode developer > ${logfile} 2>&1
+getcode "core9" > ${logfile} 2>&1
+getcode "developer" > ${logfile} 2>&1
 
 if [ -n "$install_libs" ]; then
     echo "[+] installing python development environment (needed for certain python packages to install)"
@@ -122,6 +122,7 @@ if [ -n "$initenv" ]; then
     container "js9_init"
 fi
 
+echo "[+] committing image: jumpscale/$iname"
 docker commit $iname jumpscale/$iname > ${logfile} 2>&1
 
 echo "[+] build successful"
