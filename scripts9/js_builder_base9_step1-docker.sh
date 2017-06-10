@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 
 logfile="/tmp/install.log"
 # logfile="/dev/stdout"
@@ -85,3 +85,5 @@ rm -rf /tmp/* /var/tmp/*
 rm -f /etc/dpkg/dpkg.cfg.d/02apt-speedup
 rm -f /etc/ssh/ssh_host_*
 apt-get clean
+
+echo "[+]   container installation successful"

@@ -10,9 +10,10 @@ logfile="/tmp/install.log"
 
 # Loading developer functions
 . $CODEDIR/github/jumpscale/developer/jsenv-functions.sh
+catcherror
 
 container() {
-    ssh -A root@localhost -p 2222 "$1" > ${logfile} 2>&1
+    ssh -A root@localhost -p 2222 "$1" > ${logfile} 2>&1 || return 1
 }
 
 usage() {

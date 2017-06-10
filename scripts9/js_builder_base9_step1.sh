@@ -8,8 +8,9 @@ fi
 
 # source ~/.jsenv.sh
 # source $CODEDIR/github/jumpscale/core9/cmds/js9_base
+. $CODEDIR/github/jumpscale/developer/jsenv-functions.sh
 
-logfile="/dev/null"
+logfile="/tmp/install.log"
 
 export iname=js9_base0
 
@@ -32,7 +33,8 @@ docker run \
 # this to make sure docker is fully booted before executing in it
 sleep 2
 
-docker exec -t $iname bash /opt/code/github/jumpscale/developer/scripts9/js_builder_base9_step1-docker.sh
+dockerscript="${CODEDIR}/github/jumpscale/developer/scripts9/js_builder_base9_step1-docker.sh"
+docker exec -t $iname bash ${dockerscript} || dockerdie ${iname} ${logfile}
 
 echo "[+] commiting changes"
 docker commit $iname jumpscale/$iname > ${logfile} 2>&1
