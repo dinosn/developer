@@ -8,8 +8,9 @@ fi
 
 # source ~/.jsenv.sh
 # source $CODEDIR/github/jumpscale/core9/cmds/js9_base
+. $CODEDIR/github/jumpscale/developer/jsenv-functions.sh
 
-logfile="/dev/null"
+logfile="/tmp/install.log"
 
 export iname=js9_base0
 
@@ -17,7 +18,8 @@ docker inspect $iname   > /dev/null 2>&1 && docker rm -f $iname > /dev/null
 docker inspect js9devel > /dev/null 2>&1 && docker rm -f js9deve > /dev/null
 docker inspect js9      > /dev/null 2>&1 && docker rm -f js9 > /dev/null
 
-echo "[+] building ubuntu docker base image"
+echo "[+] building docker base image"
+echo "[+] follow progression: docker exec -t $iname tail -f /tmp/install.log"
 
 docker run \
     --name "${iname}" \
@@ -32,7 +34,9 @@ docker run \
 # this to make sure docker is fully booted before executing in it
 sleep 2
 
-docker exec -t $iname bash /opt/code/github/jumpscale/developer/scripts9/js_builder_base9_step1-docker.sh
+# /opt/code is hardcoded, it runs inside the docker
+dockerscript="/opt/code/github/jumpscale/developer/scripts9/js_builder_base9_step1-docker.sh"
+docker exec -t $iname bash ${dockerscript} || dockerdie ${iname} ${logfile}
 
 echo "[+] commiting changes"
 docker commit $iname jumpscale/$iname > ${logfile} 2>&1

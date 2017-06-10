@@ -6,21 +6,25 @@ It uses Docker and the goal is to get it to work on Ubuntu, Windows & Mac OS X.
 ## JumpScale 9
 
 ### Install a specific branch
-By default, master branch is installed, if you want to install from a specific branch, set the `GIGBRANCH` environment variable before executing the following scripts:
+By default, master branch is installed, if you want to install from a specific branch, first set the `GIGBRANCH` environment variable:
 
-`export GIGBRANCH=anotherbranch`
+```bash
+export GIGBRANCH=anotherbranch
+```
 
 ### Protect host bash_profile
 If you don't want the JumpScale install script to mess with your `bash_profile`, set the `GIGSAFE` environment variable:
 
-`export GIGSAFE=1`
-
-To use any js9_* command please use `source ~/.jsenv` first.
+```bash
+export GIGSAFE=1
+```
 
 ### Choose your JumpScale base directory
 By default all the code will be installed in `~/gig`, if you want to use another location, export the `GIGDIR` environment variable:
 
-`export GIGDIR=/home/user/development/otherdir/gig`
+```bash
+export GIGDIR=/home/user/development/otherdir/gig
+```
 
 ### Initialize the host
 First execute `jsinit.sh` in order to prepare the installation:
@@ -31,30 +35,46 @@ curl https://raw.githubusercontent.com/Jumpscale/developer/9.0.0/jsinit.sh?$RAND
 ```
 
 ### Build the Docker image
-Then in order to actually install you need to execute `js9_build`:
+
+Before executing any `js9_*` command please use `source ~/.jsenv.sh` first.
+
+Then in order to build the Docker image execute `js9_build`:
 
 ```bash
-#-l installs extra libs
+#-l installs extra libs, AYS and prefab
 #-p installs portal
 js9_build -l
 ```
 
-To see all options do ```js9_build -h```
+To see all options do `js9_build -h`.
 
-To see interactive output do the following in a separate console:
+To see detailed output while the script is running do the following in a separate console:
 
 ```bash
 tail -f /tmp/install.log
 ```
 
+As a result a new Docker image with the name `js9_base` will be build and a container with the same name will be started. The script will check whether your private SSH key is loaded. If that is the case it will add your public key to `authorized_keys`. If no key is loaded, it will ask for the name of your private key.
+
+
 ### Start the Docker container
-Start the development environment build in the Docker container:
+
+As a result of the previous step a container with the name `js9_base` got started.
+
+With `js9_start` the running container will be stopped and removed, and a new one will be started:
+
 ```shell
 js9_start
 ```
 
-Then SSH into it:
-```sell
+`js9_start` allows you to control the name of the container with the `-n` option (default name is `js9`), and the SSH port with the `-p` option (default port is 2222).
+
+`js9_start` will start a new container based on the local image. If it doesn't find any local image, it downloads one from Docker Hub. With the `-b` option you instruct `js9_start` to first build a new image, which then always includes AYS, prefab and some extra libraries, but excluding the portal framework. If you want to rebuild the image that includes the portal framework, you need to you `js9_build` with the `-p` option.
+
+
+### SSH into the container
+
+```shell
 ssh root@localhost -p 2222
 ```
 
@@ -115,7 +135,7 @@ js
 In `/scripts`:
 
 - `prepare.sh`: execute this to make sure that your local environment is up to date
-- `js_builder.sh`: build JumpScale 8 on branch 8.2.0 inside the docker with name js
+- `js_builder.sh`: build JumpScale 8 on branch 8.2.0 inside the Docker container with name js
 
 
 ## Cleanup

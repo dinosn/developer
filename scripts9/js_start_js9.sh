@@ -59,7 +59,7 @@ echo "[+] starting jumpscale9 development environment"
 docker run --name $iname \
     --hostname $iname \
     -d \
-    -p ${port}:22 -p 6600-6700:6600-6700 \
+    -p ${port}:22 -p 10700-10800:10700-10800 \
     --device=/dev/net/tun \
     --cap-add=NET_ADMIN --cap-add=SYS_ADMIN \
     --cap-add=DAC_OVERRIDE --cap-add=DAC_READ_SEARCH \
@@ -82,10 +82,12 @@ fi
 # copyfiles
 # linkcmds
 
-# echo "* update jumpscale code (js9_code update -a jumpscale -f )"
-# ssh -A root@localhost -p 2222 'export LC_ALL=C.UTF-8;export LANG=C.UTF-8;js9_code update -a jumpscale -f'
-# echo "* init js9 environment (js9_init)"
-# ssh -A root@localhost -p 2222 'js9_init' > /tmp/lastcommandoutput.txt 2>&1
+ssh_authorize "${iname}"
+
+echo "* update jumpscale code (js9_code update -a jumpscale -f )"
+ssh -A root@localhost -p ${port} 'export LC_ALL=C.UTF-8;export LANG=C.UTF-8;js9_code update -a jumpscale -f'
+echo "* init js9 environment (js9_init)"
+ssh -A root@localhost -p ${port} 'js9_init' #> ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
 
 
 # configzerotiernetwork

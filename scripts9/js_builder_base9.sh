@@ -10,9 +10,10 @@ logfile="/tmp/install.log"
 
 # Loading developer functions
 . $CODEDIR/github/jumpscale/developer/jsenv-functions.sh
+catcherror
 
 container() {
-    ssh -A root@localhost -p 2222 "$1" > ${logfile} 2>&1
+    ssh -A root@localhost -p 2222 "$1" > ${logfile} 2>&1 || return 1
 }
 
 usage() {
@@ -102,7 +103,7 @@ getcode core9 > ${logfile} 2>&1
 getcode developer > ${logfile} 2>&1
 
 if [ -n "$install_libs" ]; then
-    echo "[+] installing python devlopment environment (needed for certain python packages to install)"
+    echo "[+] installing python development environment (needed for certain python packages to install)"
     container "apt-get update -y"
     container "apt-get upgrade -y"
     container "apt-get install -y build-essential libssl-dev libffi-dev python3-dev"

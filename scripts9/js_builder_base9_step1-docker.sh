@@ -29,7 +29,7 @@ echo "[+]   installing python"
 apt-get install -y python3 python3-dev > ${logfile} 2>&1
 
 echo "[+]   installing dependencies"
-apt-get install -y curl mc openssh-server git make net-tools iproute2 g++ vim tmux localehelper psmisc pkg-config libssl-dev > ${logfile} 2>&1
+apt-get install -y curl mc openssh-server git make net-tools iproute2 g++ vim tmux localehelper psmisc pkg-config libssl-dev libffi-dev iputils-ping > ${logfile} 2>&1
 
 echo "[+]   setting up default environment"
 echo "" > /etc/motd
@@ -85,3 +85,5 @@ rm -rf /tmp/* /var/tmp/*
 rm -f /etc/dpkg/dpkg.cfg.d/02apt-speedup
 rm -f /etc/ssh/ssh_host_*
 apt-get clean
+
+echo "[+]   container installation successful"
