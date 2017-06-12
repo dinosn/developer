@@ -18,6 +18,7 @@ Usage: js9_start [-n $name] [-p $port]
    -n $name: name of container
    -p $port: port on which to install
    -b: build the docker, don't download from docker
+   -r: reset docker, destroy first if already on host
    -h: help
 
    example to do all: 'js9_start -n mymachine -p 2223' which will start a container with name myachine on port 2223 and download
@@ -27,19 +28,30 @@ EOF
    exit 0
 }
 
+
+doreset(){
+    docker inspect $bname >  /dev/null 2>&1 &&  docker rm  -f $bname > /dev/null 2>&1
+    docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f "$iname" > /dev/null 2>&1
+}
+
 port=2222
 pulled=0
 
-while getopts "n:p:bh" opt; do
+while getopts "n:p:rbh" opt; do
    case $opt in
    n )  iname=$OPTARG ;;
    p )  port=$OPTARG ;;
    b )  build=1 ;;
+   r )  reset=1 ;;
    h )  usage ; exit 0 ;;
    \?)  usage ; exit 1 ;;
    esac
 done
 shift $(($OPTIND - 1))
+
+if [ -n "${reset}" ]; then
+    doreset ;
+fi
 
 
 if ! docker images | grep -q "jumpscale/$bname"; then
@@ -50,22 +62,26 @@ if ! docker images | grep -q "jumpscale/$bname"; then
     fi
 fi
 
-docker inspect $bname >  /dev/null 2>&1 &&  docker rm  -f $bname > /dev/null 2>&1
-docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f "$iname" > /dev/null 2>&1
-
 echo "[+] starting jumpscale9 development environment"
 
-# -v ${GIGDIR}/data/:/optvar/data
-docker run --name $iname \
-    --hostname $iname \
-    -d \
-    -p ${port}:22 -p 10700-10800:10700-10800 \
-    --device=/dev/net/tun \
-    --cap-add=NET_ADMIN --cap-add=SYS_ADMIN \
-    --cap-add=DAC_OVERRIDE --cap-add=DAC_READ_SEARCH \
-    -v ${GIGDIR}/:/root/gig/ \
-    -v ${GIGDIR}/code/:/opt/code/ \
-    jumpscale/$bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
+existing="$(docker ps -aq -f name=^/${iname}$)"
+
+if [[ -z "$existing" ]]; then
+
+    # -v ${GIGDIR}/data/:/optvar/data
+    docker run --name $iname \
+        --hostname $iname \
+        -d \
+        -p ${port}:22 -p 10700-10800:10700-10800 \
+        --device=/dev/net/tun \
+        --cap-add=NET_ADMIN --cap-add=SYS_ADMIN \
+        --cap-add=DAC_OVERRIDE --cap-add=DAC_READ_SEARCH \
+        -v ${GIGDIR}/:/root/gig/ \
+        -v ${GIGDIR}/code/:/opt/code/ \
+        jumpscale/$bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
+else
+    docker start $iname  > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
+fi
 
 # this to make sure docker is fully booted before executing in it
 sleep 2
