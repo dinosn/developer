@@ -30,7 +30,6 @@ EOF
 
 
 doreset(){
-    docker inspect $bname >  /dev/null 2>&1 &&  docker rm  -f $bname > /dev/null 2>&1
     docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f "$iname" > /dev/null 2>&1
 }
 
@@ -48,6 +47,8 @@ while getopts "n:p:rbh" opt; do
    esac
 done
 shift $(($OPTIND - 1))
+
+docker inspect $bname >  /dev/null 2>&1 &&  docker rm  -f $bname > /dev/null 2>&1
 
 if [ -n "${reset}" ]; then
     doreset ;
