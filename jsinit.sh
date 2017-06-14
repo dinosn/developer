@@ -109,7 +109,7 @@ getcode() {
 
     if [ ! -e $CODEDIR/github/jumpscale/developer ]; then
         repository="Jumpscale/developer"
-        branch=$GIGBRANCH
+        branch=$GIGDEVELOPERBRANCH
 
         # fallback to master if branch doesn't exists
         if ! branchExists ${repository} ${branch}; then
@@ -156,6 +156,7 @@ main() {
     echo
 
     export GIGBRANCH=${GIGBRANCH:-"master"}
+    export GIGDEVELOPERBRANCH=${GIGDEVELOPERBRANCH:-"master"}
 
     if [ "$(uname)" = "Darwin" ]; then
         echo "[+] apple plateform detected"
@@ -196,7 +197,7 @@ main() {
     fi
 
     echo "[+] downloading generic environment file"
-    curl -s https://raw.githubusercontent.com/Jumpscale/developer/$GIGBRANCH/jsenv.sh?$RANDOM > ~/.jsenv.sh
+    curl -s https://raw.githubusercontent.com/Jumpscale/developer/$GIGDEVELOPERBRANCH/jsenv.sh?$RANDOM > ~/.jsenv.sh
 
 
     echo "[+] loading gig environment file"
