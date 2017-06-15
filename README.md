@@ -6,12 +6,18 @@ It uses Docker and the goal is to get it to work on Ubuntu, Windows & Mac OS X.
 ## JumpScale 9
 
 ### Install a specific branch (optional)
-By default, master branch is installed, if you want to install from a specific branch, first set the `GIGBRANCH` environment variable:
+By default, master branch is installed, if you want to install from a specific branch, first set the `GIGBRANCH` and/or `GIGDEVELOPERBRANCH` environment variable:
 
 ```bash
-export GIGBRANCH=anotherbranch
+export GIGBRANCH=master
+export GIGDEVELOPERBRANCH=master
 ```
 
+- GIGDEVELOPERBRANCH: the branch for the deverloper repo in jumpscale
+- GIGBRANCH: the branch which will be used for all other repo's on jumpscale, if that branch does not exist then it will fallback to master
+
+- if the code repository already exists then it will just do a pull of the branch on disk (without losing local change, will crash if change).
+    
 ### Protect host bash_profile (optional)
 
 - THIS IS NOT RECOMMENDED TO DO, only use this when you don't want any change in your system
