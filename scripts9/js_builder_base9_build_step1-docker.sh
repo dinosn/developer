@@ -55,9 +55,13 @@ echo "[+]   installing some pip dependencies"
 pip3 install --upgrade pip > ${logfile} 2>&1
 pip3 install tmuxp > ${logfile} 2>&1
 pip3 install gitpython > ${logfile} 2>&1
-pip3 install paramiko --upgrade-strategy only-if-needed --upgrade
+# pip3 install paramiko --no-deps --upgrade-strategy only-if-needed --upgrade > ${logfile} 2>&1
+# pip3 install cryptography --no-deps --upgrade-strategy only-if-needed
+# pip3 install bcrypt --upgrade-strategy only-if-needed --upgrade
+# pip3 install paramiko --upgrade-strategy only-if-needed --upgrade
 
-echo "[+]   syncronizing developer files"
+
+echo "[+]   synchronizing developer files"
 rsync -rv /opt/code/github/jumpscale/developer/files_guest/ / > ${logfile} 2>&1
 
 echo "[+]   installing jumpscale core9"

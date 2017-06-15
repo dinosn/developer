@@ -31,6 +31,8 @@ EOF
    exit 0
 }
 
+reset=0
+
 while getopts ":lprh" opt; do
    case $opt in
    l )  echo "[+] will install: js9 libs" ; install_libs=1 ;;
@@ -45,11 +47,11 @@ shift $(($OPTIND - 1))
 
 
 echo "[+] loading or updating jumpscale source code"
-getcode core9 > ${logfile} 2>&1
-getcode lib9 > ${logfile} 2>&1
-getcode prefab9 > ${logfile} 2>&1
-getcode builder_bootstrap > ${logfile} 2>&1
-getcode developer > ${logfile} 2>&1
+# getcode core9 > ${logfile} 2>&1
+# getcode lib9 > ${logfile} 2>&1
+# getcode prefab9 > ${logfile} 2>&1
+# getcode builder_bootstrap > ${logfile} 2>&1
+# getcode developer > ${logfile} 2>&1
 
 
 # echo "the remaining arguments are: $1 $2 $3"
@@ -107,6 +109,11 @@ ssh-keyscan -p 2222 localhost 2>&1 | grep -v '^#' >> ~/.ssh/known_hosts
 
 # Adding github known_host
 container "ssh-keyscan github.com >> ~/.ssh/known_hosts"
+
+echo "[+] paramiko & crypt stuff"
+container pip3 install cryptography --no-deps --upgrade-strategy only-if-needed
+container pip3 install bcrypt --upgrade-strategy only-if-needed --upgrade
+container pip3 install paramiko --upgrade-strategy only-if-needed --upgrade
 
 
 if [ -n "$install_libs" ]; then

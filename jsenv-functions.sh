@@ -39,7 +39,7 @@ getcode() {
 
     else
         pushd $CODEDIR/github/jumpscale/$1
-        git pull
+        git pull || return 1
         popd
     fi
     popd
