@@ -51,6 +51,7 @@ Then in order to build the Docker image execute `js9_build`:
 ```bash
 #-l installs extra libs, AYS and prefab
 #-p installs portal
+#-r will rebuild the base docker, do when you want to redo all
 js9_build #without options will install the basic docker with basic jumpscale9 support
 ```
 
@@ -66,11 +67,6 @@ tail -f /tmp/install.log
 ```
 
 As a result a new Docker image with the name `js9_base` will be build and a container with the same name will be started. The script will check whether your private SSH key is loaded. If that is the case it will add your public key to `authorized_keys`. If no key is loaded, it will ask for the name of your private key.
-
-to make sure you rebuild the base docker you need to find & remove docker base0
-```bash
-docker rmi jumpscale/docker0 -f
-```
 
 
 to troubleshoot and you want to go inside the docker
