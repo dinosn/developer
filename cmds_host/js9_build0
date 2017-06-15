@@ -1,4 +1,0 @@
-#!/bin/bash
-source ~/.jsenv.sh
-cd $CODEDIR/github/jumpscale/developer/scripts9
-sh js_builder_base9_step1.sh $@
