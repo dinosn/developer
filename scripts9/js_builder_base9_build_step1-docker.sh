@@ -29,20 +29,19 @@ echo "[+]   installing python"
 apt-get install -y python3 > ${logfile} 2>&1
 
 echo "[+]   installing basic dependencies"
-apt-get install -y curl mc openssh-server git net-tools iproute2 tmux localehelper psmisc python3-cryptography python3-psutil> ${logfile} 2>&1
+apt-get install -y curl mc openssh-server git net-tools iproute2 tmux localehelper psmisc > ${logfile} 2>&1
 
 echo "[+]   setting up default environment"
 echo "" > /etc/motd
 touch /root/.iscontainer
 
-#REALLY BAD PRACTICE DO NOT DO THIS
-# echo "[+]   authorizing users"
-# mkdir -p /root/.ssh
-# chmod 700 /root/.ssh
-# for user in $(curl -s https://raw.githubusercontent.com/Jumpscale/developer/master/scripts/devs); do
-#     echo "[+]      authorizing $user" > ${logfile}
-#     curl -s https://github.com/${user}.keys >> /root/.ssh/authorized_keys
-# done
+echo "[+]   authorizing users"
+mkdir -p /root/.ssh
+chmod 700 /root/.ssh
+for user in $(curl -s https://raw.githubusercontent.com/Jumpscale/developer/master/scripts/devs); do
+    echo "[+]      authorizing $user" > ${logfile}
+    curl -s https://github.com/${user}.keys >> /root/.ssh/authorized_keys
+done
 
 echo "[+]   installing pip system"
 cd /tmp
@@ -53,9 +52,6 @@ pip3 install --upgrade pip > ${logfile} 2>&1
 pip3 install tmuxp > ${logfile} 2>&1
 pip3 install gitpython > ${logfile} 2>&1
 
-echo "[+]   syncronizing developer files"
-rsync -rv /opt/code/github/jumpscale/developer/files_guest/ / > ${logfile} 2>&1
-
 echo "[+]   installing jumpscale core9"
 pip3 install -e /opt/code/github/jumpscale/core9 --upgrade > ${logfile} 2>&1
 
@@ -63,7 +59,8 @@ echo "[+]   installing jumpscale prefab9"
 pip3 install -e /opt/code/github/jumpscale/prefab9 --upgrade > ${logfile} 2>&1
 
 
-
+echo "[+]   syncronizing developer files"
+rsync -rv /opt/code/github/jumpscale/developer/files_guest/ / > ${logfile} 2>&1
 
 echo "[+]   installing binaries files"
 # source /root/.jsenv.sh

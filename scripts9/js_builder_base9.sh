@@ -31,7 +31,7 @@ EOF
 
 while getopts ":lph" opt; do
    case $opt in
-   l )  echo "[+] will install: js9 libs" ; install_libs=1 ;;
+   l )  echo "[+] will install: js9 libs" ; install_libs=1 ;export install_libs ;;
    p )  echo "[+] will install: js9 portal" ; install_portal=1 ;;
    h )  usage ; exit 0 ;;
    \?)  usage ; exit 1 ;;
@@ -40,25 +40,19 @@ done
 
 shift $(($OPTIND - 1))
 
-
-echo "[+] loading or updating jumpscale source code"
-getcode core9 > ${logfile} 2>&1
-getcode prefab9 > ${logfile} 2>&1
-getcode builder_bootstrap > ${logfile} 2>&1
-getcode developer > ${logfile} 2>&1
-
-
 # echo "the remaining arguments are: $1 $2 $3"
 
 export bname="js9_base0"
 export iname="js9_base"
 
 if ! docker images | grep -q "jumpscale/$bname"; then
-    install_libs=$install_libs bash js_builder_base9_build.sh
+    bash js_builder_base9_build.sh
 fi
 
 echo "[+] cleaning previous system"
 docker inspect $iname   > /dev/null 2>&1 && docker rm -f $iname > /dev/null
+docker inspect js9devel > /dev/null 2>&1 && docker rm -f js9deve > /dev/null
+docker inspect js9      > /dev/null 2>&1 && docker rm -f js9 > /dev/null
 
 # make sure we always install jumpscale if any of the libs are asked for
 if [ -n "$install_libs" ]; then
@@ -104,6 +98,11 @@ ssh-keyscan -p 2222 localhost 2>&1 | grep -v '^#' >> ~/.ssh/known_hosts
 # Adding github known_host
 container "ssh-keyscan github.com >> ~/.ssh/known_hosts"
 
+echo "[+] loading or updating jumpscale source code"
+getcode core9 > ${logfile} 2>&1
+getcode prefab9 > ${logfile} 2>&1
+getcode builder_bootstrap > ${logfile} 2>&1
+getcode developer > ${logfile} 2>&1
 
 if [ -n "$install_libs" ]; then
     echo "[+] installing python development environment (needed for certain python packages to install)"

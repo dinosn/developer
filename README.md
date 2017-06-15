@@ -12,8 +12,8 @@ By default, master branch is installed, if you want to install from a specific b
 export GIGBRANCH=anotherbranch
 ```
 
-### Protect host bash_profile (NOT RECOMMENDED)
-If you don't want the JumpScale install script change your `bash_profile`, set the `GIGSAFE` environment variable:
+### Protect host bash_profile
+If you don't want the JumpScale install script to mess with your `bash_profile`, set the `GIGSAFE` environment variable:
 
 ```bash
 export GIGSAFE=1
@@ -43,7 +43,7 @@ Then in order to build the Docker image execute `js9_build`:
 ```bash
 #-l installs extra libs, AYS and prefab
 #-p installs portal
-js9_build
+js9_build -l
 ```
 
 To see all options do `js9_build -h`.
@@ -51,22 +51,15 @@ To see all options do `js9_build -h`.
 To see detailed output while the script is running do the following in a separate console:
 
 ```bash
-#step 1 (when base docker is building)
-docker exec -t js9_base0 tail -f /tmp/install.log
-#step 2 (further installation)
 tail -f /tmp/install.log
 ```
 
 As a result a new Docker image with the name `js9_base` will be build and a container with the same name will be started. The script will check whether your private SSH key is loaded. If that is the case it will add your public key to `authorized_keys`. If no key is loaded, it will ask for the name of your private key.
 
-to make sure you rebuild the base docker you need to find & remove docker base0
-```bash
-docker rmi jumpscale/docker0 -f
-```
 
 ### Start the Docker container
 
-As a result of the previous step a container image with the name `js9_base` got created.
+As a result of the previous step a container with the name `js9_base` got started.
 
 With `js9_start` the running container will be stopped and removed, and a new one will be started:
 
@@ -84,6 +77,19 @@ js9_start
 ```shell
 ssh root@localhost -p 2222
 ```
+
+## JumpScale 8.2
+
+```bash
+curl -sL https://raw.githubusercontent.com/Jumpscale/developer/master/scripts/js_builder_js82_zerotier.sh | bash -s <your-ZeroTier-network-ID>
+```
+
+To see interactive output do the following in a separate console:
+```bash
+tail -f /tmp/lastcommandoutput.txt
+```
+
+For more details about using `js_builder_js82_zerotier.sh` see [here](docs/installjs8_details.md).
 
 
 ### Add a Zero-OS Orchestrator to your JumpScale 8.2 development environment
