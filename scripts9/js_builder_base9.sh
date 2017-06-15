@@ -21,6 +21,7 @@ usage() {
 Usage: js9_build [-l] [-p] [-h]
    -l: means install the jumpscale libs, ays & prefab
    -p: means install the jumpscale portal
+   -r: rebuild the base image (ubuntu1604)
    -h: help
 
    example to do all: 'js9_build -lp' which will install jumpscale & libs & pip deps
@@ -29,10 +30,11 @@ EOF
    exit 0
 }
 
-while getopts ":lph" opt; do
+while getopts ":lprh" opt; do
    case $opt in
    l )  echo "[+] will install: js9 libs" ; install_libs=1 ;;
    p )  echo "[+] will install: js9 portal" ; install_portal=1 ;;
+   r )  reset=1 ;;
    h )  usage ; exit 0 ;;
    \?)  usage ; exit 1 ;;
    esac
@@ -43,6 +45,7 @@ shift $(($OPTIND - 1))
 
 echo "[+] loading or updating jumpscale source code"
 getcode core9 > ${logfile} 2>&1
+getcode lib9 > ${logfile} 2>&1
 getcode prefab9 > ${logfile} 2>&1
 getcode builder_bootstrap > ${logfile} 2>&1
 getcode developer > ${logfile} 2>&1
@@ -53,7 +56,7 @@ getcode developer > ${logfile} 2>&1
 export bname="js9_base0"
 export iname="js9_base"
 
-if ! docker images | grep -q "jumpscale/$bname"; then
+if ! docker images | grep -q "jumpscale/$bname" || [ $reset -eq 1 ]; then
     install_libs=$install_libs bash js_builder_base9_build.sh
 fi
 

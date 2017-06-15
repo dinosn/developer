@@ -31,6 +31,7 @@ apt-get install -y python3 > ${logfile} 2>&1
 echo "[+]   installing basic dependencies"
 apt-get install -y curl mc openssh-server git net-tools iproute2 tmux localehelper psmisc python3-paramiko python3-psutil> ${logfile} 2>&1
 
+
 echo "[+]   setting up default environment"
 echo "" > /etc/motd
 touch /root/.iscontainer
@@ -49,9 +50,11 @@ cd /tmp
 curl -sk https://bootstrap.pypa.io/get-pip.py > get-pip.py
 python3 get-pip.py > ${logfile} 2>&1
 
+echo "[+]   installing some pip dependencies"
 pip3 install --upgrade pip > ${logfile} 2>&1
 pip3 install tmuxp > ${logfile} 2>&1
 pip3 install gitpython > ${logfile} 2>&1
+pip3 install paramiko --upgrade-strategy only-if-needed --upgrade
 
 echo "[+]   syncronizing developer files"
 rsync -rv /opt/code/github/jumpscale/developer/files_guest/ / > ${logfile} 2>&1

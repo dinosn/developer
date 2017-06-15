@@ -66,6 +66,12 @@ to make sure you rebuild the base docker you need to find & remove docker base0
 docker rmi jumpscale/docker0 -f
 ```
 
+
+to troubleshoot and you want to go inside the docker
+```
+docker exec -ti js9 /bin/bash
+```
+
 ### Start the Docker container
 
 As a result of the previous step a container image with the name `js9_base` got created.
