@@ -39,7 +39,7 @@ getcode() {
 
     else
         cd $CODEDIR/github/jumpscale/$1
-        git pull > /tmp/install.log 2>&1
+        git pull
     fi
 
 }

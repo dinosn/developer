@@ -148,8 +148,8 @@ main() {
     . /tmp/.jsenv-functions.sh
 
     echo "[+] getcode for core9 & developer jumpscale repo's"
-    getcode core9
-    getcode developer $GIGDEVELOPERBRANCH
+    getcode core9 2>&1 > /tmp/install.log
+    getcode developer $GIGDEVELOPERBRANCH 2>&1 > /tmp/install.log
 
     echo "[+] loading gig environment file"
     . ~/.jsenv.sh
@@ -181,9 +181,6 @@ main() {
 
     echo "[+] creating local environment directories"
     mkdir -p ${CODEDIR}/github/jumpscale
-
-    echo "[+] installing code for development scripts and jumpscale core"
-    getcode
 
     echo "[+] ensure local commands are callable"
     chmod +x ${CODEDIR}/github/jumpscale/developer/cmds_host/*
