@@ -17,7 +17,7 @@ export GIGDEVELOPERBRANCH=master
 - GIGBRANCH: the branch which will be used for all other repo's on jumpscale, if that branch does not exist then it will fallback to master
 
 - if the code repository already exists then it will just do a pull of the branch on disk (without losing local change, will crash if change).
-    
+
 ### Protect host bash_profile (optional)
 
 - THIS IS NOT RECOMMENDED TO DO, only use this when you don't want any change in your system
@@ -38,8 +38,8 @@ export GIGDIR=/home/user/development/otherdir/gig
 First execute `jsinit.sh` in order to prepare the installation:
 
 ```bash
-export GIGBRANCH="master"
-curl https://raw.githubusercontent.com/Jumpscale/developer/${GIGBRANCH}/jsinit.sh?$RANDOM > /tmp/jsinit.sh; bash /tmp/jsinit.sh
+export GIGDEVELOPERBRANCH="master"
+curl https://raw.githubusercontent.com/Jumpscale/developer/${GIGDEVELOPERBRANCH}/jsinit.sh?$RANDOM > /tmp/jsinit.sh; bash /tmp/jsinit.sh
 ```
 
 ### Build the Docker image
