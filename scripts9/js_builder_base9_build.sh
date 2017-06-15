@@ -11,6 +11,7 @@ fi
 . $CODEDIR/github/jumpscale/developer/jsenv-functions.sh
 
 logfile="/tmp/install.log"
+rm -f $logfile
 
 export iname=js9_base0
 

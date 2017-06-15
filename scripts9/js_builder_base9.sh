@@ -7,6 +7,7 @@ if [ -z ${JSENV+x} ]; then
 fi
 
 logfile="/tmp/install.log"
+rm -f $logfile
 
 # Loading developer functions
 . $CODEDIR/github/jumpscale/developer/jsenv-functions.sh

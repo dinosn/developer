@@ -2,6 +2,7 @@
 set -e
 
 logfile="/tmp/install.log"
+rm -f $logfile
 # logfile="/dev/stdout"
 
 if [ "$1" != "" ]; then

@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+rm -f /tmp/install.log
+
 if ! which curl > /dev/null; then
     echo "[-] curl not found, this is required to bootstrap jsinit"
     exit 1
