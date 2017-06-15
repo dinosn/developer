@@ -35,18 +35,8 @@ docker run \
 sleep 2
 
 # /opt/code is hardcoded, it runs inside the docker
-dockerscript="/opt/code/github/jumpscale/developer/scripts9/js_builder_base9_build_step1-docker.sh"
+dockerscript="/opt/code/github/jumpscale/developer/scripts9/js_builder_base9_step1-docker.sh"
 docker exec -t $iname bash ${dockerscript} || dockerdie ${iname} ${logfile}
-
-
-if [ -n "$install_libs" ]; then
-    dockerscript="/opt/code/github/jumpscale/developer/scripts9/js_builder_base9_build_step2-docker.sh"
-    docker exec -t $iname bash ${dockerscript} || dockerdie ${iname} ${logfile}
-fi
-
-dockerscript="/opt/code/github/jumpscale/developer/scripts9/js_builder_base9_build_step3-docker.sh"
-docker exec -t $iname bash ${dockerscript} || dockerdie ${iname} ${logfile}
-
 
 echo "[+] commiting changes"
 docker commit $iname jumpscale/$iname > ${logfile} 2>&1
