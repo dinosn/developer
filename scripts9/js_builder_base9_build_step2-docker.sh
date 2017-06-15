@@ -23,3 +23,5 @@ cd ZeroTierOne/
 echo "[+]   compiling zerotier"
 make -j 4 > ${logfile} 2>&1
 make install > ${logfile} 2>&1
+
+echo "[+]   initializing jumpscale part2 succesfull"

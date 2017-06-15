@@ -29,7 +29,7 @@ echo "[+]   installing python"
 apt-get install -y python3 > ${logfile} 2>&1
 
 echo "[+]   installing basic dependencies"
-apt-get install -y curl mc openssh-server git net-tools iproute2 tmux localehelper psmisc python3-cryptography python3-psutil> ${logfile} 2>&1
+apt-get install -y curl mc openssh-server git net-tools iproute2 tmux localehelper psmisc python3-paramiko python3-psutil> ${logfile} 2>&1
 
 echo "[+]   setting up default environment"
 echo "" > /etc/motd
@@ -57,13 +57,10 @@ echo "[+]   syncronizing developer files"
 rsync -rv /opt/code/github/jumpscale/developer/files_guest/ / > ${logfile} 2>&1
 
 echo "[+]   installing jumpscale core9"
-pip3 install -e /opt/code/github/jumpscale/core9 --upgrade > ${logfile} 2>&1
+pip3 install -e /opt/code/github/jumpscale/core9 > ${logfile} 2>&1
 
 echo "[+]   installing jumpscale prefab9"
-pip3 install -e /opt/code/github/jumpscale/prefab9 --upgrade > ${logfile} 2>&1
-
-
-
+pip3 install -e /opt/code/github/jumpscale/prefab9 > ${logfile} 2>&1
 
 echo "[+]   installing binaries files"
 # source /root/.jsenv.sh
@@ -73,3 +70,5 @@ find  /opt/code/github/jumpscale/developer/cmds_guest -exec ln -s {} "/usr/local
 
 rm -rf /usr/local/bin/cmds
 rm -rf /usr/local/bin/cmds_guest
+
+echo "[+]   initializing jumpscale part1 succesfull"
