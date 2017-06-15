@@ -3,20 +3,45 @@
 # ------
 # Functions definitions: here are useful functions we use
 # ------
-getcode() {
-    echo "[+] downloading code: ${CODEDIR}/github/jumpscale/$1"
+branchExists() {
+    repository="$1"
+    branch="$2"
 
-    if [ -e "${CODEDIR}/github/jumpscale/$1" ]; then
-        cd "${CODEDIR}/github/jumpscale/$1"
-        git pull || return 1
-        cd -
+    echo "* Checking if ${repository}/${branch} exists"
+    httpcode=$(curl -o /dev/null -I -s --write-out '%{http_code}\n' https://github.com/${repository}/tree/${branch})
+
+    if [ "$httpcode" = "200" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+getcode() {
+    echo "* get code"
+    cd $CODEDIR/github/jumpscale
+
+    if ! grep -q ^github.com ~/.ssh/known_hosts 2> /dev/null; then
+        ssh-keyscan github.com >> ~/.ssh/known_hosts 2>&1
+    fi
+
+    if [ ! -e $CODEDIR/github/jumpscale/$1 ]; then
+        repository="Jumpscale/$1"
+        branch=${2:-${GIGBRANCH}}
+
+        # fallback to master if branch doesn't exists
+        if ! branchExists ${repository} ${branch}; then
+            branch="master"
+        fi
+
+        echo "* Cloning github.com/${repository} [${branch}]"
+        (git clone git@github.com:${repository}.git || git clone https://github.com/${repository}.git) || return 1
 
     else
-        mkdir -p "${CODEDIR}/github/jumpscale" || return 1
-        cd "${CODEDIR}/github/jumpscale"
-
-        (git clone git@github.com:Jumpscale/$1.git || git clone https://github.com/Jumpscale/$1.git) || return 1
+        cd $CODEDIR/github/jumpscale/$1
+        git pull > /tmp/install.log 2>&1
     fi
+
 }
 
 die() {

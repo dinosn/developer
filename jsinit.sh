@@ -85,63 +85,9 @@ cygwin_install() {
     ln -sf /usr/bin/python3 /usr/bin/python
 }
 
-branchExists() {
-    repository="$1"
-    branch="$2"
 
-    echo "* Checking if ${repository}/${branch} exists"
-    httpcode=$(curl -o /dev/null -I -s --write-out '%{http_code}\n' https://github.com/${repository}/tree/${branch})
 
-    if [ "$httpcode" = "200" ]; then
-        return 0
-    else
-        return 1
-    fi
-}
 
-getcode() {
-    echo "* get code"
-    cd $CODEDIR/github/jumpscale
-
-    if ! grep -q ^github.com ~/.ssh/known_hosts 2> /dev/null; then
-        ssh-keyscan github.com >> ~/.ssh/known_hosts 2>&1
-    fi
-
-    if [ ! -e $CODEDIR/github/jumpscale/developer ]; then
-        repository="Jumpscale/developer"
-        branch=$GIGDEVELOPERBRANCH
-
-        # fallback to master if branch doesn't exists
-        if ! branchExists ${repository} ${branch}; then
-            branch="master"
-        fi
-
-        echo "* Cloning github.com/${repository} [${branch}]"
-        git clone git@github.com:${repository} || git clone https://github.com/${repository}
-
-    else
-        cd $CODEDIR/github/jumpscale/developer
-        git pull > /tmp/lastcommandoutput.txt 2>&1
-    fi
-
-    cd $CODEDIR/github/jumpscale
-    if [ ! -e $CODEDIR/github/jumpscale/core9 ]; then
-        repository="Jumpscale/core9"
-        branch=$GIGBRANCH
-
-        # fallback to master if branch doesn't exists
-        if ! branchExists ${repository} ${branch}; then
-            branch="master"
-        fi
-
-        echo "* Cloning github.com/${repository} [${branch}]"
-        git clone -b "${branch}" git@github.com:${repository} || git clone -b "${branch}" https://github.com/${repository}
-
-    else
-        cd $CODEDIR/github/jumpscale/core9
-        git pull > /tmp/lastcommandoutput.txt 2>&1
-    fi
-}
 
 main() {
     echo "=========================="
@@ -198,7 +144,12 @@ main() {
 
     echo "[+] downloading generic environment file"
     curl -s https://raw.githubusercontent.com/Jumpscale/developer/$GIGDEVELOPERBRANCH/jsenv.sh?$RANDOM > ~/.jsenv.sh
+    curl -s https://raw.githubusercontent.com/Jumpscale/developer/$GIGDEVELOPERBRANCH/jsenv-functions.sh?$RANDOM > /tmp/.jsenv-functions.sh
+    . /tmp/.jsenv-functions.sh
 
+    echo "[+] getcode for core9 & developer jumpscale repo's"
+    getcode core9
+    getcode developer $GIGDEVELOPERBRANCH
 
     echo "[+] loading gig environment file"
     . ~/.jsenv.sh
