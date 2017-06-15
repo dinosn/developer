@@ -19,7 +19,7 @@ branchExists() {
 
 getcode() {
     echo "* get code"
-    cd $CODEDIR/github/jumpscale
+    pushd $CODEDIR/github/jumpscale
 
     if ! grep -q ^github.com ~/.ssh/known_hosts 2> /dev/null; then
         ssh-keyscan github.com >> ~/.ssh/known_hosts 2>&1
@@ -38,9 +38,11 @@ getcode() {
         (git clone git@github.com:${repository}.git || git clone https://github.com/${repository}.git) || return 1
 
     else
-        cd $CODEDIR/github/jumpscale/$1
+        pushd $CODEDIR/github/jumpscale/$1
         git pull
+        popd
     fi
+    popd
 
 }
 
