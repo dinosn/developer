@@ -31,7 +31,7 @@ EOF
 
 while getopts ":lph" opt; do
    case $opt in
-   l )  echo "[+] will install: js9 libs" ; install_libs=1 ;;
+   l )  echo "[+] will install: js9 libs" ; install_libs=1 ;export install_libs ;;
    p )  echo "[+] will install: js9 portal" ; install_portal=1 ;;
    h )  usage ; exit 0 ;;
    \?)  usage ; exit 1 ;;
@@ -46,7 +46,7 @@ export bname="js9_base0"
 export iname="js9_base"
 
 if ! docker images | grep -q "jumpscale/$bname"; then
-    bash js_builder_base9_step1.sh
+    bash js_builder_base9_build.sh
 fi
 
 echo "[+] cleaning previous system"
@@ -100,6 +100,8 @@ container "ssh-keyscan github.com >> ~/.ssh/known_hosts"
 
 echo "[+] loading or updating jumpscale source code"
 getcode core9 > ${logfile} 2>&1
+getcode prefab9 > ${logfile} 2>&1
+getcode builder_bootstrap > ${logfile} 2>&1
 getcode developer > ${logfile} 2>&1
 
 if [ -n "$install_libs" ]; then

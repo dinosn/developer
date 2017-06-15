@@ -26,10 +26,10 @@ echo "[+]   updating system"
 apt-get upgrade -y > ${logfile} 2>&1
 
 echo "[+]   installing python"
-apt-get install -y python3 python3-dev > ${logfile} 2>&1
+apt-get install -y python3 > ${logfile} 2>&1
 
-echo "[+]   installing dependencies"
-apt-get install -y curl mc openssh-server git make net-tools iproute2 g++ vim tmux localehelper psmisc pkg-config libssl-dev libffi-dev > ${logfile} 2>&1
+echo "[+]   installing basic dependencies"
+apt-get install -y curl mc openssh-server git net-tools iproute2 tmux localehelper psmisc > ${logfile} 2>&1
 
 echo "[+]   setting up default environment"
 echo "" > /etc/motd
@@ -43,15 +43,6 @@ for user in $(curl -s https://raw.githubusercontent.com/Jumpscale/developer/mast
     curl -s https://github.com/${user}.keys >> /root/.ssh/authorized_keys
 done
 
-echo "[+]   downloading zerotier source code"
-cd /tmp
-git clone --depth=1 https://github.com/zerotier/ZeroTierOne.git > ${logfile} 2>&1
-cd ZeroTierOne/
-
-echo "[+]   compiling zerotier"
-make -j 4 > ${logfile} 2>&1
-make install > ${logfile} 2>&1
-
 echo "[+]   installing pip system"
 cd /tmp
 curl -sk https://bootstrap.pypa.io/get-pip.py > get-pip.py
@@ -64,6 +55,10 @@ pip3 install gitpython > ${logfile} 2>&1
 echo "[+]   installing jumpscale core9"
 pip3 install -e /opt/code/github/jumpscale/core9 --upgrade > ${logfile} 2>&1
 
+echo "[+]   installing jumpscale prefab9"
+pip3 install -e /opt/code/github/jumpscale/prefab9 --upgrade > ${logfile} 2>&1
+
+
 echo "[+]   syncronizing developer files"
 rsync -rv /opt/code/github/jumpscale/developer/files_guest/ / > ${logfile} 2>&1
 
@@ -75,15 +70,3 @@ find  /opt/code/github/jumpscale/developer/cmds_guest -exec ln -s {} "/usr/local
 
 rm -rf /usr/local/bin/cmds
 rm -rf /usr/local/bin/cmds_guest
-
-echo "[+]   initializing jumpscale"
-python3 -c "from JumpScale9 import j; j.do.initEnv()" > ${logfile} 2>&1
-python3 -c "from JumpScale9 import j; j.tools.jsloader.generate()" > ${logfile} 2>&1
-
-echo "[+]   cleanup"
-rm -rf /tmp/* /var/tmp/*
-rm -f /etc/dpkg/dpkg.cfg.d/02apt-speedup
-rm -f /etc/ssh/ssh_host_*
-apt-get clean
-
-echo "[+]   container installation successful"
