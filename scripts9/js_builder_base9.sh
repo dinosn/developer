@@ -56,7 +56,7 @@ base_deps() {
     container apt-get install -y python3
 
     echo "[+]   installing basic dependencies"
-    container apt-get install -y curl mc openssh-server git net-tools iproute2 tmux localehelper psmisc python3-paramiko python3-psutil telnet
+    container apt-get install -y curl mc openssh-server git net-tools iproute2 tmux localehelper psmisc python3-cryptography python3-paramiko python3-psutil telnet
 
     echo "[+]   setting up default environment"
     container 'echo "" > /etc/motd'
@@ -80,9 +80,10 @@ enable_ssh() {
     dockerscript="/opt/code/github/jumpscale/developer/scripts9/ubuntu_enablessh.sh"
     docker exec -t $iname bash ${dockerscript} || dockerdie ${iname} ${logfile}
 
-    # Allowing this host
-    echo "[+]   allow this host"
-    ssh-keyscan -p 2222 localhost 2>&1 | grep -v '^#' >> ~/.ssh/known_hosts
+    echo "[+]   Waiting for ssh to allow connections"
+    while ! ssh-keyscan -p 2222 localhost 2>&1 | grep -q "OpenSSH"; do
+        sleep 0.2
+    done
 
     # Removing previous known_hosts for this target
     # and allowing the new one
@@ -90,11 +91,9 @@ enable_ssh() {
     sed -i.bak /localhost.:2222/d ~/.ssh/known_hosts
     rm -f ~/.ssh/known_hosts.bak
 
-    echo "[+]   Waiting for ssh to allow connections"
-    while ! ssh-keyscan -p 2222 localhost 2>&1 | grep -q "OpenSSH"; do
-        sleep 0.2
-    done
-
+    # Allowing this host
+    echo "[+]   allow this host"
+    ssh-keyscan -p 2222 localhost 2>&1 | grep -v '^#' >> ~/.ssh/known_hosts
 }
 
 getpip_python() {
@@ -137,8 +136,8 @@ installjs9() {
 
 installzerotier() {
     container "apt-get install gpgv2 -y"
-    container "curl -s 'https://pgp.mit.edu/pks/lookup?op=get&search=0x1657198823E52A61' | gpg --import && \
-        if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo \"$z\" | bash; fi"
+    container "curl -s 'https://pgp.mit.edu/pks/lookup?op=get&search=0x1657198823E52A61' | gpg --import"
+    container "curl -s https://install.zerotier.com/ | bash || true"
 }
 
 cleanup() {
@@ -151,19 +150,17 @@ cleanup() {
     # container rm -f "/etc/ssh/ssh_host_*"
 }
 
-#update_code()
-# dockerrun "phusion/baseimage" "base0" 2222
-# enable_ssh
-# dockercommit "base0" "base0" "stop"
+dockerrun "phusion/baseimage" "base0" 2222
+enable_ssh
+dockercommit "base0" "base0" "stop"
 
-# dockerrun "jumpscale/base0" "base1" 2222
-# base_deps
-# dockercommit "base1" "base1" "stop"
+dockerrun "jumpscale/base0" "base1" 2222
+base_deps
+dockercommit "base1" "base1" "stop"
 
-# dockerrun "jumpscale/base1" "base2" 2222
-# getpip_python
-# dockercommit "base2" "base2" "stop"
-
+dockerrun "jumpscale/base1" "base2" 2222
+getpip_python
+dockercommit "base2" "base2" "stop"
 
 dockerrun "jumpscale/base2" "base3" 2222
 installjs9

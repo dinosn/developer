@@ -31,9 +31,9 @@ dockerremoveimage(){
 
 
 dockerrun() {
-    local bname="$1"
-    local iname="$2"
-    local port="${3:-2222}"
+    bname="$1"
+    iname="$2"
+    port="${3:-2222}"
     local addarg="${4:-}"
 
     #addarg: -p 10700-10800:10700-10800
