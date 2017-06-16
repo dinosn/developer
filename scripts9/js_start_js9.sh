@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 
 if [ -z ${JSENV+x} ]; then
     echo "[-] JSENV is not set, your environment is not loaded correctly."
@@ -60,8 +60,8 @@ echo "[+] starting jumpscale9 development environment"
 
 dockerrun $bname $iname $port
 
-echo "* update jumpscale code (js9_code update -a jumpscale -f )"
-ssh -A root@localhost -p ${port} 'export LC_ALL=C.UTF-8;export LANG=C.UTF-8;js9_code update -a jumpscale -f'
+# echo "* update jumpscale code (js9_code update -a jumpscale -f )"
+# ssh -A root@localhost -p ${port} 'export LC_ALL=C.UTF-8;export LANG=C.UTF-8;js9_code update -a jumpscale -f'
 echo "* init js9 environment (js9_init)"
 ssh -A root@localhost -p ${port} 'js9_init' #> ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
 
