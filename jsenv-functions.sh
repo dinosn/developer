@@ -26,7 +26,7 @@ dockerremove(){
 
 dockerremoveimage(){
     echo "[+] remove docker image $1"
-    docker rmi  -f "jumpscale9/$1" > /dev/null 2>&1
+    docker rmi  -f "jumpscale9/$1"  > ${logfile} 2>&1 || true
 }
 
 
@@ -56,6 +56,7 @@ dockerrun() {
         -v ${GIGDIR}/:/root/gig/ \
         -v ${GIGDIR}/code/:/opt/code/ \
         -v ${GIGDIR}/data/:/optvar/data \
+        -v ${GIGDIR}/private/:/optvar/private \
         $bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
 
     sleep 1

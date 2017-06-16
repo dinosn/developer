@@ -150,6 +150,13 @@ cleanup() {
     # container rm -f "/etc/ssh/ssh_host_*"
 }
 
+if [ $reset -eq 1 ]; then
+    dockerremoveimage jumpscale/base0
+    dockerremoveimage jumpscale/base1
+    dockerremoveimage jumpscale/base2
+    dockerremoveimage jumpscale/base3
+fi
+
 dockerrun "phusion/baseimage" "base0" 2222
 enable_ssh
 dockercommit "base0" "base0" "stop"
