@@ -8,16 +8,20 @@ if [ "$1" != "" ]; then
     logfile="$1"
 fi
 
-echo "[+]   initializing jumpscale part3"
-python3 -c "from JumpScale9 import j; j.do.initEnv()" > ${logfile} 2>&1
-python3 -c "from JumpScale9 import j; j.tools.jsloader.generate()" > ${logfile} 2>&1
 
-echo "[+]   cleanup"
-rm -rf /tmp/* /var/tmp/*
-rm -f /etc/dpkg/dpkg.cfg.d/02apt-speedup
-rm -f /etc/ssh/ssh_host_*
-rm -rf /root/.cache
-mkdir /root/.cache
-apt-get clean
+echo "[+]   installing python3-dev"
+apt-get install -y python3-dev > ${logfile} 2>&1
 
-echo "[+]   container installation successful"
+echo "[+]   installing dependencies"
+apt-get install -y make g++ vim tmux psmisc pkg-config libssl-dev libffi-dev > ${logfile} 2>&1
+
+# echo "[+]   downloading zerotier source code"
+# cd /tmp
+# git clone --depth=1 https://github.com/zerotier/ZeroTierOne.git > ${logfile} 2>&1
+# cd ZeroTierOne/
+#
+# echo "[+]   compiling zerotier"
+# make -j 4 > ${logfile} 2>&1
+# make install > ${logfile} 2>&1
+
+echo "[+]   initializing jumpscale part2 succesfull"

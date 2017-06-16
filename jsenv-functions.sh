@@ -4,8 +4,8 @@
 # Functions definitions: here are useful functions we use
 # ------
 branchExists() {
-    repository="$1"
-    branch="$2"
+    local repository="$1"
+    local branch="$2"
 
     echo "* Checking if ${repository}/${branch} exists"
     httpcode=$(curl -o /dev/null -I -s --write-out '%{http_code}\n' https://github.com/${repository}/tree/${branch})
@@ -15,6 +15,54 @@ branchExists() {
     else
         return 1
     fi
+}
+
+
+dockerremove(){
+    echo "[+] remove docker $1"
+    docker rm  -f "$1" || true
+    # docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f "$iname" > /dev/null 2>&1
+}
+
+dockerremoveimage(){
+    echo "[+] remove docker image $1"
+    docker rmi  -f "jumpscale9/$1" > /dev/null 2>&1
+}
+
+
+dockerrun() {
+    local bname="$1"
+    local iname="$2"
+    local port="${3:-2222}"
+    local addarg="${4:-}"
+
+    #addarg: -p 10700-10800:10700-10800
+
+    echo "[+] start docker $bname -> $iname (port:$port)"
+
+    existing="$(docker ps -aq -f name=^/${iname}$)"
+
+    if [[ ! -z "$existing" ]]; then
+        dockerremove $iname
+    fi
+
+    docker run --name $iname \
+        --hostname $iname \
+        -d \
+        -p ${port}:22 ${addarg} \
+        --device=/dev/net/tun \
+        --cap-add=NET_ADMIN --cap-add=SYS_ADMIN \
+        --cap-add=DAC_OVERRIDE --cap-add=DAC_READ_SEARCH \
+        -v ${GIGDIR}/:/root/gig/ \
+        -v ${GIGDIR}/code/:/opt/code/ \
+        -v ${GIGDIR}/data/:/optvar/data \
+        $bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
+
+    sleep 1
+
+    ssh_authorize "${iname}"
+
+
 }
 
 getcode() {
@@ -48,6 +96,7 @@ getcode() {
 
 die() {
     echo "[-] something went wrong: $1"
+    cat $logfile
     exit 1
 }
 
@@ -63,6 +112,14 @@ dockerdie() {
     docker exec -t $iname cat "$2"
 
     exit 1
+}
+
+dockercommit() {
+    echo "[+] Commit docker: $1"
+    docker commit $1 jumpscale/$2 > ${logfile} 2>&1 || return 1
+    if [ "$3" != "" ]; then
+        dockerremove $1
+    fi
 }
 
 ssh_authorize() {
@@ -92,4 +149,9 @@ catcherror_handler() {
 
 catcherror() {
     trap 'catcherror_handler $LINENO' ERR
+}
+
+container() {
+    catcherror
+    ssh -A root@localhost -p ${port} "$@" > ${logfile} 2>&1
 }
