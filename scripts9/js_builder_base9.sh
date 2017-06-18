@@ -75,6 +75,7 @@ docker run \
     --cap-add=NET_ADMIN --cap-add=SYS_ADMIN \
     -v ${GIGDIR}/:/root/gig/ \
     -v ${GIGDIR}/code/:/opt/code/ \
+    -v ~/.cache/pip/:/root/.cache/pip/ \
     jumpscale/$bname > ${logfile} 2>&1
 
 # this to make sure docker is fully booted before executing in it
