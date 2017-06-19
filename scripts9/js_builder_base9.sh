@@ -43,7 +43,6 @@ done
 
 shift $(($OPTIND - 1))
 
-
 base_deps() {
 
     echo "[+]   updating ubuntu repositories"
@@ -185,7 +184,6 @@ if [ -n "$install_portal" ]; then
     install_libs=1
     initenv=1
 fi
-
 
 if [ -n "$install_libs" ]; then
     echo "[+] installing python development environment (needed for certain python packages to install)"

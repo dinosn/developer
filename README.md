@@ -13,6 +13,7 @@ export GIGBRANCH=master
 export GIGDEVELOPERBRANCH=master
 ```
 
+
 - GIGDEVELOPERBRANCH: the branch for the deverloper repo in jumpscale
 - GIGBRANCH: the branch which will be used for all other repo's on jumpscale, if that branch does not exist then it will fallback to master
 
@@ -60,9 +61,6 @@ To see all options do `js9_build -h`.
 To see detailed output while the script is running do the following in a separate console:
 
 ```bash
-#step 1 (when base docker is building)
-docker exec -t js9_base0 tail -f /tmp/install.log
-#step 2 (further installation)
 tail -f /tmp/install.log
 ```
 
@@ -74,9 +72,10 @@ to troubleshoot and you want to go inside the docker
 docker exec -ti js9 /bin/bash
 ```
 
+
 ### Start the Docker container
 
-As a result of the previous step a container image with the name `js9_base` got created.
+As a result of the previous step a container with the name `js9_base` got started.
 
 With `js9_start` the running container will be stopped and removed, and a new one will be started:
 
@@ -94,6 +93,19 @@ js9_start
 ```shell
 ssh root@localhost -p 2222
 ```
+
+## JumpScale 8.2
+
+```bash
+curl -sL https://raw.githubusercontent.com/Jumpscale/developer/master/scripts/js_builder_js82_zerotier.sh | bash -s <your-ZeroTier-network-ID>
+```
+
+To see interactive output do the following in a separate console:
+```bash
+tail -f /tmp/lastcommandoutput.txt
+```
+
+For more details about using `js_builder_js82_zerotier.sh` see [here](docs/installjs8_details.md).
 
 
 ## Start with the JumpScale interactive shell
