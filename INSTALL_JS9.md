@@ -16,7 +16,7 @@ sudo -i
 export SSHKEYNAME=<YOUR SSH KEY NAME (i.e. id_rsa)>
 ```
 
-4 - Link sh with bash
+4 - Link sh with bash (prob not needed)
 ```bash
 ln -fs /bin/bash /bin/sh
 ```
@@ -29,6 +29,7 @@ curl https://raw.githubusercontent.com/Jumpscale/developer/master/jsinit.sh?$RAN
 
 6 - Start installing JumpScale9 Libraries:
 ```bash
+js9_build # if you only want to install the base
 js9_build -l # install JumpScale9 Libraries without portal
 js9_build -p # install JumpScale9 Libraries with portal
 ```
