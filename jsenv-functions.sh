@@ -85,7 +85,7 @@ getcode() {
         fi
 
         echo "* Cloning github.com/${repository} [${branch}]"
-        (git clone git@github.com:${repository}.git || git clone https://github.com/${repository}.git) || return 1
+        (git clone -b ${branch} git@github.com:${repository}.git || git clone -b ${branch} https://github.com/${repository}.git) || return 1
 
     else
         pushd $CODEDIR/github/jumpscale/$1
