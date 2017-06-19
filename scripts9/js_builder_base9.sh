@@ -140,8 +140,8 @@ cleanup() {
     echo "[+]   cleanup"
     container rm -rf "/tmp/*" "/var/tmp/*"
     container rm -f /etc/dpkg/dpkg.cfg.d/02apt-speedup
-    container rm -rf /root/.cache
-    container mkdir /root/.cache
+    #container rm -rf /root/.cache
+    #container mkdir /root/.cache
     container apt-get clean
     # container rm -f "/etc/ssh/ssh_host_*"
 }
