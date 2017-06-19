@@ -117,9 +117,6 @@ installjs9() {
     echo "[+]   installing jumpscale core9"
     container pip3 install -e /opt/code/github/jumpscale/core9
 
-    echo "[+]   installing jumpscale prefab9"
-    container pip3 install -e /opt/code/github/jumpscale/prefab9
-
     echo "[+]   installing binaries files"
     container 'find  /opt/code/github/jumpscale/core9/cmds -exec ln -s {} "/usr/local/bin/" \;'
     container 'find  /opt/code/github/jumpscale/developer/cmds_guest -exec ln -s {} "/usr/local/bin/" \;'
@@ -143,8 +140,8 @@ cleanup() {
     echo "[+]   cleanup"
     container rm -rf "/tmp/*" "/var/tmp/*"
     container rm -f /etc/dpkg/dpkg.cfg.d/02apt-speedup
-    container rm -rf /root/.cache
-    container mkdir /root/.cache
+    #container rm -rf /root/.cache
+    #container mkdir /root/.cache
     container apt-get clean
     # container rm -f "/etc/ssh/ssh_host_*"
 }

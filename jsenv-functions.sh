@@ -57,6 +57,7 @@ dockerrun() {
         -v ${GIGDIR}/code/:/opt/code/ \
         -v ${GIGDIR}/data/:/optvar/data \
         -v ${GIGDIR}/private/:/optvar/private \
+        -v ~/.cache/pip/:/root/.cache/pip/ \
         $bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
 
     sleep 1
@@ -84,7 +85,7 @@ getcode() {
         fi
 
         echo "* Cloning github.com/${repository} [${branch}]"
-        (git clone git@github.com:${repository}.git || git clone https://github.com/${repository}.git) || return 1
+        (git clone -b ${branch} git@github.com:${repository}.git || git clone -b ${branch} https://github.com/${repository}.git) || return 1
 
     else
         pushd $CODEDIR/github/jumpscale/$1
