@@ -149,12 +149,15 @@ main() {
     curl -s https://raw.githubusercontent.com/Jumpscale/developer/$GIGDEVELOPERBRANCH/jsenv-functions.sh?$RANDOM > /tmp/.jsenv-functions.sh
     . /tmp/.jsenv-functions.sh
 
+    echo "[+] loading gig environment file"
+    . ~/.jsenv.sh
+
+    echo "[+] creating local environment directories"
+    mkdir -p ${CODEDIR}/github/jumpscale
+
     echo "[+] getcode for core9 & developer jumpscale repo's"
     getcode core9 2>&1 > /tmp/install.log
     getcode developer $GIGDEVELOPERBRANCH 2>&1 > /tmp/install.log
-
-    echo "[+] loading gig environment file"
-    . ~/.jsenv.sh
 
     # You can avoid .bash_profile smashing by setting
     # GIGSAFE environment variable
@@ -179,10 +182,6 @@ main() {
     else
         echo "Please make sure to source .jsenv.sh before running any js9_* command"
     fi
-
-
-    echo "[+] creating local environment directories"
-    mkdir -p ${CODEDIR}/github/jumpscale
 
     echo "[+] ensure local commands are callable"
     chmod +x ${CODEDIR}/github/jumpscale/developer/cmds_host/*
