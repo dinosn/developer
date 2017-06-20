@@ -111,6 +111,7 @@ getpip_python() {
 }
 
 installjs9() {
+    container "ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts"
     echo "[+]   synchronizing developer files"
     container rsync -rv /opt/code/github/jumpscale/developer/files_guest/ /
 
