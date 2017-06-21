@@ -46,6 +46,21 @@ dockerrun() {
         dockerremove $iname
     fi
 
+    mounted_volumes="\
+        -v ${GIGDIR}/:/root/gig/ \
+        -v ${GIGDIR}/code/:/opt/code/ \
+        -v ${GIGDIR}/private/:/optvar/private \
+        -v ${HOME}/.cache/pip/:/root/.cache/pip/ \
+    "
+
+    # mount optvar/data to all platforms except for windows to avoid fsync mongodb error
+    # related: https://docs.mongodb.com/manual/administration/production-notes/#fsync-on-directories
+    if ! grep -q Microsoft /proc/version; then
+        mounted_volumes="$mounted_volumes \
+            -v ${GIGDIR}/data/:/optvar/data \
+        "
+    fi
+
     docker run --name $iname \
         --hostname $iname \
         -d \
@@ -53,11 +68,7 @@ dockerrun() {
         --device=/dev/net/tun \
         --cap-add=NET_ADMIN --cap-add=SYS_ADMIN \
         --cap-add=DAC_OVERRIDE --cap-add=DAC_READ_SEARCH \
-        -v ${GIGDIR}/:/root/gig/ \
-        -v ${GIGDIR}/code/:/opt/code/ \
-        -v ${GIGDIR}/data/:/optvar/data \
-        -v ${GIGDIR}/private/:/optvar/private \
-        -v ~/.cache/pip/:/root/.cache/pip/ \
+        ${mounted_volumes} \
         $bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
 
     sleep 1
@@ -132,7 +143,7 @@ ssh_authorize() {
 
     echo "[+] authorizing local ssh keys on docker: $1"
     SSHKEYS=$(ssh-add -L)
-    docker exec -t "$1" /bin/sh -c "echo \"${SSHKEYS}\" >> /root/.ssh/authorized_keys"
+    docker exec -t "$1" /bin/sh -c "echo ${SSHKEYS} >> /root/.ssh/authorized_keys"
 }
 
 #
@@ -157,3 +168,10 @@ container() {
     catcherror
     ssh -A root@localhost -p ${port} "$@" > ${logfile} 2>&1
 }
+
+# alias docker for docker.exe for windows subsystem(WSL) linux because docker isn't supported natively on WSL
+if grep -q Microsoft /proc/version; then
+    docker() {
+        docker.exe "$@"
+    }
+fi

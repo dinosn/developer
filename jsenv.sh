@@ -41,7 +41,8 @@ elif grep -q Microsoft /proc/version; then
     # Windows subsystem 4 linux
     WINDOWSUSERNAME=$(ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.')
     WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
-    GIGDIR=/mnt/c/Users/${WINDOWSUSERNAME}/gig
+    GIGDIR=/c/Users/${WINDOWSUSERNAME}/gig
+    export HOMEDIR=~
 
 else
     # Native Linux or MacOSX
@@ -76,7 +77,11 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
     while [ ! -e "$HOMEDIR/.ssh/$SSHKEYNAME" ] || [ "$SSHKEYNAME" = "" ]
     do
         echo "please give name of ssh key to load, if not generate one."
-        read -p 'SSHKEYNAME: ' SSHKEYNAME
+        if [[ "$SHELL" == *"zsh" ]];then
+            read 'SSHKEYNAME?SSHKEYNAME: '
+        else
+            read -p 'SSHKEYNAME: ' SSHKEYNAME
+        fi
         echo "check keypath '$HOMEDIR/.ssh/$SSHKEYNAME' exists"
     done
 
@@ -94,7 +99,7 @@ export CODEDIR="${GIGDIR}/code"
 
 # export GIGGROUP="getent group gig | cut -d: -f3"
 
-if [[ "$PS1" != *"gig"* ]]; then
+if [[ "$PS1" != *"js9"* ]]; then
     export PS1="(js9) $PS1"
 fi
 

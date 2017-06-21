@@ -204,7 +204,7 @@ main() {
     echo "[+] please edit templates in ${GIGDIR}/private/"
     echo "[+]    if you don't then installer will ask for it."
     echo "[+]"
-    echo "[+] please run `source ~/.jsenv.sh` or reload your shell"
+    echo "[+] please run 'source ~/.jsenv.sh' or reload your shell"
     echo "[+]    incase you set the GIGSAFE flag you always have to source .jsenv.sh first"
     echo "[+]"
     echo "[+] to get started with jumpscale do 'js9_start -b'"

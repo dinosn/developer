@@ -42,6 +42,20 @@ By default all the code will be installed in `~/gig`, if you want to use another
 export GIGDIR=/home/user/development/otherdir/gig
 ```
 
+####Note for Windows Subsystem Linux(WSL)
+As for now dockers aren't supported on WSL, So you will need to:
+1. install [docker on windows](https://docs.docker.com/docker-for-windows/install/)
+2. Allow sharing C: drive from docker settings shared drives
+3. Run the following commands on WSL Bash:
+```bash
+sudo mkdir /c
+sudo mount --bind /mnt/c /c
+```
+4. Add the following lines to WSL ~/.bashrc file (to link WSL with host docker bin)
+ ```bash
+export PATH="$PATH:/mnt/c/Program\ Files/Docker/Docker/resources/bin/"
+```
+
 ### Initialize the host
 First execute `jsinit.sh` in order to prepare the installation:
 
