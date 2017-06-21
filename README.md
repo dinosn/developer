@@ -5,6 +5,13 @@ It uses Docker and the goal is to get it to work on Ubuntu, Windows & Mac OS X.
 
 ## JumpScale 9
 
+Make sure to have your chosen ssh key loaded into ssh agent before starting.
+You can do that by:
+```bash
+eval $(ssh-agent)
+ssh-add <path-to-sshkey>
+```
+
 ### Install a specific branch (optional)
 By default, master branch is installed, if you want to install from a specific branch, first set the `GIGBRANCH` and/or `GIGDEVELOPERBRANCH` environment variable:
 
