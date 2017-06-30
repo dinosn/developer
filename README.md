@@ -1,11 +1,10 @@
 # Development environment
-
 Use this development environment to play & develop with JumpScale.
+
 It uses Docker and the goal is to get it to work on Ubuntu, Windows & Mac OS X.
 
 ## JumpScale 9
-
-Make sure to have your chosen ssh key loaded into ssh agent before starting.
+Make sure to have your chosen SSH key loaded into SSH agent before starting.
 You can do that by:
 ```bash
 eval $(ssh-agent)
@@ -20,17 +19,16 @@ export GIGBRANCH=master
 export GIGDEVELOPERBRANCH=master
 ```
 
-
-- GIGDEVELOPERBRANCH: the branch for the deverloper repo in jumpscale
-- GIGBRANCH: the branch which will be used for all other repo's on jumpscale, if that branch does not exist then it will fallback to master
-
-- if the code repository already exists then it will just do a pull of the branch on disk (without losing local change, will crash if change).
+- GIGDEVELOPERBRANCH: the branch of this (jumpscale/developer) repository to use
+- GIGBRANCH: the branch which will be used for all other JumpScale repositories
+  - If the specified branch does not exist then it will fallback to master
+  - If the repository was already cloned, then it will just do a pull of the branch (without losing local changes, will fail if there are changes).
 
 ### Protect host bash_profile (optional)
 
-- THIS IS NOT RECOMMENDED TO DO, only use this when you don't want any change in your system
-- If you don't want the JumpScale install script change your `bash_profile`, set the `GIGSAFE` environment variable:
+THIS IS NOT RECOMMENDED TO DO, only use this when you don't want any change in your system
 
+If you don't want the JumpScale install script change your `bash_profile`, set the `GIGSAFE` environment variable:
 ```bash
 export GIGSAFE=1
 ```
@@ -42,30 +40,29 @@ By default all the code will be installed in `~/gig`, if you want to use another
 export GIGDIR=/home/user/development/otherdir/gig
 ```
 
-####Note for Windows Subsystem Linux(WSL)
-As for now dockers aren't supported on WSL, So you will need to:
-1. install [docker on windows](https://docs.docker.com/docker-for-windows/install/)
-2. Allow sharing C: drive from docker settings shared drives
+#### Note for Windows Subsystem for Linux (WSL)
+Since Docker containers aren't supported on WSL (for now), you will need to do the following:
+1. Install [Docker on Windows](https://docs.docker.com/docker-for-windows/install/)
+2. Allow sharing the `C:` drive from the Docker Shared Drives settings
 3. Run the following commands on WSL Bash:
-```bash
-sudo mkdir /c
-sudo mount --bind /mnt/c /c
-```
-4. Add the following lines to WSL ~/.bashrc file (to link WSL with host docker bin)
- ```bash
-export PATH="$PATH:/mnt/c/Program\ Files/Docker/Docker/resources/bin/"
-```
+   ```bash
+   sudo mkdir /c
+   sudo mount --bind /mnt/c /c
+   ```
+4. Add the following lines to the WSL `~/.bashrc` file (to link WSL with host Docker bin)
+   ```bash
+   export PATH="$PATH:/mnt/c/Program\ Files/Docker/Docker/resources/bin/"
+   ```
 
 ### Initialize the host
 First execute `jsinit.sh` in order to prepare the installation:
-
 ```bash
 export GIGDEVELOPERBRANCH="master"
-curl https://raw.githubusercontent.com/Jumpscale/developer/${GIGDEVELOPERBRANCH}/jsinit.sh?$RANDOM > /tmp/jsinit.sh; bash /tmp/jsinit.sh
+curl https://raw.githubusercontent.com/Jumpscale/developer/${GIGDEVELOPERBRANCH}/jsinit.sh?$RANDOM > /tmp/jsinit.sh
+bash /tmp/jsinit.sh
 ```
 
 ### Build the Docker image
-
 Before executing any `js9_*` command please use `source ~/.jsenv.sh` first.
 
 Then in order to build the Docker image execute `js9_build`:
@@ -73,8 +70,8 @@ Then in order to build the Docker image execute `js9_build`:
 ```bash
 #-l installs extra libs, AYS and prefab
 #-p installs portal
-#-r will rebuild the base docker, do when you want to redo all
-js9_build #without options will install the basic docker with basic jumpscale9 support
+#-r will rebuild the base Docker, use this when you want to redo all
+js9_build #without options will install the basic docker with basic JumpScale9 support
 ```
 
 To see all options do `js9_build -h`.
@@ -88,15 +85,15 @@ tail -f /tmp/install.log
 As a result a new Docker image with the name `js9_base` will be build and a container with the same name will be started. The script will check whether your private SSH key is loaded. If that is the case it will add your public key to `authorized_keys`. If no key is loaded, it will ask for the name of your private key.
 
 
-to troubleshoot and you want to go inside the docker
-```
+To troubleshoot you can always enter the Docker as follows:
+```bash
 docker exec -ti js9 /bin/bash
 ```
 
 
 ### Start the Docker container
 
-As a result of the previous step a container with the name `js9_base` got started.
+As a result of the previous step a container with the name `js9` got started.
 
 With `js9_start` the running container will be stopped and removed, and a new one will be started:
 
