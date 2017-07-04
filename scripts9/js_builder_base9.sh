@@ -116,7 +116,7 @@ installjs9() {
     container rsync -rv /opt/code/github/jumpscale/developer/files_guest/ /
 
     echo "[+]   installing jumpscale core9"
-    container pip3 install -e /opt/code/github/jumpscale/core9
+    container "cd /opt/code/github/jumpscale/core9;bash install.sh"
 
     echo "[+]   installing binaries files"
     container 'find  /opt/code/github/jumpscale/core9/cmds -exec ln -s {} "/usr/local/bin/" \;'
