@@ -20,7 +20,7 @@ branchExists() {
 
 dockerremove(){
     echo "[+] remove docker $1"
-    docker rm  -f "$1" || true
+    docker rm  -f "$1" > /dev/null 2>&1 || true
     # docker inspect $iname >  /dev/null 2>&1 &&  docker rm  -f "$iname" > /dev/null 2>&1
 }
 
