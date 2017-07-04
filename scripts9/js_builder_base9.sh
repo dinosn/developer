@@ -190,12 +190,12 @@ if [ -n "$install_libs" ]; then
     container "apt-get install -y build-essential libssl-dev libffi-dev python3-dev"
 
     echo "[+] installing jumpscale 9 libraries"
-    container "js9_getcode_libs_prefab_ays noinit"
+    container "js9_getcode_libs_prefab_ays ${GIGBRANCH} noinit"
 fi
 
 if [ -n "$install_portal" ]; then
     echo "[+] installing jumpscale 9 portal"
-    container "js9_getcode_portal noinit"
+    container "js9_getcode_portal ${GIGBRANCH} noinit"
 fi
 
 if [ -n "$initenv" ]; then
