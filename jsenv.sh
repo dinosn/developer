@@ -37,7 +37,7 @@ if [ "$(uname)" = "Darwin" ]; then
     export HOMEDIR=~
     export GIGDIR=${GIGDIR:-~/gig}
 
-elif grep -q Microsoft /proc/version; then
+elif [ -e /proc/version ] && grep -q Microsoft /proc/version; then
     # Windows subsystem 4 linux
     WINDOWSUSERNAME=$(ls -ail /mnt/c/Users/ | grep drwxrwxrwx | grep -v Public | grep -v Default | grep -v '\.\.')
     WINDOWSUSERNAME=${WINDOWSUSERNAME##* }
