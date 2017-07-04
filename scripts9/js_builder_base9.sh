@@ -135,6 +135,10 @@ installzerotier() {
     container "apt-get install gpgv2 -y"
     container "curl -s 'https://pgp.mit.edu/pks/lookup?op=get&search=0x1657198823E52A61' | gpg --import"
     container "curl -s https://install.zerotier.com/ | bash || true"
+    # Due to permission changes in OSX Docker + Lowering privileges in zerotier, we need to manually set permissions for tun module
+    if [ "$(uname)" = "Darwin" ]; then
+        container "chmod 666 /dev/net/tun"
+    fi
 }
 
 cleanup() {
