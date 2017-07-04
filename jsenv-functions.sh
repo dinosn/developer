@@ -55,7 +55,7 @@ dockerrun() {
 
     # mount optvar/data to all platforms except for windows to avoid fsync mongodb error
     # related: https://docs.mongodb.com/manual/administration/production-notes/#fsync-on-directories
-    if ! grep -q Microsoft /proc/version; then
+    if [ -e /proc/version ] &&  ! grep -q Microsoft /proc/version; then
         mounted_volumes="$mounted_volumes \
             -v ${GIGDIR}/data/:/optvar/data \
         "
@@ -170,7 +170,7 @@ container() {
 }
 
 # alias docker for docker.exe for windows subsystem(WSL) linux because docker isn't supported natively on WSL
-if grep -q Microsoft /proc/version; then
+if [ -e /proc/version ] &&  grep -q Microsoft /proc/version; then
     docker() {
         docker.exe "$@"
     }

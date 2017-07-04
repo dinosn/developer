@@ -146,6 +146,7 @@ main() {
 
     echo "[+] downloading generic environment file"
     curl -s https://raw.githubusercontent.com/Jumpscale/developer/$GIGDEVELOPERBRANCH/jsenv.sh?$RANDOM > ~/.jsenv.sh
+    sed -i "/export JSENV/a export GIGDIR='${GIGDIR}'" ~/.jsenv.sh
     curl -s https://raw.githubusercontent.com/Jumpscale/developer/$GIGDEVELOPERBRANCH/jsenv-functions.sh?$RANDOM > /tmp/.jsenv-functions.sh
     . /tmp/.jsenv-functions.sh
 
