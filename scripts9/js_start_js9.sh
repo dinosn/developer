@@ -21,6 +21,7 @@ Usage: js9_start [-n $name] [-p $port]
    -p $port: port on which to install
    -b: build the docker, don't download from docker
    -r: reset docker, destroy first if already on host
+   -c: continue using existing js9 docker
    -h: help
 
    example to do all: 'js9_start -n mymachine -p 2223' which will start a container with name myachine on port 2223 and download
@@ -29,36 +30,59 @@ Usage: js9_start [-n $name] [-p $port]
 EOF
    exit 0
 }
+doreset(){
+    dockerremove $iname
+    dockerremove $bname
+}
 
-while getopts "n:p:rbh" opt; do
+
+while getopts "n:p:rbhc" opt; do
    case $opt in
    n )  iname=$OPTARG ;;
    p )  port=$OPTARG ;;
    b )  build=1 ;;
    r )  reset=1 ;;
+   c )  cont=1 ;;
    h )  usage ; exit 0 ;;
    \?)  usage ; exit 1 ;;
    esac
 done
 shift $(($OPTIND - 1))
 
-dockerremove $iname
-dockerremove $bname
-
-if [ -n "${reset}" ]; then
-    dockerremoveimage $bname ;
+showprompt=1
+if [ -n "$reset" ]; then
+  showprompt=0
+  doreset
 fi
+
+if [ -n "$cont" ]; then
+  showprompt=0
+fi
+dockerexists="$(docker ps -aq -f name=^/${iname}$)"
+if [ "$showprompt" -eq 1 ] && [ ! -z "$dockerexists" ]; then
+  while true; do
+      read -p " [+] Do you want to reset the docker?" yn
+      case $yn in
+          [Yy]* ) doreset; break;;
+          [Nn]* ) break;;
+          * ) echo "Please answer with yes or no";;
+      esac
+  done
+
+fi
+
 
 
 if ! docker images | grep -q "$bname"; then
     if [ -n "${build}" ]; then
+        dockerremoveimage $bname ;
         bash js_builder_base9.sh
     fi
 fi
 
 echo "[+] starting jumpscale9 development environment"
 
-dockerrun $bname $iname $port
+dockerrun $bname $iname $port reset
 
 # echo "* update jumpscale code (js9_code update -a jumpscale -f )"
 # ssh -A root@localhost -p ${port} 'export LC_ALL=C.UTF-8;export LANG=C.UTF-8;js9_code update -a jumpscale -f'

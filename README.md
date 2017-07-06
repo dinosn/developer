@@ -103,6 +103,8 @@ js9_start
 
 `js9_start` allows you to control the name of the container with the `-n` option (default name is `js9`), and the SSH port with the `-p` option (default port is 2222).
 
+`js9_start` will start a new container based on the local image if there isn't a js9 container on the system. If there is the user will be prompted to choose between using the existing container or removing the container and a new one would be created. To bypass the prompt you can choose the `r` option to reset the installation or `c` option to continue using the existing container.
+
 `js9_start` will start a new container based on the local image. If it doesn't find any local image, it downloads one from Docker Hub. With the `-b` option you instruct `js9_start` to first build a new image, which then always includes AYS, prefab and some extra libraries, but excluding the portal framework. If you want to rebuild the image that includes the portal framework, you need to you `js9_build` with the `-p` option.
 
 

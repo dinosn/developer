@@ -34,25 +34,20 @@ dockerrun() {
     bname="$1"
     iname="$2"
     port="${3:-2222}"
-    local addarg="${4:-}"
+    reset="$4"
+    local addarg="${5:-}"
 
     #addarg: -p 10700-10800:10700-10800
 
     echo "[+] start docker $bname -> $iname (port:$port)"
 
     existing="$(docker ps -aq -f name=^/${iname}$)"
-
-    if [[ ! -z "$existing" ]]; then
-        dockerremove $iname
-    fi
-
     mounted_volumes="\
         -v ${GIGDIR}/:/root/gig/ \
         -v ${GIGDIR}/code/:/opt/code/ \
         -v ${GIGDIR}/private/:/optvar/private \
         -v ${HOME}/.cache/pip/:/root/.cache/pip/ \
     "
-
     # mount optvar/data to all platforms except for windows to avoid fsync mongodb error
     # related: https://docs.mongodb.com/manual/administration/production-notes/#fsync-on-directories
     if [ -e /proc/version ] &&  ! grep -q Microsoft /proc/version; then
@@ -61,15 +56,28 @@ dockerrun() {
         "
     fi
 
-    docker run --name $iname \
-        --hostname $iname \
-        -d \
-        -p ${port}:22 ${addarg} \
-        --device=/dev/net/tun \
-        --cap-add=NET_ADMIN --cap-add=SYS_ADMIN \
-        --cap-add=DAC_OVERRIDE --cap-add=DAC_READ_SEARCH \
-        ${mounted_volumes} \
-        $bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
+    if [[ ! -z "$existing" ]]; then
+      if [ ! -z "$reset" ]; then
+        echo $reset
+        docker start $iname  > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
+      else
+        dockerremove $iname
+      fi
+    else
+        docker run --name $iname \
+            --hostname $iname \
+            -d \
+            -p ${port}:22 ${addarg} \
+            --device=/dev/net/tun \
+            --cap-add=NET_ADMIN --cap-add=SYS_ADMIN \
+            --cap-add=DAC_OVERRIDE --cap-add=DAC_READ_SEARCH \
+            -v ${GIGDIR}/:/root/gig/ \
+            -v ${GIGDIR}/code/:/opt/code/ \
+            -v ${GIGDIR}/data/:/optvar/data \
+            -v ${GIGDIR}/private/:/optvar/private \
+            $bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
+    fi
+
 
     sleep 1
 
