@@ -146,7 +146,12 @@ ssh_authorize() {
 
     echo "[+] authorizing local ssh keys on docker: $1"
     SSHKEYS=$(ssh-add -L)
-    docker exec -t "$1" /bin/sh -c "echo ${SSHKEYS} >> /root/.ssh/authorized_keys"
+    if [ -e /proc/version ] && grep -q Microsoft /proc/version; then
+        # Windows Sub Linux doesn't support escaping quote so ssh-add -L should have only one key
+        docker exec -t "$1" /bin/sh -c "echo ${SSHKEYS} >> /root/.ssh/authorized_keys"
+    else
+        docker exec -t "$1" /bin/sh -c "echo \"${SSHKEYS}\" >> /root/.ssh/authorized_keys"
+    fi
 }
 
 #
