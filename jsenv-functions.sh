@@ -34,7 +34,7 @@ dockerrun() {
     bname="$1"
     iname="$2"
     port="${3:-2222}"
-    reset="$4"
+    start="$4"
     local addarg="${5:-}"
 
     #addarg: -p 10700-10800:10700-10800
@@ -57,26 +57,22 @@ dockerrun() {
     fi
 
     if [[ ! -z "$existing" ]]; then
-      if [ ! -z "$reset" ]; then
+      if [ ! -z "$start" ]; then
         docker start $iname  > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
+        return
       else
         dockerremove $iname
       fi
-    else
-        docker run --name $iname \
-            --hostname $iname \
-            -d \
-            -p ${port}:22 ${addarg} \
-            --device=/dev/net/tun \
-            --cap-add=NET_ADMIN --cap-add=SYS_ADMIN \
-            --cap-add=DAC_OVERRIDE --cap-add=DAC_READ_SEARCH \
-            -v ${GIGDIR}/:/root/gig/ \
-            -v ${GIGDIR}/code/:/opt/code/ \
-            -v ${GIGDIR}/data/:/optvar/data \
-            -v ${GIGDIR}/private/:/optvar/private \
-            $bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
     fi
-
+    docker run --name $iname \
+        --hostname $iname \
+        -d \
+        -p ${port}:22 ${addarg} \
+        --device=/dev/net/tun \
+        --cap-add=NET_ADMIN --cap-add=SYS_ADMIN \
+        --cap-add=DAC_OVERRIDE --cap-add=DAC_READ_SEARCH \
+        ${mounted_volumes} \
+        $bname > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
 
     sleep 1
 

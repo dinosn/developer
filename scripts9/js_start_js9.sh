@@ -82,7 +82,7 @@ fi
 
 echo "[+] starting jumpscale9 development environment"
 
-dockerrun $bname $iname $port reset
+dockerrun $bname $iname $port js9_start
 
 # echo "* update jumpscale code (js9_code update -a jumpscale -f )"
 # ssh -A root@localhost -p ${port} 'export LC_ALL=C.UTF-8;export LANG=C.UTF-8;js9_code update -a jumpscale -f'
