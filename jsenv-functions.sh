@@ -58,7 +58,6 @@ dockerrun() {
 
     if [[ ! -z "$existing" ]]; then
       if [ ! -z "$reset" ]; then
-        echo $reset
         docker start $iname  > ${logfile} 2>&1 || die "docker could not start, please check ${logfile}"
       else
         dockerremove $iname
