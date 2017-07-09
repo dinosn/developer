@@ -119,7 +119,7 @@ main() {
         alpine_install
 
     elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
-        echo "[+] linux plateform detected"
+        echo "[+] linux platform detected"
 
         dist=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
         if [ "$dist" = "Ubuntu" ]; then
