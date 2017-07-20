@@ -46,7 +46,6 @@ dockerrun() {
         -v ${GIGDIR}/:/root/gig/ \
         -v ${GIGDIR}/code/:/opt/code/ \
         -v ${GIGDIR}/private/:/optvar/private \
-        -v ${HOME}/.cache/pip/:/root/.cache/pip/ \
     "
     # mount optvar/data to all platforms except for windows to avoid fsync mongodb error
     # related: https://docs.mongodb.com/manual/administration/production-notes/#fsync-on-directories
