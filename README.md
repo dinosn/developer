@@ -10,6 +10,7 @@ You can do that by:
 eval $(ssh-agent)
 ssh-add <path-to-sshkey>
 ```
+Make sure you add your ssh public key that you will for the installation on your github profile and you have access at https://github.com/Jumpscale/developer with it.
 
 ### Install a specific branch (optional)
 By default, master branch is installed, if you want to install from a specific branch, first set the `GIGBRANCH` and/or `GIGDEVELOPERBRANCH` environment variable:
